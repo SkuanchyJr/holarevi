@@ -1,0 +1,93 @@
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+[1G[0K2:52:52 PM [stripe] Initializing Stripe schema...
+2:52:52 PM [stripe] Stripe schema ready
+{ autoExpandLists: [90mundefined[39m, stripeApiVersion: [90mundefined[39m } StripeSync initialized
+2:52:52 PM [stripe] Setting up managed webhook...
+2:52:52 PM [stripe] Webhook configured: https://a4a9a116-dceb-4281-ae61-a7b4baf21a33-00-355z2l704i6pf.picard.replit.dev/api/stripe/webhook/f4fdac98-9a31-4608-8abf-3e1f9da26ec0 (UUID: f4fdac98-9a31-4608-8abf-3e1f9da26ec0)
+2:52:52 PM [stripe] Syncing Stripe data...
+Syncing products
+Incremental sync from cursor: 1773045041
+Fetching items to sync from Stripe
+Upserting final batch of 1 items
+Sync complete: 1 items synced
+Syncing prices
+Incremental sync from cursor: 1773045041
+Fetching items to sync from Stripe
+Upserting final batch of 1 items
+Sync complete: 1 items synced
+Syncing plans
+Incremental sync from cursor: 1773045041
+Fetching items to sync from Stripe
+Upserting final batch of 1 items
+Sync complete: 1 items synced
+Syncing customers
+Incremental sync from cursor: 1772633307
+Fetching items to sync from Stripe
+Upserting final batch of 1 items
+Sync complete: 1 items synced
+Syncing subscriptions
+Incremental sync from cursor: 1767290101
+Fetching items to sync from Stripe
+Upserting final batch of 1 items
+Sync complete: 1 items synced
+Syncing subscription schedules
+Fetching items to sync from Stripe
+2:52:54 PM [express] serving on port 5000
+Sync complete: 0 items synced
+Syncing invoices
+Incremental sync from cursor: 1772387875
+Fetching items to sync from Stripe
+Upserting final batch of 1 items
+Sync complete: 1 items synced
+Syncing charges
+Incremental sync from cursor: 1773126838
+Fetching items to sync from Stripe
+Upserting final batch of 1 items
+Sync complete: 1 items synced
+Syncing setup_intents
+Incremental sync from cursor: 1767239743
+Fetching items to sync from Stripe
+Upserting final batch of 1 items
+Sync complete: 1 items synced
+Syncing payment method
+Getting payment methods for 14 customers
+Fetching items to sync from Stripe
+Fetching items to sync from Stripe
+Fetching items to sync from Stripe
+Fetching items to sync from Stripe
+Fetching items to sync from Stripe
+Fetching items to sync from Stripe
+Fetching items to sync from Stripe
+Fetching items to sync from Stripe
+Fetching items to sync from Stripe
+Fetching items to sync from Stripe
+2:52:55 PM [stripe] Error syncing Stripe data: No such customer: 'cus_TWYaUx3yeHYtOH'
+Sync complete: 0 items synced
+Sync complete: 0 items synced
+Sync complete: 0 items synced
+Upserting final batch of 2 items
+Sync complete: 2 items synced
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+2:53:04 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+2:53:04 PM [express] GET /api/prelaunch-status 200 in 15ms :: {"success":true,"prelaunchEnabled":false}
+2:53:04 PM [express] POST /api/track-page-view 200 in 163ms :: {"success":true}
+2:53:05 PM [express] GET /api/blogs 200 in 7ms :: {"success":true,"blogs":[{"id":"15d2fd5c-c934-49bd-89db-906886a20fa3","title":"PROBANDOOO TITULO","subtitle":"OPCIONAL","slug":"probandooo-titulo","content":"haoksjdafpfe \nMIAU","metaTitle":"opaaaaaaaaa","metaDescription":"oaoaoao","published":true,"createdAt":"2025-12-20T20:03:34.499Z","updatedAt":"2025-12-20T20:03:34.499Z"}]}
+2:53:24 PM [sync] Running initial review sync via google...
+[Google Business] Starting sync for all connected restaurants...
+[Google Business] Found 0 connected restaurants
+[Google Business] Sync complete for all restaurants
+2:53:24 PM [sync] Initial review sync completed via google
+2:57:54 PM [sync] Starting scheduled review sync via google...
+[Google Business] Starting sync for all connected restaurants...
+[Google Business] Found 0 connected restaurants
+[Google Business] Sync complete for all restaurants
+2:57:54 PM [sync] Scheduled review sync completed via google
+3:02:54 PM [sync] Starting scheduled review sync via google...
+[Google Business] Starting sync for all connected restaurants...
+[Google Business] Found 0 connected restaurants
+[Google Business] Sync complete for all restaurants
+3:02:54 PM [sync] Scheduled review sync completed via google
