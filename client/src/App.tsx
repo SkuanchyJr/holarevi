@@ -55,17 +55,21 @@ import { InvitationPopup } from "@/components/invitation-popup";
 
 function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const style = {
-    "--sidebar-width": "16rem",
+    "--sidebar-width": "15rem",
     "--sidebar-width-icon": "3rem",
   };
 
   return (
     <SidebarProvider style={style as React.CSSProperties}>
-      <div className="flex h-screen w-full">
+      <div className="flex h-screen w-full bg-background">
         <AppSidebar />
-        <div className="flex flex-col flex-1 min-w-0">
-          <header className="flex items-center justify-between gap-2 p-3 border-b bg-background sticky top-0 z-40">
-            <SidebarTrigger data-testid="button-sidebar-toggle" />
+        <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+          {/* Top header bar */}
+          <header className="flex items-center justify-between gap-2 px-4 py-2.5 border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-40 h-12">
+            <SidebarTrigger
+              data-testid="button-sidebar-toggle"
+              className="h-7 w-7 text-muted-foreground hover:text-foreground transition-colors"
+            />
             <div className="flex items-center gap-1">
               <LanguageToggle />
               <ThemeToggle />
@@ -82,9 +86,9 @@ function LoadingScreen() {
   const { t } = useLanguage();
   return (
     <div className="flex h-screen w-full items-center justify-center bg-background">
-      <div className="flex flex-col items-center gap-4">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-muted-foreground">{t("common.loading")}</p>
+      <div className="flex flex-col items-center gap-3">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
       </div>
     </div>
   );
@@ -93,10 +97,8 @@ function LoadingScreen() {
 function usePrelaunchGuard() {
   const [location, setLocation] = useLocation();
 
-  // Check if current path is an admin route - these are ALWAYS excluded from prelaunch
   const isAdminRoute = location.startsWith("/admin");
 
-  // Other paths that should be accessible during prelaunch
   const allowedPaths = [
     "/prelaunch",
     "/contact",
@@ -124,8 +126,6 @@ function usePrelaunchGuard() {
 
   const isLoading = !isFetched || isFetching;
 
-  // If we should block the route, redirect to /prelaunch instead of just rendering it
-  // This ensures the URL changes as well
   if (shouldBlockRoute && isFetched && !isFetching) {
     setLocation("/prelaunch");
   }
@@ -138,7 +138,6 @@ function usePrelaunchGuard() {
 }
 
 function PageTracker() {
-  // Track page views for analytics (separate component to avoid hook issues)
   usePageTracking();
   return null;
 }
@@ -148,18 +147,13 @@ function Router() {
   const { isLoading: prelaunchLoading } = usePrelaunchGuard();
   const [location] = useLocation();
 
-  // Show loading screen while checking prelaunch status
   if (prelaunchLoading) {
     return <LoadingScreen />;
   }
 
-  // Note: shouldBlockRoute now triggers a redirect in usePrelaunchGuard,
-  // so we no longer need to render Prelaunch here - the redirect handles it
-
-  // Admin routes and prelaunch are handled separately from the main app auth
   return (
     <Switch>
-      {/* Admin routes - independent from main app auth */}
+      {/* Admin routes */}
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin" component={AdminHome} />
       <Route path="/admin/contacts" component={AdminContacts} />
@@ -173,12 +167,11 @@ function Router() {
       <Route path="/admin/blogs" component={AdminBlogs} />
       <Route path="/admin/reviews" component={AdminReviews} />
       <Route path="/admin/qr-reviews" component={AdminQRReviews} />
-      {/* Affiliate routes - independent from main app auth */}
+      {/* Affiliate routes */}
       <Route path="/affiliate/login" component={AffiliateLogin} />
       <Route path="/affiliate/dashboard" component={AffiliateDashboard} />
 
-
-      {/* Prelaunch page - accessible anytime */}
+      {/* Prelaunch */}
       <Route path="/prelaunch" component={Prelaunch} />
 
       {/* Main app routes */}
@@ -197,54 +190,44 @@ function Router() {
                 <Route path="/terms" component={TermsOfService} />
                 <Route path="/blog/:slug" component={BlogPostPage} />
                 <Route path="/blog" component={BlogPage} />
-                <Route
-                  path="/google-permissions"
-                  component={GooglePermissions}
-                />
+                <Route path="/google-permissions" component={GooglePermissions} />
                 <Route component={Landing} />
               </Switch>
             );
           }
 
-          // Check if user needs to select a plan (pending status)
           if (user?.subscriptionStatus === "pending") {
-            // Pending users can only access /select-plan
             if (location !== "/select-plan") {
               return <Redirect to="/select-plan" />;
             }
             return <SelectPlan />;
           }
 
-          // Non-pending users should not access /select-plan - redirect to dashboard
           if (location === "/select-plan") {
             return <Redirect to="/" />;
           }
 
-          // Check if trial has expired and user has no active subscription
-          const isTrialExpired = (user?.subscriptionStatus === "trial" || user?.subscriptionStatus === "trialing") && 
-            user?.trialEndsAt && 
+          const isTrialExpired = (user?.subscriptionStatus === "trial" || user?.subscriptionStatus === "trialing") &&
+            user?.trialEndsAt &&
             new Date(user.trialEndsAt) < new Date();
-          
-          const isSubscriptionInactive = user?.subscriptionStatus === "canceled" || 
+
+          const isSubscriptionInactive = user?.subscriptionStatus === "canceled" ||
             user?.subscriptionStatus === "past_due";
-          
+
           const needsPaywall = isTrialExpired || isSubscriptionInactive;
 
-          // Expired trial users can only access /paywall and /billing
           if (needsPaywall) {
             const allowedPaywallPaths = ["/paywall", "/billing"];
             const isAllowedPath = allowedPaywallPaths.some(p => location === p || location.startsWith(p + "/"));
-            
+
             if (!isAllowedPath) {
               return <Redirect to="/paywall" />;
             }
-            
-            // Render paywall or billing page without sidebar for paywall
+
             if (location === "/paywall") {
               return <Paywall />;
             }
-            
-            // Allow billing page with sidebar
+
             return (
               <AuthenticatedLayout>
                 <Billing />
@@ -252,21 +235,16 @@ function Router() {
             );
           }
 
-          // Active users should not access /paywall - redirect to dashboard
           if (location === "/paywall") {
             return <Redirect to="/" />;
           }
 
           return (
             <Switch>
-              {/* Blog pages - public content, no sidebar */}
               <Route path="/blog/:slug" component={BlogPostPage} />
               <Route path="/blog" component={BlogPage} />
-              
-              {/* Onboarding page - no sidebar layout */}
               <Route path="/onboarding" component={Onboarding} />
-              
-              {/* Main authenticated app with sidebar */}
+
               <Route>
                 {() => (
                   <AuthenticatedLayout>

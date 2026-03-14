@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,16 +28,32 @@ import {
   X,
   RefreshCw,
   MessageSquare,
-  Filter,
   Loader2,
   Sparkles,
   ArrowUpDown,
+  Filter,
+  Store,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/lib/i18n";
-import { cleanGoogleTranslationLabels } from "@/lib/utils";
+import { cleanGoogleTranslationLabels, cn } from "@/lib/utils";
 import type { ReviewWithRestaurant, Restaurant } from "@shared/schema";
 import { ReplyUsageCard, useReplyUsage } from "@/components/reply-usage-card";
+import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
+
+const STATUS_STYLES: Record<string, string> = {
+  pending: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+  approved: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+  posted: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+  dismissed: "bg-muted text-muted-foreground",
+};
+
+const SENTIMENT_STYLES: Record<string, string> = {
+  positive: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+  negative: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+  neutral: "bg-muted text-muted-foreground",
+};
 
 function ReviewCard({
   review,
@@ -59,152 +74,140 @@ function ReviewCard({
   isLimitReached?: boolean;
   t: (key: string) => string;
 }) {
-  const sentimentColor = {
-    positive: "text-green-600 bg-green-50 dark:bg-green-900/20",
-    negative: "text-red-600 bg-red-50 dark:bg-red-900/20",
-    neutral: "text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20",
-  };
-
-  const statusColor = {
-    pending: "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400",
-    approved: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400",
-    posted: "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400",
-    dismissed: "bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-400",
-  };
-
-  const getSentimentLabel = (sentiment: string) => {
-    const key = `reviews.sentiment.${sentiment}`;
-    return t(key);
-  };
-
-  const getStatusLabel = (status: string) => {
-    const key = `reviews.status.${status}`;
-    return t(key);
-  };
-
-  const getLanguageLabel = (lang: string) => {
-    const key = `reviews.languages.${lang}`;
-    return t(key);
-  };
-
   return (
-    <Card className="hover-elevate">
-      <CardContent className="p-4 sm:p-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-4">
-          <div className="flex items-start gap-3 min-w-0 flex-1">
-            <Avatar className="h-10 w-10 sm:h-12 sm:w-12 shrink-0">
-              <AvatarImage src={review.reviewerPhotoUrl || undefined} className="object-cover" />
-              <AvatarFallback>
-                {review.reviewerName?.[0]?.toUpperCase() || "U"}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-medium truncate">{review.reviewerName || t("reviews.anonymous")}</span>
-                <div className="flex items-center gap-0.5 shrink-0">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${
-                        i < review.rating
-                          ? "fill-yellow-400 text-yellow-400"
-                          : "text-gray-300 dark:text-gray-600"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-muted-foreground mt-1 flex-wrap">
-                <span className="truncate max-w-[120px] sm:max-w-none">{review.restaurant?.name}</span>
-                <span className="text-muted-foreground/50">|</span>
-                <span>{getLanguageLabel(review.language || "en")}</span>
-                {review.reviewedAt && (
-                  <>
-                    <span className="text-muted-foreground/50 hidden sm:inline">|</span>
-                    <span className="hidden sm:inline">{new Date(review.reviewedAt).toLocaleDateString()}</span>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            {review.sentiment && (
-              <Badge
-                variant="secondary"
-                className={`text-xs ${sentimentColor[review.sentiment as keyof typeof sentimentColor] || ""}`}
-              >
-                {getSentimentLabel(review.sentiment)}
-              </Badge>
-            )}
-            <Badge
-              variant="secondary"
-              className={`text-xs ${statusColor[review.replyStatus as keyof typeof statusColor] || ""}`}
-            >
-              {getStatusLabel(review.replyStatus || "pending")}
-            </Badge>
-          </div>
-        </div>
-
-        {/* Review Text */}
-        <div className="bg-muted/50 rounded-lg p-4 mb-4">
-          <p className="text-sm">{cleanGoogleTranslationLabels(review.comment) || t("reviews.noComment")}</p>
-        </div>
-
-        {/* Generated Reply Preview */}
-        {review.generatedReply && review.replyStatus === "pending" && (
-          <div className="border rounded-lg p-4 mb-4">
-            <div className="flex items-center gap-2 mb-2">
-              <MessageSquare className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">{t("reviews.aiGeneratedReply")}</span>
-            </div>
-            <p className="text-sm text-muted-foreground line-clamp-3">
-              {review.generatedReply}
-            </p>
-          </div>
-        )}
-
-        {/* Posted Reply */}
-        {review.postedReply && review.replyStatus === "posted" && (
-          <div className="border border-green-200 dark:border-green-900 bg-green-50/50 dark:bg-green-900/10 rounded-lg p-4 mb-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Check className="h-4 w-4 text-green-600" />
-              <span className="text-sm font-medium text-green-700 dark:text-green-400">
-                {t("reviews.postedReply")}
+    <div className="rounded-xl border border-border bg-card overflow-hidden hover:border-border/80 transition-colors">
+      {/* Card header */}
+      <div className="px-4 py-3.5 flex items-start justify-between gap-3">
+        <div className="flex items-start gap-3 min-w-0">
+          <Avatar className="h-9 w-9 shrink-0">
+            <AvatarImage src={review.reviewerPhotoUrl || undefined} className="object-cover" />
+            <AvatarFallback className="text-xs bg-muted font-medium">
+              {review.reviewerName?.[0]?.toUpperCase() || "U"}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-medium text-sm text-foreground">
+                {review.reviewerName || t("reviews.anonymous")}
               </span>
+              <div className="flex items-center gap-0.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    className={cn(
+                      "h-3 w-3",
+                      i < review.rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/30"
+                    )}
+                  />
+                ))}
+              </div>
             </div>
-            <p className="text-sm text-muted-foreground">{review.postedReply}</p>
+            <div className="flex items-center gap-2 mt-0.5 text-xs text-muted-foreground flex-wrap">
+              <span className="flex items-center gap-1">
+                <Store className="h-2.5 w-2.5" />
+                {review.restaurant?.name}
+              </span>
+              {review.reviewedAt && (
+                <>
+                  <span>·</span>
+                  <span>{new Date(review.reviewedAt).toLocaleDateString()}</span>
+                </>
+              )}
+            </div>
           </div>
-        )}
+        </div>
 
-        {/* Actions */}
-        {review.replyStatus === "pending" && (
-          <div className="flex items-center gap-2 flex-wrap">
-            <Button size="sm" onClick={onApprove} disabled={isLimitReached} data-testid={`button-approve-${review.id}`}>
-              <Check className="mr-1 h-4 w-4" />
-              {t("reviews.actions.approvePost")}
-            </Button>
-            <Button size="sm" variant="outline" onClick={onViewDetails} data-testid={`button-edit-${review.id}`}>
-              {t("reviews.actions.editReply")}
-            </Button>
-            <Button 
-              size="sm" 
-              variant="ghost" 
-              onClick={onRegenerate} 
-              disabled={isRegenerating}
-              data-testid={`button-regenerate-${review.id}`}
-            >
-              <RefreshCw className={`mr-1 h-4 w-4 ${isRegenerating ? "animate-spin" : ""}`} />
-              {isRegenerating ? t("reviews.actions.regenerating") : t("reviews.actions.regenerate")}
-            </Button>
-            <Button size="sm" variant="ghost" onClick={onDismiss} data-testid={`button-dismiss-${review.id}`}>
-              <X className="mr-1 h-4 w-4" />
-              {t("reviews.actions.dismiss")}
-            </Button>
+        <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
+          {review.sentiment && (
+            <span className={cn("text-xs font-medium px-2 py-0.5 rounded-full", SENTIMENT_STYLES[review.sentiment] || SENTIMENT_STYLES.neutral)}>
+              {t(`reviews.sentiment.${review.sentiment}`)}
+            </span>
+          )}
+          <span className={cn("text-xs font-medium px-2 py-0.5 rounded-full", STATUS_STYLES[review.replyStatus || "pending"])}>
+            {t(`reviews.status.${review.replyStatus || "pending"}`)}
+          </span>
+        </div>
+      </div>
+
+      {/* Review text */}
+      <div className="px-4 pb-3">
+        <p className="text-sm text-foreground/80 leading-relaxed">
+          {cleanGoogleTranslationLabels(review.comment) || (
+            <span className="text-muted-foreground italic">{t("reviews.noComment")}</span>
+          )}
+        </p>
+      </div>
+
+      {/* Generated reply preview */}
+      {review.generatedReply && review.replyStatus === "pending" && (
+        <div className="mx-4 mb-3 rounded-lg bg-primary/5 border border-primary/15 p-3">
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <Sparkles className="h-3.5 w-3.5 text-primary" />
+            <span className="text-xs font-medium text-primary">{t("reviews.aiGeneratedReply")}</span>
           </div>
-        )}
-      </CardContent>
-    </Card>
+          <p className="text-xs text-foreground/70 leading-relaxed line-clamp-3">
+            {review.generatedReply}
+          </p>
+        </div>
+      )}
+
+      {/* Posted reply */}
+      {review.postedReply && review.replyStatus === "posted" && (
+        <div className="mx-4 mb-3 rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900 p-3">
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <Check className="h-3.5 w-3.5 text-green-600" />
+            <span className="text-xs font-medium text-green-700 dark:text-green-400">{t("reviews.postedReply")}</span>
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed">{review.postedReply}</p>
+        </div>
+      )}
+
+      {/* Action bar */}
+      {review.replyStatus === "pending" && (
+        <div className="px-4 py-2.5 border-t border-border bg-muted/30 flex items-center gap-2 flex-wrap">
+          <Button
+            size="sm"
+            className="h-7 text-xs gap-1.5"
+            onClick={onApprove}
+            disabled={isLimitReached}
+            data-testid={`button-approve-${review.id}`}
+          >
+            <Check className="h-3 w-3" />
+            {t("reviews.actions.approvePost")}
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-7 text-xs"
+            onClick={onViewDetails}
+            data-testid={`button-edit-${review.id}`}
+          >
+            {t("reviews.actions.editReply")}
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-7 text-xs gap-1.5"
+            onClick={onRegenerate}
+            disabled={isRegenerating}
+            data-testid={`button-regenerate-${review.id}`}
+          >
+            <RefreshCw className={cn("h-3 w-3", isRegenerating && "animate-spin")} />
+            {isRegenerating ? t("reviews.actions.regenerating") : t("reviews.actions.regenerate")}
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-7 text-xs gap-1.5 text-muted-foreground hover:text-foreground ml-auto"
+            onClick={onDismiss}
+            data-testid={`button-dismiss-${review.id}`}
+          >
+            <X className="h-3 w-3" />
+            {t("reviews.actions.dismiss")}
+          </Button>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -235,18 +238,11 @@ export default function Reviews() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/reviews"] });
       queryClient.invalidateQueries({ queryKey: ["/api/dashboard/stats"] });
-      toast({
-        title: t("reviews.toasts.replyPosted"),
-        description: t("reviews.toasts.replyPostedDesc"),
-      });
+      toast({ title: t("reviews.toasts.replyPosted"), description: t("reviews.toasts.replyPostedDesc") });
       setSelectedReview(null);
     },
     onError: () => {
-      toast({
-        title: t("reviews.toasts.error"),
-        description: t("reviews.toasts.errorPost"),
-        variant: "destructive",
-      });
+      toast({ title: t("reviews.toasts.error"), description: t("reviews.toasts.errorPost"), variant: "destructive" });
     },
   });
 
@@ -256,10 +252,7 @@ export default function Reviews() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/reviews"] });
-      toast({
-        title: t("reviews.toasts.reviewDismissed"),
-        description: t("reviews.toasts.reviewDismissedDesc"),
-      });
+      toast({ title: t("reviews.toasts.reviewDismissed"), description: t("reviews.toasts.reviewDismissedDesc") });
     },
   });
 
@@ -270,19 +263,12 @@ export default function Reviews() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/reviews"] });
-      toast({
-        title: t("reviews.toasts.replyRegenerated"),
-        description: t("reviews.toasts.replyRegeneratedDesc"),
-      });
+      toast({ title: t("reviews.toasts.replyRegenerated"), description: t("reviews.toasts.replyRegeneratedDesc") });
       setRegeneratingReviewId(null);
     },
     onError: () => {
       setRegeneratingReviewId(null);
-      toast({
-        title: t("reviews.toasts.error"),
-        description: t("reviews.toasts.errorRegenerate"),
-        variant: "destructive",
-      });
+      toast({ title: t("reviews.toasts.error"), description: t("reviews.toasts.errorRegenerate"), variant: "destructive" });
     },
   });
 
@@ -291,57 +277,31 @@ export default function Reviews() {
       const response = await apiRequest("POST", "/api/reviews/generate-all");
       return response.json() as Promise<{ generated: number; skipped: number }>;
     },
-    onSuccess: (data: { generated: number; skipped: number }) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["/api/reviews"] });
-      if (data.skipped > 0) {
-        toast({
-          title: t("reviews.toasts.allGenerated"),
-          description: t("reviews.toasts.allGeneratedPartial")
-            .replace("{generated}", String(data.generated))
-            .replace("{skipped}", String(data.skipped)),
-        });
-      } else {
-        toast({
-          title: t("reviews.toasts.allGenerated"),
-          description: t("reviews.toasts.allGeneratedDesc").replace("{count}", String(data.generated)),
-        });
-      }
+      const desc = data.skipped > 0
+        ? t("reviews.toasts.allGeneratedPartial").replace("{generated}", String(data.generated)).replace("{skipped}", String(data.skipped))
+        : t("reviews.toasts.allGeneratedDesc").replace("{count}", String(data.generated));
+      toast({ title: t("reviews.toasts.allGenerated"), description: desc });
     },
     onError: () => {
-      toast({
-        title: t("reviews.toasts.error"),
-        description: t("reviews.toasts.errorGenerateAll"),
-        variant: "destructive",
-      });
+      toast({ title: t("reviews.toasts.error"), description: t("reviews.toasts.errorGenerateAll"), variant: "destructive" });
     },
   });
 
   const handleSyncReviews = async () => {
     if (!filterRestaurant || filterRestaurant === "all") {
-      toast({
-        title: t("reviews.toasts.selectRestaurant"),
-        description: t("reviews.toasts.selectRestaurantDesc"),
-        variant: "destructive",
-      });
+      toast({ title: t("reviews.toasts.selectRestaurant"), description: t("reviews.toasts.selectRestaurantDesc"), variant: "destructive" });
       return;
     }
-    
     setIsSyncing(true);
     try {
       const response = await apiRequest("POST", "/api/reviews/resync", { restaurantId: filterRestaurant });
       const data = await response.json();
-      
       queryClient.invalidateQueries({ queryKey: ["/api/reviews"] });
-      toast({
-        title: t("reviews.toasts.syncSuccess"),
-        description: t("reviews.toasts.syncSuccessDesc").replace("{count}", String(data.synced || 0)),
-      });
-    } catch (error) {
-      toast({
-        title: t("reviews.toasts.error"),
-        description: t("reviews.toasts.errorSync"),
-        variant: "destructive",
-      });
+      toast({ title: t("reviews.toasts.syncSuccess"), description: t("reviews.toasts.syncSuccessDesc").replace("{count}", String(data.synced || 0)) });
+    } catch {
+      toast({ title: t("reviews.toasts.error"), description: t("reviews.toasts.errorSync"), variant: "destructive" });
     } finally {
       setIsSyncing(false);
     }
@@ -361,9 +321,7 @@ export default function Reviews() {
 
   const pendingCount = reviews?.filter((r) => r.replyStatus === "pending").length || 0;
   const postedCount = reviews?.filter((r) => r.replyStatus === "posted").length || 0;
-  const pendingWithoutReplyCount = reviews?.filter(
-    (r) => r.replyStatus === "pending" && !r.generatedReply
-  ).length || 0;
+  const pendingWithoutReplyCount = reviews?.filter(r => r.replyStatus === "pending" && !r.generatedReply).length || 0;
 
   const handleApprove = (review: ReviewWithRestaurant) => {
     if (review.generatedReply) {
@@ -371,202 +329,170 @@ export default function Reviews() {
     }
   };
 
-  const handleViewDetails = (review: ReviewWithRestaurant) => {
-    setSelectedReview(review);
-    setEditedReply(review.generatedReply || "");
-  };
-
   return (
-    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-full overflow-x-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="min-w-0">
-          <h1 className="text-2xl sm:text-3xl font-semibold">{t("reviews.title")}</h1>
-          <p className="text-muted-foreground mt-1 text-sm sm:text-base">
-            {t("reviews.subtitle")}
-          </p>
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <Button
-            variant="outline"
-            onClick={handleSyncReviews}
-            disabled={isSyncing || filterRestaurant === "all"}
-            data-testid="button-sync-reviews"
-          >
-            {isSyncing ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t("reviews.syncing")}
-              </>
-            ) : (
-              <>
-                <RefreshCw className="mr-2 h-4 w-4" />
-                {t("reviews.syncReviews")}
-              </>
-            )}
-          </Button>
-          {pendingWithoutReplyCount > 0 && (
+    <div className="p-6 space-y-5 max-w-5xl mx-auto">
+      <PageHeader
+        title={t("reviews.title")}
+        subtitle={t("reviews.subtitle")}
+        actions={
+          <>
             <Button
-              onClick={() => generateAllMutation.mutate()}
-              disabled={generateAllMutation.isPending || isLimitReached}
-              data-testid="button-generate-all"
+              variant="outline"
+              size="sm"
+              onClick={handleSyncReviews}
+              disabled={isSyncing || filterRestaurant === "all"}
+              data-testid="button-sync-reviews"
             >
-              {generateAllMutation.isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("reviews.toasts.generatingAll")}
-                </>
-              ) : (
-                <>
-                  <Sparkles className="mr-2 h-4 w-4" />
-                  {t("reviews.generateAllPending").replace("{count}", String(pendingWithoutReplyCount))}
-                </>
-              )}
+              {isSyncing ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="mr-1.5 h-3.5 w-3.5" />}
+              {isSyncing ? t("reviews.syncing") : t("reviews.syncReviews")}
             </Button>
-          )}
-          <Select value={filterRestaurant} onValueChange={setFilterRestaurant}>
-            <SelectTrigger className="w-full sm:w-[180px]" data-testid="select-filter-restaurant">
-              <Filter className="mr-2 h-4 w-4 shrink-0" />
-              <SelectValue placeholder={t("reviews.allRestaurants")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t("reviews.allRestaurants")}</SelectItem>
-              {restaurants?.map((r) => (
-                <SelectItem key={r.id} value={r.id}>
-                  {r.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={sortOrder} onValueChange={(value: "newest" | "oldest") => setSortOrder(value)}>
-            <SelectTrigger className="w-full sm:w-[160px]" data-testid="select-sort-order">
-              <ArrowUpDown className="mr-2 h-4 w-4 shrink-0" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="newest">{t("reviews.sort.newest")}</SelectItem>
-              <SelectItem value="oldest">{t("reviews.sort.oldest")}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+            {pendingWithoutReplyCount > 0 && (
+              <Button
+                size="sm"
+                onClick={() => generateAllMutation.mutate()}
+                disabled={generateAllMutation.isPending || isLimitReached}
+                data-testid="button-generate-all"
+              >
+                {generateAllMutation.isPending
+                  ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                  : <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                }
+                {t("reviews.generateAllPending").replace("{count}", String(pendingWithoutReplyCount))}
+              </Button>
+            )}
+          </>
+        }
+      />
+
+      {/* Filters row */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <Select value={filterRestaurant} onValueChange={setFilterRestaurant}>
+          <SelectTrigger className="h-8 w-auto min-w-[160px] text-xs" data-testid="select-filter-restaurant">
+            <Filter className="mr-1.5 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            <SelectValue placeholder={t("reviews.allRestaurants")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("reviews.allRestaurants")}</SelectItem>
+            {restaurants?.map((r) => (
+              <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={sortOrder} onValueChange={(v: "newest" | "oldest") => setSortOrder(v)}>
+          <SelectTrigger className="h-8 w-auto min-w-[140px] text-xs" data-testid="select-sort-order">
+            <ArrowUpDown className="mr-1.5 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="newest">{t("reviews.sort.newest")}</SelectItem>
+            <SelectItem value="oldest">{t("reviews.sort.oldest")}</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      <ReplyUsageCard data-testid="reply-usage-card" />
+      <ReplyUsageCard variant="compact" />
 
+      {/* Tabs */}
       <Tabs value={filterStatus} onValueChange={setFilterStatus}>
-        <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-          <TabsList className="w-max sm:w-auto">
-          <TabsTrigger value="all" data-testid="tab-all">
-            {t("reviews.tabs.all")} ({reviews?.length || 0})
+        <TabsList className="h-8">
+          <TabsTrigger value="all" className="text-xs h-6 px-3" data-testid="tab-all">
+            {t("reviews.tabs.all")}
+            <span className="ml-1.5 bg-muted text-muted-foreground text-[10px] font-semibold rounded-full px-1.5 py-0.5 leading-none">
+              {reviews?.length || 0}
+            </span>
           </TabsTrigger>
-          <TabsTrigger value="pending" data-testid="tab-pending">
-            {t("reviews.tabs.pending")} ({pendingCount})
+          <TabsTrigger value="pending" className="text-xs h-6 px-3" data-testid="tab-pending">
+            {t("reviews.tabs.pending")}
+            {pendingCount > 0 && (
+              <span className="ml-1.5 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-[10px] font-semibold rounded-full px-1.5 py-0.5 leading-none">
+                {pendingCount}
+              </span>
+            )}
           </TabsTrigger>
-          <TabsTrigger value="posted" data-testid="tab-posted">
-            {t("reviews.tabs.posted")} ({postedCount})
+          <TabsTrigger value="posted" className="text-xs h-6 px-3" data-testid="tab-posted">
+            {t("reviews.tabs.posted")}
+            {postedCount > 0 && (
+              <span className="ml-1.5 bg-muted text-muted-foreground text-[10px] font-semibold rounded-full px-1.5 py-0.5 leading-none">
+                {postedCount}
+              </span>
+            )}
           </TabsTrigger>
-          <TabsTrigger value="dismissed" data-testid="tab-dismissed">
+          <TabsTrigger value="dismissed" className="text-xs h-6 px-3" data-testid="tab-dismissed">
             {t("reviews.tabs.dismissed")}
           </TabsTrigger>
-          </TabsList>
-        </div>
+        </TabsList>
 
-        <TabsContent value={filterStatus} className="mt-6">
-          <div className="space-y-4">
-            {isLoading ? (
-              Array.from({ length: 3 }).map((_, i) => (
-                <Card key={i}>
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <Skeleton className="h-12 w-12 rounded-full" />
-                      <div className="flex-1 space-y-2">
-                        <Skeleton className="h-5 w-48" />
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-3/4" />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            ) : filteredReviews && filteredReviews.length > 0 ? (
-              filteredReviews.map((review) => (
-                <ReviewCard
-                  key={review.id}
-                  review={review}
-                  onApprove={() => handleApprove(review)}
-                  onDismiss={() => dismissMutation.mutate(review.id)}
-                  onRegenerate={() => regenerateMutation.mutate(review.id)}
-                  onViewDetails={() => handleViewDetails(review)}
-                  isRegenerating={regeneratingReviewId === review.id}
-                  isLimitReached={isLimitReached}
-                  t={t}
-                />
-              ))
-            ) : (
-              <Card>
-                <CardContent className="py-12 text-center">
-                  <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="font-medium">{t("reviews.noReviewsFound")}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {filterStatus === "pending"
-                      ? t("reviews.allResponded")
-                      : t("reviews.noMatchFilters")}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-          </div>
+        <TabsContent value={filterStatus} className="mt-4 space-y-3">
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} className="h-32 w-full rounded-xl" />
+            ))
+          ) : filteredReviews && filteredReviews.length > 0 ? (
+            filteredReviews.map((review) => (
+              <ReviewCard
+                key={review.id}
+                review={review}
+                onApprove={() => handleApprove(review)}
+                onDismiss={() => dismissMutation.mutate(review.id)}
+                onRegenerate={() => regenerateMutation.mutate(review.id)}
+                onViewDetails={() => { setSelectedReview(review); setEditedReply(review.generatedReply || ""); }}
+                isRegenerating={regeneratingReviewId === review.id}
+                isLimitReached={isLimitReached}
+                t={t}
+              />
+            ))
+          ) : (
+            <div className="rounded-xl border border-border bg-card">
+              <EmptyState
+                icon={<MessageSquare className="h-5 w-5" />}
+                title={t("reviews.noReviewsFound")}
+                description={filterStatus === "pending" ? t("reviews.allResponded") : t("reviews.noMatchFilters")}
+              />
+            </div>
+          )}
         </TabsContent>
       </Tabs>
 
       {/* Edit Reply Dialog */}
       <Dialog open={!!selectedReview} onOpenChange={() => setSelectedReview(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle>{t("reviews.editDialog.title")}</DialogTitle>
-            <DialogDescription>
-              {t("reviews.editDialog.description")}
-            </DialogDescription>
+            <DialogDescription>{t("reviews.editDialog.description")}</DialogDescription>
           </DialogHeader>
-
           {selectedReview && (
             <div className="space-y-4">
-              {/* Original Review */}
               <div>
-                <label className="text-sm font-medium mb-2 block">{t("reviews.editDialog.originalReview")}</label>
-                <div className="bg-muted/50 rounded-lg p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="font-medium">{selectedReview.reviewerName}</span>
+                <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2 block">
+                  {t("reviews.editDialog.originalReview")}
+                </label>
+                <div className="rounded-lg bg-muted/50 p-3.5 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">{selectedReview.reviewerName}</span>
                     <div className="flex items-center gap-0.5">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-3 w-3 ${
-                            i < selectedReview.rating
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                        />
+                        <Star key={i} className={cn("h-3 w-3", i < selectedReview.rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/30")} />
                       ))}
                     </div>
                   </div>
-                  <p className="text-sm">{selectedReview.comment}</p>
+                  <p className="text-sm text-foreground/80 leading-relaxed">{selectedReview.comment}</p>
                 </div>
               </div>
-
-              {/* Editable Reply */}
               <div>
-                <label className="text-sm font-medium mb-2 block">{t("reviews.editDialog.yourReply")}</label>
+                <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2 block">
+                  {t("reviews.editDialog.yourReply")}
+                </label>
                 <Textarea
                   value={editedReply}
                   onChange={(e) => setEditedReply(e.target.value)}
-                  rows={6}
+                  rows={5}
                   placeholder={t("reviews.editDialog.placeholder")}
+                  className="resize-none"
                   data-testid="textarea-edit-reply"
                 />
               </div>
             </div>
           )}
-
           <DialogFooter>
             <Button variant="outline" onClick={() => setSelectedReview(null)}>
               {t("common.cancel")}
@@ -574,18 +500,13 @@ export default function Reviews() {
             <Button
               onClick={() => {
                 if (selectedReview) {
-                  approveMutation.mutate({
-                    reviewId: selectedReview.id,
-                    reply: editedReply,
-                  });
+                  approveMutation.mutate({ reviewId: selectedReview.id, reply: editedReply });
                 }
               }}
               disabled={approveMutation.isPending || !editedReply.trim()}
               data-testid="button-post-reply"
             >
-              {approveMutation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
+              {approveMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t("reviews.editDialog.postReply")}
             </Button>
           </DialogFooter>

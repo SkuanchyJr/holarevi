@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,167 +23,94 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Palette,
-  Plus,
-  Trash2,
-  Edit,
-  Loader2,
-  Lock,
-  Sparkles,
-} from "lucide-react";
+import { Palette, Plus, Trash2, Edit, Loader2, Lock, Sparkles } from "lucide-react";
 import type { TonePreset } from "@shared/schema";
 import { useLanguage } from "@/lib/i18n";
+import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
+import { cn } from "@/lib/utils";
+
+const STYLE_COLORS: Record<string, string> = {
+  friendly: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+  formal: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+  casual: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
+  professional: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
+  warm: "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400",
+  mediterranean: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+};
 
 export default function TonePresets() {
   const { toast } = useToast();
   const { t } = useLanguage();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPreset, setEditingPreset] = useState<TonePreset | null>(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    style: "friendly",
-    instructions: "",
-  });
+  const [formData, setFormData] = useState({ name: "", description: "", style: "friendly", instructions: "" });
 
   const toneStyles = [
-    {
-      value: "friendly",
-      label: t("tonePresets.styles.friendly"),
-      description: t("tonePresets.styles.friendlyDesc"),
-    },
-    {
-      value: "formal",
-      label: t("tonePresets.styles.formal"),
-      description: t("tonePresets.styles.formalDesc"),
-    },
-    {
-      value: "casual",
-      label: t("tonePresets.styles.casual"),
-      description: t("tonePresets.styles.casualDesc"),
-    },
-    {
-      value: "professional",
-      label: t("tonePresets.styles.professional"),
-      description: t("tonePresets.styles.professionalDesc"),
-    },
-    {
-      value: "warm",
-      label: t("tonePresets.styles.warm"),
-      description: t("tonePresets.styles.warmDesc"),
-    },
+    { value: "friendly", label: t("tonePresets.styles.friendly"), description: t("tonePresets.styles.friendlyDesc") },
+    { value: "formal", label: t("tonePresets.styles.formal"), description: t("tonePresets.styles.formalDesc") },
+    { value: "casual", label: t("tonePresets.styles.casual"), description: t("tonePresets.styles.casualDesc") },
+    { value: "professional", label: t("tonePresets.styles.professional"), description: t("tonePresets.styles.professionalDesc") },
+    { value: "warm", label: t("tonePresets.styles.warm"), description: t("tonePresets.styles.warmDesc") },
   ];
 
-  const { data: presets, isLoading: loadingPresets } = useQuery<TonePreset[]>({
-    queryKey: ["/api/tone-presets"],
-  });
-
-  const { data: planInfo } = useQuery<any>({
-    queryKey: ["/api/plan-info"],
-  });
+  const { data: presets, isLoading } = useQuery<TonePreset[]>({ queryKey: ["/api/tone-presets"] });
+  const { data: planInfo } = useQuery<any>({ queryKey: ["/api/plan-info"] });
 
   const createPreset = useMutation({
-    mutationFn: async (data: typeof formData) => {
-      const res = await apiRequest("POST", "/api/tone-presets", data);
-      return res.json();
-    },
+    mutationFn: async (data: typeof formData) => (await apiRequest("POST", "/api/tone-presets", data)).json(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/tone-presets"] });
       queryClient.invalidateQueries({ queryKey: ["/api/plan-info"] });
       resetForm();
-      toast({
-        title: t("tonePresets.toasts.created"),
-        description: t("tonePresets.toasts.createdDesc"),
-      });
+      toast({ title: t("tonePresets.toasts.created"), description: t("tonePresets.toasts.createdDesc") });
     },
     onError: (error: any) => {
-      const message =
-        error?.error === "tone_preset_limit_reached"
-          ? error?.message || t("tonePresets.limitReached")
-          : t("tonePresets.toasts.errorCreate");
-      toast({
-        title: t("tonePresets.toasts.error"),
-        description: message,
-        variant: "destructive",
-      });
+      toast({ title: t("tonePresets.toasts.error"), description: error?.message || t("tonePresets.toasts.errorCreate"), variant: "destructive" });
     },
   });
 
   const updatePreset = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: typeof formData }) => {
-      const res = await apiRequest("PATCH", `/api/tone-presets/${id}`, data);
-      return res.json();
-    },
+    mutationFn: async ({ id, data }: { id: string; data: typeof formData }) =>
+      (await apiRequest("PATCH", `/api/tone-presets/${id}`, data)).json(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/tone-presets"] });
       resetForm();
-      toast({
-        title: t("tonePresets.toasts.updated"),
-        description: t("tonePresets.toasts.updatedDesc"),
-      });
+      toast({ title: t("tonePresets.toasts.updated"), description: t("tonePresets.toasts.updatedDesc") });
     },
     onError: () => {
-      toast({
-        title: t("tonePresets.toasts.error"),
-        description: t("tonePresets.toasts.errorUpdate"),
-        variant: "destructive",
-      });
+      toast({ title: t("tonePresets.toasts.error"), description: t("tonePresets.toasts.errorUpdate"), variant: "destructive" });
     },
   });
 
   const deletePreset = useMutation({
-    mutationFn: async (id: string) => {
-      const res = await apiRequest("DELETE", `/api/tone-presets/${id}`);
-      return res.json();
-    },
+    mutationFn: async (id: string) => (await apiRequest("DELETE", `/api/tone-presets/${id}`)).json(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/tone-presets"] });
       queryClient.invalidateQueries({ queryKey: ["/api/plan-info"] });
-      toast({
-        title: t("tonePresets.toasts.deleted"),
-        description: t("tonePresets.toasts.deletedDesc"),
-      });
+      toast({ title: t("tonePresets.toasts.deleted"), description: t("tonePresets.toasts.deletedDesc") });
     },
     onError: () => {
-      toast({
-        title: t("tonePresets.toasts.error"),
-        description: t("tonePresets.toasts.errorDelete"),
-        variant: "destructive",
-      });
+      toast({ title: t("tonePresets.toasts.error"), description: t("tonePresets.toasts.errorDelete"), variant: "destructive" });
     },
   });
 
   const resetForm = () => {
     setIsDialogOpen(false);
     setEditingPreset(null);
-    setFormData({
-      name: "",
-      description: "",
-      style: "friendly",
-      instructions: "",
-    });
+    setFormData({ name: "", description: "", style: "friendly", instructions: "" });
   };
 
   const openEditDialog = (preset: TonePreset) => {
     setEditingPreset(preset);
-    setFormData({
-      name: preset.name,
-      description: preset.description || "",
-      style: preset.style || "friendly",
-      instructions: preset.instructions || "",
-    });
+    setFormData({ name: preset.name, description: preset.description || "", style: preset.style || "friendly", instructions: preset.instructions || "" });
     setIsDialogOpen(true);
   };
 
   const handleSubmit = () => {
     if (!formData.name) return;
-
-    if (editingPreset) {
-      updatePreset.mutate({ id: editingPreset.id, data: formData });
-    } else {
-      createPreset.mutate(formData);
-    }
+    if (editingPreset) updatePreset.mutate({ id: editingPreset.id, data: formData });
+    else createPreset.mutate(formData);
   };
 
   const currentCount = planInfo?.currentUsage?.tonePresets || 0;
@@ -199,252 +119,142 @@ export default function TonePresets() {
   const canAddMore = isUnlimited || currentCount < (limit as number);
 
   return (
-    <div className="p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header + botón crear preset */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold" data-testid="text-presets-title">
-              {t("tonePresets.title")}
-            </h1>
-            <p className="text-muted-foreground">{t("tonePresets.subtitle")}</p>
-          </div>
-          <Dialog
-            open={isDialogOpen}
-            onOpenChange={(open) => {
-              if (!open) resetForm();
-              else setIsDialogOpen(true);
-            }}
-          >
+    <div className="p-6 space-y-6 max-w-3xl mx-auto">
+      <PageHeader
+        title={t("tonePresets.title")}
+        subtitle={t("tonePresets.subtitle")}
+        actions={
+          <Dialog open={isDialogOpen} onOpenChange={(open) => { if (!open) resetForm(); else setIsDialogOpen(true); }}>
             <DialogTrigger asChild>
-              <Button
-                disabled={!canAddMore && !editingPreset}
-                data-testid="button-create-preset"
-              >
-                <Plus className="w-4 h-4 mr-2" />
+              <Button size="sm" disabled={!canAddMore && !editingPreset} data-testid="button-create-preset">
+                <Plus className="mr-1.5 h-3.5 w-3.5" />
                 {t("tonePresets.createPreset")}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-lg">
               <DialogHeader>
-                <DialogTitle>
-                  {editingPreset
-                    ? t("tonePresets.dialog.editTitle")
-                    : t("tonePresets.dialog.createTitle")}
-                </DialogTitle>
-                <DialogDescription>
-                  {t("tonePresets.dialog.description")}
-                </DialogDescription>
+                <DialogTitle>{editingPreset ? t("tonePresets.dialog.editTitle") : t("tonePresets.dialog.createTitle")}</DialogTitle>
+                <DialogDescription>{t("tonePresets.dialog.description")}</DialogDescription>
               </DialogHeader>
-              <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">{t("tonePresets.dialog.name")}</Label>
-                  <Input
-                    id="name"
-                    placeholder={t("tonePresets.dialog.namePlaceholder")}
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                    data-testid="input-preset-name"
-                  />
+              <div className="space-y-4 py-2">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("tonePresets.dialog.name")}</Label>
+                  <Input placeholder={t("tonePresets.dialog.namePlaceholder")} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} data-testid="input-preset-name" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="style">{t("tonePresets.dialog.style")}</Label>
-                  <Select
-                    value={formData.style}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, style: value })
-                    }
-                  >
-                    <SelectTrigger data-testid="select-preset-style">
-                      <SelectValue />
-                    </SelectTrigger>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("tonePresets.dialog.style")}</Label>
+                  <Select value={formData.style} onValueChange={(v) => setFormData({ ...formData, style: v })}>
+                    <SelectTrigger data-testid="select-preset-style"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      {toneStyles.map((style) => (
-                        <SelectItem key={style.value} value={style.value}>
-                          <div>
-                            <span className="font-medium">{style.label}</span>
-                            <span className="text-muted-foreground ml-2 text-sm">
-                              - {style.description}
-                            </span>
-                          </div>
+                      {toneStyles.map((s) => (
+                        <SelectItem key={s.value} value={s.value}>
+                          <span className="font-medium">{s.label}</span>
+                          <span className="text-muted-foreground ml-2 text-xs">— {s.description}</span>
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">
-                    {t("tonePresets.dialog.descriptionLabel")}
-                  </Label>
-                  <Input
-                    id="description"
-                    placeholder={t("tonePresets.dialog.descriptionPlaceholder")}
-                    value={formData.description}
-                    onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
-                    }
-                    data-testid="input-preset-description"
-                  />
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("tonePresets.dialog.descriptionLabel")}</Label>
+                  <Input placeholder={t("tonePresets.dialog.descriptionPlaceholder")} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} data-testid="input-preset-description" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="instructions">
-                    {t("tonePresets.dialog.instructions")}
-                  </Label>
-                  <Textarea
-                    id="instructions"
-                    placeholder={t(
-                      "tonePresets.dialog.instructionsPlaceholder",
-                    )}
-                    value={formData.instructions}
-                    onChange={(e) =>
-                      setFormData({ ...formData, instructions: e.target.value })
-                    }
-                    className="min-h-[100px]"
-                    data-testid="textarea-preset-instructions"
-                  />
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("tonePresets.dialog.instructions")}</Label>
+                  <Textarea placeholder={t("tonePresets.dialog.instructionsPlaceholder")} value={formData.instructions} onChange={(e) => setFormData({ ...formData, instructions: e.target.value })} className="min-h-[90px] resize-none" data-testid="textarea-preset-instructions" />
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={resetForm}>
-                  {t("common.cancel")}
-                </Button>
-                <Button
-                  onClick={handleSubmit}
-                  disabled={
-                    !formData.name ||
-                    createPreset.isPending ||
-                    updatePreset.isPending
-                  }
-                  data-testid="button-save-preset"
-                >
-                  {(createPreset.isPending || updatePreset.isPending) && (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  )}
-                  {editingPreset
-                    ? t("common.saveChanges")
-                    : t("tonePresets.createPreset")}
+                <Button variant="outline" onClick={resetForm}>{t("common.cancel")}</Button>
+                <Button onClick={handleSubmit} disabled={!formData.name || createPreset.isPending || updatePreset.isPending} data-testid="button-save-preset">
+                  {(createPreset.isPending || updatePreset.isPending) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {editingPreset ? t("common.saveChanges") : t("tonePresets.createPreset")}
                 </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
+        }
+      />
+
+      {/* Usage bar */}
+      <div className="rounded-xl border border-border bg-card px-5 py-4">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-sm font-medium text-foreground">{t("tonePresets.presetLimit")}</p>
+          <p className="text-sm text-muted-foreground">
+            {isUnlimited
+              ? t("tonePresets.unlimitedPresets")
+              : t("tonePresets.presetsUsed").replace("{current}", String(currentCount)).replace("{limit}", String(limit))}
+          </p>
         </div>
+        {!isUnlimited && (
+          <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+            <div
+              className="h-full bg-primary rounded-full transition-all"
+              style={{ width: `${Math.min((currentCount / (limit as number)) * 100, 100)}%` }}
+            />
+          </div>
+        )}
+        {!canAddMore && (
+          <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1.5">
+            <Lock className="h-3 w-3" />
+            {t("tonePresets.upgradeToCreate")}
+          </p>
+        )}
+      </div>
 
-        {/* Barra de límite de presets */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">
-              {t("tonePresets.presetLimit")}
-            </CardTitle>
-            <CardDescription>
-              {isUnlimited
-                ? t("tonePresets.unlimitedPresets")
-                : t("tonePresets.presetsUsed")
-                    .replace("{current}", String(currentCount))
-                    .replace("{limit}", String(limit))}
-            </CardDescription>
-          </CardHeader>
-          {!isUnlimited && (
-            <CardContent>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div
-                  className="bg-primary h-2 rounded-full transition-all"
-                  style={{
-                    width: `${Math.min(
-                      (currentCount / (limit as number)) * 100,
-                      100,
-                    )}%`,
-                  }}
-                />
+      {/* Presets list */}
+      <div className="space-y-3">
+        {isLoading ? (
+          <div className="flex justify-center py-10">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : !presets?.length ? (
+          <div className="rounded-xl border border-border bg-card">
+            <EmptyState
+              icon={<Sparkles className="h-5 w-5" />}
+              title={t("tonePresets.noPresets")}
+              description={t("tonePresets.noPresetsDesc")}
+              action={
+                <Button size="sm" onClick={() => setIsDialogOpen(true)}>
+                  <Plus className="mr-1.5 h-3.5 w-3.5" />
+                  {t("tonePresets.createPreset")}
+                </Button>
+              }
+            />
+          </div>
+        ) : (
+          presets.map((preset) => (
+            <div key={preset.id} className="rounded-xl border border-border bg-card p-4 flex items-start justify-between gap-4" data-testid={`card-preset-${preset.id}`}>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                  <span className="font-semibold text-sm text-foreground">{preset.name}</span>
+                  <span className={cn("text-xs font-medium px-2 py-0.5 rounded-full", STYLE_COLORS[preset.style || "friendly"])}>
+                    {preset.style}
+                  </span>
+                  {preset.isDefault && (
+                    <span className="text-xs font-medium bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
+                      {t("tonePresets.default")}
+                    </span>
+                  )}
+                </div>
+                {preset.description && (
+                  <p className="text-xs text-muted-foreground mb-1">{preset.description}</p>
+                )}
+                {preset.instructions && (
+                  <p className="text-xs text-foreground/60 italic line-clamp-2">"{preset.instructions}"</p>
+                )}
               </div>
-              {!canAddMore && (
-                <p className="text-sm text-muted-foreground mt-2 flex items-center gap-2">
-                  <Lock className="w-4 h-4" />
-                  {t("tonePresets.upgradeToCreate")}
-                </p>
-              )}
-            </CardContent>
-          )}
-        </Card>
-
-        {/* Lista de presets */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Palette className="w-5 h-5" />
-              {t("tonePresets.yourPresets")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loadingPresets ? (
-              <div className="flex justify-center py-8">
-                <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+              <div className="flex items-center gap-1 shrink-0">
+                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEditDialog(preset)} data-testid={`button-edit-preset-${preset.id}`}>
+                  <Edit className="h-3.5 w-3.5" />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" onClick={() => deletePreset.mutate(preset.id)} disabled={deletePreset.isPending} data-testid={`button-delete-preset-${preset.id}`}>
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
               </div>
-            ) : !presets?.length ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>{t("tonePresets.noPresets")}</p>
-                <p className="text-sm">{t("tonePresets.noPresetsDesc")}</p>
-              </div>
-            ) : (
-              <div className="grid gap-4">
-                {presets.map((preset) => (
-                  <Card
-                    key={preset.id}
-                    className="bg-muted/30"
-                    data-testid={`card-preset-${preset.id}`}
-                  >
-                    <CardContent className="pt-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold">{preset.name}</h3>
-                            <Badge variant="outline">{preset.style}</Badge>
-                            {preset.isDefault && (
-                              <Badge variant="secondary">
-                                {t("tonePresets.default")}
-                              </Badge>
-                            )}
-                          </div>
-                          {preset.description && (
-                            <p className="text-sm text-muted-foreground mb-2">
-                              {preset.description}
-                            </p>
-                          )}
-                          {preset.instructions && (
-                            <p className="text-sm text-muted-foreground italic">
-                              "{preset.instructions}"
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => openEditDialog(preset)}
-                            data-testid={`button-edit-preset-${preset.id}`}
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => deletePreset.mutate(preset.id)}
-                            disabled={deletePreset.isPending}
-                            data-testid={`button-delete-preset-${preset.id}`}
-                          >
-                            <Trash2 className="w-4 h-4 text-destructive" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
