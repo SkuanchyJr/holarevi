@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,22 +30,78 @@ import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/i18n";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { PageHeader } from "@/components/page-header";
+import { cn } from "@/lib/utils";
+
+function SettingsSection({
+  icon,
+  title,
+  description,
+  badge,
+  children,
+  className,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description?: string;
+  badge?: React.ReactNode;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("rounded-xl border border-border bg-card overflow-hidden", className)}>
+      <div className="px-5 py-4 border-b border-border flex items-center gap-3">
+        <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0">
+          {icon}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-foreground">{title}</h2>
+            {badge}
+          </div>
+          {description && <p className="text-xs text-muted-foreground mt-0.5">{description}</p>}
+        </div>
+      </div>
+      <div className="p-5 space-y-4">{children}</div>
+    </div>
+  );
+}
+
+function SettingRow({
+  label,
+  description,
+  control,
+}: {
+  label: string;
+  description?: string;
+  control: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <div className="min-w-0">
+        <p className="text-sm font-medium text-foreground">{label}</p>
+        {description && <p className="text-xs text-muted-foreground mt-0.5">{description}</p>}
+      </div>
+      <div className="shrink-0">{control}</div>
+    </div>
+  );
+}
 
 export default function Settings() {
   const { user } = useAuth();
   const { t } = useLanguage();
   const { toast } = useToast();
-  
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  
+
   useEffect(() => {
     if (user) {
       setFirstName(user.firstName || "");
       setLastName(user.lastName || "");
     }
   }, [user]);
-  
+
   const updateProfileMutation = useMutation({
     mutationFn: async (data: { firstName: string; lastName: string }) => {
       const res = await apiRequest("PATCH", "/api/auth/user", data);
@@ -54,20 +109,13 @@ export default function Settings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-      toast({
-        title: t("settings.profile.saved"),
-        description: t("settings.profile.savedDesc"),
-      });
+      toast({ title: t("settings.profile.saved"), description: t("settings.profile.savedDesc") });
     },
     onError: () => {
-      toast({
-        title: t("common.error"),
-        description: t("settings.profile.saveError"),
-        variant: "destructive",
-      });
+      toast({ title: t("common.error"), description: t("settings.profile.saveError"), variant: "destructive" });
     },
   });
-  
+
   const hasChanges = user && (firstName !== (user.firstName || "") || lastName !== (user.lastName || ""));
 
   const deleteAccountMutation = useMutation({
@@ -76,18 +124,11 @@ export default function Settings() {
       return res.json();
     },
     onSuccess: () => {
-      toast({
-        title: t("settings.dangerZone.accountDeleted"),
-        description: t("settings.dangerZone.accountDeletedDesc"),
-      });
+      toast({ title: t("settings.dangerZone.accountDeleted"), description: t("settings.dangerZone.accountDeletedDesc") });
       window.location.href = "/";
     },
     onError: () => {
-      toast({
-        title: t("common.error"),
-        description: t("settings.dangerZone.deleteError"),
-        variant: "destructive",
-      });
+      toast({ title: t("common.error"), description: t("settings.dangerZone.deleteError"), variant: "destructive" });
     },
   });
 
@@ -96,242 +137,176 @@ export default function Settings() {
     : "U";
 
   return (
-    <div className="p-6 space-y-6 max-w-4xl">
-      <div>
-        <h1 className="text-3xl font-semibold">{t("settings.title")}</h1>
-        <p className="text-muted-foreground mt-1">
-          {t("settings.subtitle")}
-        </p>
-      </div>
+    <div className="p-6 space-y-4 max-w-2xl mx-auto">
+      <PageHeader title={t("settings.title")} subtitle={t("settings.subtitle")} />
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <User className="h-5 w-5" />
-            {t("settings.profile.title")}
-          </CardTitle>
-          <CardDescription>
-            {t("settings.profile.description")}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
-              <AvatarImage src={user?.profileImageUrl || undefined} className="object-cover" />
-              <AvatarFallback className="text-lg">{userInitials}</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-medium">
-                {user?.firstName} {user?.lastName}
-              </p>
-              <p className="text-sm text-muted-foreground">{user?.email}</p>
-            </div>
-          </div>
-          <Separator />
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <Label htmlFor="firstName">{t("settings.profile.firstName")}</Label>
-              <Input
-                id="firstName"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="mt-2"
-                data-testid="input-first-name"
-              />
-            </div>
-            <div>
-              <Label htmlFor="lastName">{t("settings.profile.lastName")}</Label>
-              <Input
-                id="lastName"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="mt-2"
-                data-testid="input-last-name"
-              />
-            </div>
-            <div className="md:col-span-2">
-              <Label htmlFor="email">{t("settings.profile.email")}</Label>
-              <Input
-                id="email"
-                type="email"
-                value={user?.email || ""}
-                disabled
-                className="mt-2"
-                data-testid="input-email"
-              />
-              <p className="text-sm text-muted-foreground mt-1">
-                {t("settings.profile.emailManagedByProvider")}
-              </p>
-            </div>
-          </div>
-          {hasChanges && (
-            <Button
-              onClick={() => updateProfileMutation.mutate({ firstName, lastName })}
-              disabled={updateProfileMutation.isPending}
-              data-testid="button-save-profile"
-            >
-              {updateProfileMutation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              {t("common.saveChanges")}
-            </Button>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Bell className="h-5 w-5" />
-            {t("settings.notifications.title")}
-            <Badge variant="outline" className="ml-auto text-xs bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800">
-              {t("common.comingSoon").toUpperCase()}
-            </Badge>
-          </CardTitle>
-          <CardDescription>
-            {t("settings.notifications.description")}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">{t("settings.notifications.email")}</p>
-              <p className="text-sm text-muted-foreground">
-                {t("settings.notifications.emailDesc")}
-              </p>
-            </div>
-            <Switch data-testid="switch-email-notifications" defaultChecked />
-          </div>
-          <Separator />
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">{t("settings.notifications.negativeAlerts")}</p>
-              <p className="text-sm text-muted-foreground">
-                {t("settings.notifications.negativeAlertsDesc")}
-              </p>
-            </div>
-            <Switch data-testid="switch-negative-alerts" defaultChecked />
-          </div>
-          <Separator />
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">{t("settings.notifications.weeklySummary")}</p>
-              <p className="text-sm text-muted-foreground">
-                {t("settings.notifications.weeklySummaryDesc")}
-              </p>
-            </div>
-            <Switch data-testid="switch-weekly-summary" />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Globe className="h-5 w-5" />
-            {t("settings.languageRegion.title")}
-          </CardTitle>
-          <CardDescription>
-            {t("settings.languageRegion.description")}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+      {/* Profile */}
+      <SettingsSection
+        icon={<User className="h-4 w-4" />}
+        title={t("settings.profile.title")}
+        description={t("settings.profile.description")}
+      >
+        <div className="flex items-center gap-4 pb-4 border-b border-border">
+          <Avatar className="h-14 w-14">
+            <AvatarImage src={user?.profileImageUrl || undefined} className="object-cover" />
+            <AvatarFallback className="text-base bg-primary/10 text-primary font-semibold">{userInitials}</AvatarFallback>
+          </Avatar>
           <div>
-            <Label>{t("settings.languageRegion.timezone")}</Label>
-            <Select defaultValue="europe/madrid">
-              <SelectTrigger className="mt-2 max-w-sm" data-testid="select-timezone">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="europe/madrid">Europe/Madrid (CET)</SelectItem>
-                <SelectItem value="europe/london">Europe/London (GMT)</SelectItem>
-                <SelectItem value="america/new_york">America/New_York (EST)</SelectItem>
-              </SelectContent>
-            </Select>
+            <p className="font-semibold text-foreground">{user?.firstName} {user?.lastName}</p>
+            <p className="text-sm text-muted-foreground">{user?.email}</p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
-            {t("settings.security.title")}
-          </CardTitle>
-          <CardDescription>
-            {t("settings.security.description")}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">{t("settings.security.twoFactor")}</p>
-              <p className="text-sm text-muted-foreground">
-                {t("settings.security.twoFactorDesc")}
-              </p>
-            </div>
-            <Button variant="outline" size="sm" disabled>
-              {t("common.comingSoon")}
-            </Button>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label htmlFor="firstName" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              {t("settings.profile.firstName")}
+            </Label>
+            <Input
+              id="firstName"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              data-testid="input-first-name"
+            />
           </div>
-          <Separator />
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">{t("settings.security.activeSessions")}</p>
-              <p className="text-sm text-muted-foreground">
-                {t("settings.security.activeSessionsDesc")}
-              </p>
-            </div>
-            <Button variant="outline" size="sm" disabled>
-              {t("settings.security.viewSessions")}
-            </Button>
+          <div className="space-y-1.5">
+            <Label htmlFor="lastName" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              {t("settings.profile.lastName")}
+            </Label>
+            <Input
+              id="lastName"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              data-testid="input-last-name"
+            />
           </div>
-        </CardContent>
-      </Card>
+          <div className="sm:col-span-2 space-y-1.5">
+            <Label htmlFor="email" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              {t("settings.profile.email")}
+            </Label>
+            <Input id="email" type="email" value={user?.email || ""} disabled data-testid="input-email" />
+            <p className="text-xs text-muted-foreground">{t("settings.profile.emailManagedByProvider")}</p>
+          </div>
+        </div>
 
-      <Card className="border-destructive/50">
-        <CardHeader>
-          <CardTitle className="text-destructive">{t("settings.dangerZone.title")}</CardTitle>
-          <CardDescription>
-            {t("settings.dangerZone.description")}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">{t("settings.dangerZone.signOut")}</p>
-              <p className="text-sm text-muted-foreground">
-                {t("settings.dangerZone.signOutDesc")}
-              </p>
-            </div>
-            <Button variant="outline" asChild>
+        {hasChanges && (
+          <Button
+            onClick={() => updateProfileMutation.mutate({ firstName, lastName })}
+            disabled={updateProfileMutation.isPending}
+            size="sm"
+            data-testid="button-save-profile"
+          >
+            {updateProfileMutation.isPending && <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />}
+            {t("common.saveChanges")}
+          </Button>
+        )}
+      </SettingsSection>
+
+      {/* Notifications */}
+      <SettingsSection
+        icon={<Bell className="h-4 w-4" />}
+        title={t("settings.notifications.title")}
+        description={t("settings.notifications.description")}
+        badge={
+          <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 text-amber-600 border-amber-300 bg-amber-50 dark:bg-amber-950/20 dark:text-amber-400">
+            {t("common.comingSoon").toUpperCase()}
+          </Badge>
+        }
+      >
+        <SettingRow
+          label={t("settings.notifications.email")}
+          description={t("settings.notifications.emailDesc")}
+          control={<Switch data-testid="switch-email-notifications" defaultChecked />}
+        />
+        <Separator />
+        <SettingRow
+          label={t("settings.notifications.negativeAlerts")}
+          description={t("settings.notifications.negativeAlertsDesc")}
+          control={<Switch data-testid="switch-negative-alerts" defaultChecked />}
+        />
+        <Separator />
+        <SettingRow
+          label={t("settings.notifications.weeklySummary")}
+          description={t("settings.notifications.weeklySummaryDesc")}
+          control={<Switch data-testid="switch-weekly-summary" />}
+        />
+      </SettingsSection>
+
+      {/* Language & Region */}
+      <SettingsSection
+        icon={<Globe className="h-4 w-4" />}
+        title={t("settings.languageRegion.title")}
+        description={t("settings.languageRegion.description")}
+      >
+        <div className="space-y-1.5">
+          <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            {t("settings.languageRegion.timezone")}
+          </Label>
+          <Select defaultValue="europe/madrid">
+            <SelectTrigger className="max-w-xs" data-testid="select-timezone"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="europe/madrid">Europe/Madrid (CET)</SelectItem>
+              <SelectItem value="europe/london">Europe/London (GMT)</SelectItem>
+              <SelectItem value="america/new_york">America/New_York (EST)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </SettingsSection>
+
+      {/* Security */}
+      <SettingsSection
+        icon={<Shield className="h-4 w-4" />}
+        title={t("settings.security.title")}
+        description={t("settings.security.description")}
+      >
+        <SettingRow
+          label={t("settings.security.twoFactor")}
+          description={t("settings.security.twoFactorDesc")}
+          control={<Button variant="outline" size="sm" disabled className="h-7 text-xs">{t("common.comingSoon")}</Button>}
+        />
+        <Separator />
+        <SettingRow
+          label={t("settings.security.activeSessions")}
+          description={t("settings.security.activeSessionsDesc")}
+          control={<Button variant="outline" size="sm" disabled className="h-7 text-xs">{t("settings.security.viewSessions")}</Button>}
+        />
+      </SettingsSection>
+
+      {/* Danger zone */}
+      <SettingsSection
+        icon={<Trash2 className="h-4 w-4 text-destructive" />}
+        title={t("settings.dangerZone.title")}
+        description={t("settings.dangerZone.description")}
+        className="border-destructive/30"
+      >
+        <SettingRow
+          label={t("settings.dangerZone.signOut")}
+          description={t("settings.dangerZone.signOutDesc")}
+          control={
+            <Button variant="outline" size="sm" className="h-7 text-xs" asChild>
               <a href="/api/logout" data-testid="button-logout">
-                <LogOut className="mr-2 h-4 w-4" />
+                <LogOut className="mr-1.5 h-3 w-3" />
                 {t("common.logout")}
               </a>
             </Button>
-          </div>
-          <Separator />
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">{t("settings.dangerZone.deleteAccount")}</p>
-              <p className="text-sm text-muted-foreground">
-                {t("settings.dangerZone.deleteAccountDesc")}
-              </p>
-            </div>
+          }
+        />
+        <Separator />
+        <SettingRow
+          label={t("settings.dangerZone.deleteAccount")}
+          description={t("settings.dangerZone.deleteAccountDesc")}
+          control={
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive" size="sm" data-testid="button-delete-account">
-                  <Trash2 className="mr-2 h-4 w-4" />
+                <Button variant="destructive" size="sm" className="h-7 text-xs" data-testid="button-delete-account">
+                  <Trash2 className="mr-1.5 h-3 w-3" />
                   {t("common.delete")}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>{t("settings.dangerZone.confirmDeleteTitle")}</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {t("settings.dangerZone.confirmDeleteDesc")}
-                  </AlertDialogDescription>
+                  <AlertDialogDescription>{t("settings.dangerZone.confirmDeleteDesc")}</AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
@@ -341,19 +316,15 @@ export default function Settings() {
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     data-testid="button-confirm-delete-account"
                   >
-                    {deleteAccountMutation.isPending ? (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                      <Trash2 className="mr-2 h-4 w-4" />
-                    )}
+                    {deleteAccountMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                     {t("settings.dangerZone.confirmDelete")}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-          </div>
-        </CardContent>
-      </Card>
+          }
+        />
+      </SettingsSection>
     </div>
   );
 }

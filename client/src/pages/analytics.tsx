@@ -1,13 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 import {
   BarChart3,
   TrendingUp,
@@ -23,73 +17,77 @@ import {
 import { Link } from "wouter";
 import type { AdvancedAnalytics } from "@shared/schema";
 import { useLanguage } from "@/lib/i18n";
+import { PageHeader } from "@/components/page-header";
+import { cn } from "@/lib/utils";
+import { StatCard } from "@/components/stat-card";
 
-function SentimentIcon({
-  type,
-}: {
-  type: "positive" | "neutral" | "negative";
-}) {
-  switch (type) {
-    case "positive":
-      return <ThumbsUp className="w-4 h-4 text-green-500" />;
-    case "negative":
-      return <ThumbsDown className="w-4 h-4 text-red-500" />;
-    default:
-      return <Minus className="w-4 h-4 text-yellow-500" />;
-  }
-}
-
-function RatingBar({
-  rating,
-  count,
-  total,
-}: {
-  rating: number;
-  count: number;
-  total: number;
-}) {
-  const percentage = total > 0 ? (count / total) * 100 : 0;
-
+function RatingBar({ rating, count, total }: { rating: number; count: number; total: number }) {
+  const pct = total > 0 ? (count / total) * 100 : 0;
   return (
     <div className="flex items-center gap-3">
-      <div className="flex items-center gap-1 w-16">
-        <span className="text-sm font-medium">{rating}</span>
-        <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+      <div className="flex items-center gap-1 w-12 shrink-0">
+        <span className="text-xs font-medium tabular-nums">{rating}</span>
+        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
       </div>
-      <div className="flex-1 bg-muted rounded-full h-2">
-        <div
-          className="bg-yellow-400 h-2 rounded-full transition-all"
-          style={{ width: `${percentage}%` }}
-        />
+      <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+        <div className="h-full bg-yellow-400 rounded-full transition-all" style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-sm text-muted-foreground w-12 text-right">
-        {count}
-      </span>
+      <span className="text-xs text-muted-foreground w-8 text-right tabular-nums">{count}</span>
+    </div>
+  );
+}
+
+function SentimentRow({ type, count, total, label }: { type: string; count: number; total: number; label: string }) {
+  const pct = total > 0 ? (count / total) * 100 : 0;
+  const colors: Record<string, string> = {
+    positive: "bg-green-500",
+    neutral: "bg-amber-400",
+    negative: "bg-red-500",
+  };
+  const textColors: Record<string, string> = {
+    positive: "text-green-600 dark:text-green-400",
+    neutral: "text-amber-600 dark:text-amber-400",
+    negative: "text-red-600 dark:text-red-400",
+  };
+  const icons: Record<string, React.ReactNode> = {
+    positive: <ThumbsUp className="h-3.5 w-3.5" />,
+    neutral: <Minus className="h-3.5 w-3.5" />,
+    negative: <ThumbsDown className="h-3.5 w-3.5" />,
+  };
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between">
+        <div className={cn("flex items-center gap-1.5 text-sm font-medium", textColors[type])}>
+          {icons[type]}
+          {label}
+        </div>
+        <span className="text-xs text-muted-foreground tabular-nums">{count} ({pct.toFixed(0)}%)</span>
+      </div>
+      <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+        <div className={cn("h-full rounded-full transition-all", colors[type])} style={{ width: `${pct}%` }} />
+      </div>
     </div>
   );
 }
 
 export default function Analytics() {
   const { t } = useLanguage();
-  const {
-    data: analytics,
-    isLoading,
-    error,
-  } = useQuery<AdvancedAnalytics>({
+  const { data: analytics, isLoading, error } = useQuery<AdvancedAnalytics>({
     queryKey: ["/api/analytics/advanced"],
   });
-
-  const { data: planInfo } = useQuery<any>({
-    queryKey: ["/api/plan-info"],
-  });
-
+  const { data: planInfo } = useQuery<any>({ queryKey: ["/api/plan-info"] });
   const hasAccess = planInfo?.features?.hasAdvancedAnalytics;
 
   if (isLoading) {
     return (
-      <div className="p-6">
-        <div className="flex items-center justify-center h-[50vh]">
-          <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+      <div className="p-6 space-y-6 max-w-5xl mx-auto">
+        <Skeleton className="h-10 w-60" />
+        <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28 rounded-xl" />)}
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Skeleton className="h-64 rounded-xl" />
+          <Skeleton className="h-64 rounded-xl" />
         </div>
       </div>
     );
@@ -97,310 +95,152 @@ export default function Analytics() {
 
   if (error || !hasAccess) {
     return (
-      <div className="p-6">
-        <div className="max-w-4xl py-8">
-          <Card className="text-center py-12">
-            <CardContent>
-              <Lock className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <h2 className="text-xl font-semibold mb-2">
-                {t("analytics.title")}
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                {t("analytics.upgradeMessage")}
-              </p>
-              <Link href="/billing">
-                <Button data-testid="button-upgrade-analytics">
-                  {t("analytics.upgradePlan")}
-                  <ArrowUpRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+      <div className="p-6 max-w-5xl mx-auto">
+        <div className="rounded-xl border border-border bg-card flex flex-col items-center justify-center py-16 text-center px-4">
+          <div className="h-12 w-12 rounded-2xl bg-muted flex items-center justify-center mb-4">
+            <Lock className="h-5 w-5 text-muted-foreground" />
+          </div>
+          <h2 className="text-base font-semibold text-foreground mb-2">{t("analytics.title")}</h2>
+          <p className="text-sm text-muted-foreground max-w-sm mb-6">{t("analytics.upgradeMessage")}</p>
+          <Button asChild data-testid="button-upgrade-analytics">
+            <Link href="/billing">
+              {t("analytics.upgradePlan")}
+              <ArrowUpRight className="ml-1.5 h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </div>
     );
   }
 
-  const totalReviews = analytics?.totalReviews || 0;
+  const total = analytics?.totalReviews || 0;
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Título */}
-      <div>
-        <h1 className="text-2xl font-bold" data-testid="text-analytics-title">
-          {t("analytics.title")}
-        </h1>
-        <p className="text-muted-foreground">{t("analytics.subtitle")}</p>
+    <div className="p-6 space-y-6 max-w-5xl mx-auto">
+      <PageHeader title={t("analytics.title")} subtitle={t("analytics.subtitle")} />
+
+      {/* Stat cards */}
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title={t("analytics.metrics.totalReviews")}
+          value={analytics?.totalReviews || 0}
+          icon={<MessageSquare className="h-4 w-4" />}
+          iconClassName="bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400"
+          data-testid="text-total-reviews"
+        />
+        <StatCard
+          title={t("analytics.metrics.totalReplies")}
+          value={analytics?.totalReplies || 0}
+          description={total > 0 ? t("analytics.metrics.responseRate").replace("{rate}", String(Math.round(((analytics?.totalReplies || 0) / total) * 100))) : undefined}
+          icon={<BarChart3 className="h-4 w-4" />}
+          iconClassName="bg-primary/10 text-primary"
+          data-testid="text-total-replies"
+        />
+        <StatCard
+          title={t("analytics.metrics.avgRating")}
+          value={analytics?.averageRating?.toFixed(1) || "0.0"}
+          icon={<Star className="h-4 w-4" />}
+          iconClassName="bg-yellow-100 text-yellow-600 dark:bg-yellow-900/40 dark:text-yellow-500"
+          data-testid="text-avg-rating"
+        />
+        <StatCard
+          title={t("analytics.metrics.sentiment")}
+          value={`${analytics?.sentimentBreakdown?.positive || 0} pos`}
+          description={`${analytics?.sentimentBreakdown?.negative || 0} neg · ${analytics?.sentimentBreakdown?.neutral || 0} neu`}
+          icon={<TrendingUp className="h-4 w-4" />}
+          iconClassName="bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400"
+        />
       </div>
 
-      {/* Métricas principales */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t("analytics.metrics.totalReviews")}
-            </CardTitle>
-            <MessageSquare className="w-4 h-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div
-              className="text-2xl font-bold"
-              data-testid="text-total-reviews"
-            >
-              {analytics?.totalReviews || 0}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t("analytics.metrics.totalReplies")}
-            </CardTitle>
-            <BarChart3 className="w-4 h-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div
-              className="text-2xl font-bold"
-              data-testid="text-total-replies"
-            >
-              {analytics?.totalReplies || 0}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {totalReviews > 0
-                ? t("analytics.metrics.responseRate").replace(
-                    "{rate}",
-                    String(
-                      Math.round(
-                        ((analytics?.totalReplies || 0) / totalReviews) * 100,
-                      ),
-                    ),
-                  )
-                : t("analytics.metrics.noReviews")}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t("analytics.metrics.avgRating")}
-            </CardTitle>
-            <Star className="w-4 h-4 text-yellow-400" />
-          </CardHeader>
-          <CardContent>
-            <div
-              className="text-2xl font-bold flex items-center gap-1"
-              data-testid="text-avg-rating"
-            >
-              {analytics?.averageRating?.toFixed(1) || "0.0"}
-              <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t("analytics.metrics.sentiment")}
-            </CardTitle>
-            <TrendingUp className="w-4 h-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1">
-                <ThumbsUp className="w-4 h-4 text-green-500" />
-                <span className="font-semibold">
-                  {analytics?.sentimentBreakdown?.positive || 0}
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Minus className="w-4 h-4 text-yellow-500" />
-                <span className="font-semibold">
-                  {analytics?.sentimentBreakdown?.neutral || 0}
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <ThumbsDown className="w-4 h-4 text-red-500" />
-                <span className="font-semibold">
-                  {analytics?.sentimentBreakdown?.negative || 0}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Distribución de rating + sentimiento */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("analytics.ratingDistribution.title")}</CardTitle>
-            <CardDescription>
-              {t("analytics.ratingDistribution.description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {[5, 4, 3, 2, 1].map((rating) => {
-              const data = analytics?.ratingDistribution?.find(
-                (r) => r.rating === rating,
-              );
-              return (
-                <RatingBar
-                  key={rating}
-                  rating={rating}
-                  count={data?.count || 0}
-                  total={totalReviews}
-                />
-              );
+      {/* Charts row */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-xl border border-border bg-card p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-1">{t("analytics.ratingDistribution.title")}</h3>
+          <p className="text-xs text-muted-foreground mb-4">{t("analytics.ratingDistribution.description")}</p>
+          <div className="space-y-3">
+            {[5, 4, 3, 2, 1].map((r) => {
+              const d = analytics?.ratingDistribution?.find(x => x.rating === r);
+              return <RatingBar key={r} rating={r} count={d?.count || 0} total={total} />;
             })}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("analytics.sentimentAnalysis.title")}</CardTitle>
-            <CardDescription>
-              {t("analytics.sentimentAnalysis.description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {[
-                {
-                  type: "positive" as const,
-                  labelKey: "positive",
-                  color: "bg-green-500",
-                },
-                {
-                  type: "neutral" as const,
-                  labelKey: "neutral",
-                  color: "bg-yellow-500",
-                },
-                {
-                  type: "negative" as const,
-                  labelKey: "negative",
-                  color: "bg-red-500",
-                },
-              ].map(({ type, labelKey, color }) => {
-                const count = analytics?.sentimentBreakdown?.[type] || 0;
-                const percentage =
-                  totalReviews > 0 ? (count / totalReviews) * 100 : 0;
-
-                return (
-                  <div key={type} className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <SentimentIcon type={type} />
-                        <span className="text-sm font-medium">
-                          {t(`analytics.sentimentAnalysis.${labelKey}`)}
-                        </span>
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        {count} ({percentage.toFixed(0)}%)
-                      </span>
-                    </div>
-                    <div className="w-full bg-muted rounded-full h-2">
-                      <div
-                        className={`${color} h-2 rounded-full transition-all`}
-                        style={{ width: `${percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
+        <div className="rounded-xl border border-border bg-card p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-1">{t("analytics.sentimentAnalysis.title")}</h3>
+          <p className="text-xs text-muted-foreground mb-4">{t("analytics.sentimentAnalysis.description")}</p>
+          <div className="space-y-4">
+            {(["positive", "neutral", "negative"] as const).map((type) => (
+              <SentimentRow
+                key={type}
+                type={type}
+                count={analytics?.sentimentBreakdown?.[type] || 0}
+                total={total}
+                label={t(`analytics.sentimentAnalysis.${type}`)}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Tendencias + mejores localizaciones */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("analytics.monthlyTrends.title")}</CardTitle>
-            <CardDescription>
-              {t("analytics.monthlyTrends.description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {!analytics?.monthlyTrends?.length ? (
-              <p className="text-sm text-muted-foreground text-center py-8">
-                {t("analytics.noData")}
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {analytics.monthlyTrends.slice(-6).map((trend) => (
-                  <div
-                    key={trend.month}
-                    className="flex items-center justify-between border-b pb-2"
-                  >
-                    <span className="text-sm font-medium">{trend.month}</span>
-                    <div className="flex items-center gap-4">
-                      <Badge variant="outline" className="gap-1">
-                        <MessageSquare className="w-3 h-3" />
-                        {trend.reviews}
-                      </Badge>
-                      <Badge variant="secondary" className="gap-1">
-                        <BarChart3 className="w-3 h-3" />
-                        {trend.replies}
-                      </Badge>
-                      <Badge variant="default" className="gap-1">
-                        <Star className="w-3 h-3" />
-                        {trend.averageRating.toFixed(1)}
-                      </Badge>
-                    </div>
+      {/* Trends + Top locations */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-xl border border-border bg-card p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-1">{t("analytics.monthlyTrends.title")}</h3>
+          <p className="text-xs text-muted-foreground mb-4">{t("analytics.monthlyTrends.description")}</p>
+          {!analytics?.monthlyTrends?.length ? (
+            <p className="text-sm text-muted-foreground text-center py-6">{t("analytics.noData")}</p>
+          ) : (
+            <div className="space-y-2">
+              {analytics.monthlyTrends.slice(-6).map((trend) => (
+                <div key={trend.month} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
+                  <span className="text-sm font-medium text-foreground">{trend.month}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 px-2 py-0.5 rounded-full font-medium">
+                      {trend.reviews} rev
+                    </span>
+                    <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full font-medium">
+                      {trend.replies} rep
+                    </span>
+                    <span className="text-xs flex items-center gap-0.5 font-medium text-foreground">
+                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                      {trend.averageRating.toFixed(1)}
+                    </span>
                   </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("analytics.topLocations.title")}</CardTitle>
-            <CardDescription>
-              {t("analytics.topLocations.description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {!analytics?.topPerformingLocations?.length ? (
-              <p className="text-sm text-muted-foreground text-center py-8">
-                {t("analytics.noLocations")}
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {analytics.topPerformingLocations
-                  .slice(0, 5)
-                  .map((location, index) => (
-                    <div
-                      key={location.restaurantId}
-                      className="flex items-center justify-between border-b pb-2"
-                      data-testid={`row-location-${location.restaurantId}`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg font-bold text-muted-foreground">
-                          #{index + 1}
-                        </span>
-                        <span className="font-medium">{location.name}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline">
-                          {location.reviewCount}{" "}
-                          {t("analytics.topLocations.reviews")}
-                        </Badge>
-                        <Badge variant="default" className="gap-1">
-                          <Star className="w-3 h-3" />
-                          {location.averageRating.toFixed(1)}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <div className="rounded-xl border border-border bg-card p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-1">{t("analytics.topLocations.title")}</h3>
+          <p className="text-xs text-muted-foreground mb-4">{t("analytics.topLocations.description")}</p>
+          {!analytics?.topPerformingLocations?.length ? (
+            <p className="text-sm text-muted-foreground text-center py-6">{t("analytics.noLocations")}</p>
+          ) : (
+            <div className="space-y-2">
+              {analytics.topPerformingLocations.slice(0, 5).map((location, i) => (
+                <div
+                  key={location.restaurantId}
+                  className="flex items-center justify-between py-2 border-b border-border/50 last:border-0"
+                  data-testid={`row-location-${location.restaurantId}`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="text-xs font-bold text-muted-foreground w-4 shrink-0">#{i + 1}</span>
+                    <span className="text-sm font-medium text-foreground truncate">{location.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-xs text-muted-foreground">{location.reviewCount} {t("analytics.topLocations.reviews")}</span>
+                    <span className="text-xs font-semibold flex items-center gap-0.5 text-foreground">
+                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                      {location.averageRating.toFixed(1)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
