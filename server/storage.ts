@@ -237,11 +237,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateUserStripeInfo(userId: string, data: Partial<User>): Promise<User | undefined> {
-    const sanitized = { ...data };
-    if (sanitized.subscriptionStatus) {
-      sanitized.subscriptionStatus = sanitized.subscriptionStatus.trim() as any;
+    const sanitized: Record<string, unknown> = { ...data };
+    if (typeof sanitized.subscriptionStatus === 'string') {
+      sanitized.subscriptionStatus = sanitized.subscriptionStatus.trim();
     }
-    if (sanitized.onboardingStep) {
+    if (typeof sanitized.onboardingStep === 'string') {
       sanitized.onboardingStep = sanitized.onboardingStep.trim();
     }
     const [user] = await db

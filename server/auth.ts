@@ -159,7 +159,7 @@ export async function setupAuth(app: Express) {
         delete (safeUser as any).passwordHash;
 
         if (safeUser.subscriptionStatus) {
-            safeUser.subscriptionStatus = safeUser.subscriptionStatus.trim() as any;
+            (safeUser as Record<string, unknown>).subscriptionStatus = safeUser.subscriptionStatus.trim();
         }
 
         return res.json(safeUser);

@@ -16,6 +16,7 @@ import {
 import path from "path";
 import { initReviewSyncJob } from "./jobs/reviewSync";
 import { initWeeklyEmailScheduler } from "./jobs/weeklyEmailScheduler";
+import { fixOnboardingData } from "./migrations/fix-onboarding-data";
 
 const app = express();
 const httpServer = createServer(app);
@@ -182,6 +183,8 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  await fixOnboardingData();
+
   // Initialize Stripe before routes
   await initStripe();
 
