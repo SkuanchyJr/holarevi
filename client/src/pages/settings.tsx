@@ -25,13 +25,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { User, Bell, Globe, Shield, LogOut, Loader2, Trash2 } from "lucide-react";
+import { User, Bell, Globe, Shield, LogOut, Loader2, Trash2, Mail, AlertTriangle, CalendarDays } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/lib/i18n";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { PageHeader } from "@/components/page-header";
 import { cn } from "@/lib/utils";
+import notificationImage from "@assets/image_1776193840346.png";
 
 function SettingsSection({
   icon,
@@ -205,26 +206,66 @@ export default function Settings() {
       {/* Notifications */}
       <SettingsSection
         icon={<Bell className="h-4 w-4" />}
-        title={t("settings.notifications.title")}
-        description={t("settings.notifications.description")}
+        title="Notificaciones"
+        description="Así funciona hoy el sistema de avisos por email."
       >
-        <SettingRow
-          label={t("settings.notifications.email")}
-          description={t("settings.notifications.emailDesc")}
-          control={<Switch data-testid="switch-email-notifications" defaultChecked />}
-        />
-        <Separator />
-        <SettingRow
-          label={t("settings.notifications.negativeAlerts")}
-          description={t("settings.notifications.negativeAlertsDesc")}
-          control={<Switch data-testid="switch-negative-alerts" defaultChecked />}
-        />
-        <Separator />
-        <SettingRow
-          label={t("settings.notifications.weeklySummary")}
-          description={t("settings.notifications.weeklySummaryDesc")}
-          control={<Switch data-testid="switch-weekly-summary" defaultChecked />}
-        />
+        <div className="overflow-hidden rounded-lg border border-border bg-background">
+          <div className="border-b border-border px-4 py-3">
+            <div className="flex items-start gap-3">
+              <img
+                src={notificationImage}
+                alt="Notificaciones"
+                className="h-12 w-12 rounded-md object-cover"
+                data-testid="img-notifications-preview"
+              />
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-foreground">Recibes estos emails</p>
+                <p className="text-xs text-muted-foreground">
+                  El panel muestra lo que la app realmente envía hoy.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 space-y-4">
+            <SettingRow
+              label="Resumen semanal"
+              description="Se envía una vez por semana con métricas y rendimiento."
+              control={<Badge variant="secondary" data-testid="badge-weekly-summary">Activo</Badge>}
+            />
+            <Separator />
+            <SettingRow
+              label="Notificación al responder"
+              description="Llega cuando se publica una respuesta a una reseña."
+              control={<Badge variant="secondary" data-testid="badge-reply-notification">Activo</Badge>}
+            />
+            <Separator />
+            <div className="flex items-start gap-3 rounded-md bg-muted/30 px-3 py-3">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+              <p className="text-xs text-muted-foreground">
+                No hay alertas inmediatas por reseñas negativas ni switches configurables en esta vista.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="rounded-md border border-border bg-muted/20 p-3">
+            <Mail className="h-4 w-4 text-muted-foreground" />
+            <p className="mt-2 text-sm font-medium text-foreground">Resumen semanal</p>
+            <p className="text-xs text-muted-foreground">Emails automáticos de rendimiento.</p>
+          </div>
+          <div className="rounded-md border border-border bg-muted/20 p-3">
+            <CalendarDays className="h-4 w-4 text-muted-foreground" />
+            <p className="mt-2 text-sm font-medium text-foreground">Cada semana</p>
+            <p className="text-xs text-muted-foreground">Sin controles manuales desde aquí.</p>
+          </div>
+          <div className="rounded-md border border-border bg-muted/20 p-3">
+            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+            <p className="mt-2 text-sm font-medium text-foreground">Respuestas publicadas</p>
+            <p className="text-xs text-muted-foreground">Aviso cuando se postea una respuesta.</p>
+          </div>
+        </div>
       </SettingsSection>
 
       {/* Language & Region */}
