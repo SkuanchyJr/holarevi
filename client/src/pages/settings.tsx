@@ -284,7 +284,7 @@ export default function Settings() {
           description={t("settings.dangerZone.signOutDesc")}
           control={
             <Button variant="outline" size="sm" className="h-7 text-xs" asChild>
-              <a href="/api/logout" data-testid="button-logout">
+              <a href="/api/auth/logout" data-testid="button-logout">
                 <LogOut className="mr-1.5 h-3 w-3" />
                 {t("common.logout")}
               </a>
