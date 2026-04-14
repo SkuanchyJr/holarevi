@@ -127,13 +127,6 @@ export async function sendReplyNotification(data: {
   postedReply: string;
 }): Promise<void> {
   try {
-    try {
-      getTransporter();
-    } catch {
-      console.log("[ReplyNotification] SMTP not configured, skipping notification");
-      return;
-    }
-
     const [restaurant] = await db
       .select()
       .from(restaurants)

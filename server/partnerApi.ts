@@ -564,6 +564,15 @@ export async function postReplyViaPartnerApi(
       repliedAt: new Date(),
     });
     console.log(`[Partner API] Reply posted for review: ${reviewId}`);
+
+    sendReplyNotification({
+      restaurantId: restaurant.id,
+      reviewerName: review.reviewerName || "Cliente",
+      rating: review.rating,
+      reviewComment: review.comment || "",
+      postedReply: reply,
+    }).catch((err) => console.error("[Partner API] Reply notification error:", err));
+
     return true;
   }
   
