@@ -173,7 +173,6 @@ function LocalizedRouter({ currentPath }: { currentPath: string }) {
 
   const subscriptionStatus = user?.subscriptionStatus?.trim();
   const isPublicRoute = currentPath === "/" || currentPath === "/auth" || currentPath === "/prelaunch" || currentPath.startsWith("/blog") || currentPath === "/contact" || currentPath === "/select-plan" || currentPath === "/pricing";
-  const isOnboardingRoute = currentPath === "/onboarding";
 
   // SUBSCRIPTION CHECK MUST COME FIRST
   // A new user with subscriptionStatus="pending" must select a plan before onboarding
@@ -204,10 +203,7 @@ function LocalizedRouter({ currentPath }: { currentPath: string }) {
     );
   }
 
-  // Onboarding check comes AFTER subscription is resolved
-  if (!user?.onboardingCompleted && !isPublicRoute && !isOnboardingRoute) {
-    return <Redirect to={`/${language}/onboarding`} />;
-  }
+  // Onboarding is no longer forced — users see a Tutorial button in the sidebar instead
 
   if (currentPath === "/select-plan") return <Redirect to={`/${language}/`} />;
 
@@ -227,11 +223,11 @@ function LocalizedRouter({ currentPath }: { currentPath: string }) {
     <Switch>
       <Route path="/:lang/blog/:slug" component={BlogPostPage} />
       <Route path="/:lang/blog" component={BlogPage} />
-      <Route path="/:lang/onboarding" component={OnboardingPage} />
       <Route>
         <AuthenticatedLayout>
           <InvitationPopup />
           <Switch>
+            <Route path="/:lang/onboarding" component={OnboardingPage} />
             <Route path="/:lang/" component={Dashboard} />
             <Route path="/:lang/dashboard" component={Dashboard} />
             <Route path="/:lang/reviews" component={Reviews} />

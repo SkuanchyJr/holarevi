@@ -17,7 +17,9 @@ import {
   QrCode,
   Star,
   ChevronUp,
+  GraduationCap,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { Review } from "@shared/schema";
 import type { PlanId } from "@shared/plans";
 import {
@@ -189,6 +191,22 @@ export function AppSidebar() {
               </span>
             )}
           </div>
+        )}
+
+        {!user?.onboardingCompleted && (
+          <Button
+            asChild
+            className={cn(
+              "mx-2 mb-3 w-[calc(100%-1rem)] shadow-md animate-pulse hover:animate-none",
+              isCollapsed && "justify-center px-2"
+            )}
+            data-testid="button-tutorial"
+          >
+            <Link href="/onboarding">
+              <GraduationCap className="h-4 w-4 shrink-0" />
+              {!isCollapsed && <span>{t("sidebar.tutorial")}</span>}
+            </Link>
+          </Button>
         )}
 
         {/* Main navigation */}

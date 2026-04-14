@@ -11,7 +11,6 @@ export default function OnboardingPage() {
   const { t, language } = useLanguage();
   const [, setLocation] = useLocation();
 
-  // Detect Google OAuth callback result from URL params
   const googleConnected = useMemo(() => {
     const params = new URLSearchParams(window.location.search);
     return params.get("success") === "connected";
@@ -27,7 +26,7 @@ export default function OnboardingPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center h-full py-16">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
@@ -36,7 +35,7 @@ export default function OnboardingPage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-muted/30 flex items-center justify-center p-4">
+    <div className="flex items-center justify-center p-6 py-10">
       <div className="w-full max-w-2xl">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold tracking-tight mb-2">
