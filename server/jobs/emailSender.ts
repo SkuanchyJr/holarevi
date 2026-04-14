@@ -23,7 +23,7 @@ export interface SendResult {
 
 let transporter: Transporter | null = null;
 
-function getTransporter(): Transporter {
+export function getTransporter(): Transporter {
   if (!transporter) {
     const host = process.env.SMTP_HOST;
     const port = parseInt(process.env.SMTP_PORT || "587", 10);

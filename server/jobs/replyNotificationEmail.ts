@@ -1,33 +1,7 @@
-import nodemailer from "nodemailer";
-import type { Transporter } from "nodemailer";
 import { db } from "../db";
 import { users, restaurants } from "@shared/schema";
 import { eq } from "drizzle-orm";
-
-let transporter: Transporter | null = null;
-
-function getTransporter(): Transporter {
-  if (!transporter) {
-    const host = process.env.SMTP_HOST;
-    const port = parseInt(process.env.SMTP_PORT || "587", 10);
-    const user = process.env.SMTP_USER;
-    const pass = process.env.SMTP_PASS;
-
-    if (!host || !user || !pass) {
-      throw new Error(
-        "SMTP_HOST, SMTP_USER, and SMTP_PASS are required for email sending"
-      );
-    }
-
-    transporter = nodemailer.createTransport({
-      host,
-      port,
-      secure: port === 465,
-      auth: { user, pass },
-    });
-  }
-  return transporter;
-}
+import { getTransporter } from "./emailSender";
 
 function getDashboardUrl(): string {
   return process.env.APP_URL || "https://holarevi.com";
@@ -153,10 +127,9 @@ export async function sendReplyNotification(data: {
   postedReply: string;
 }): Promise<void> {
   try {
-    const host = process.env.SMTP_HOST;
-    const user = process.env.SMTP_USER;
-    const pass = process.env.SMTP_PASS;
-    if (!host || !user || !pass) {
+    try {
+      getTransporter();
+    } catch {
       console.log("[ReplyNotification] SMTP not configured, skipping notification");
       return;
     }
