@@ -49,14 +49,9 @@ expertMode = true
 [userenv]
 
 [userenv.shared]
-ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "H0l@Revi!9Qf#T2XkM8"
 SMTP_HOST = "smtp.gmail.com"
 SMTP_PORT = "587"
-SMTP_USER = "info@holarevi.com"
-SMTP_PASS = "guudbwuvkkefzcuq"
 SMTP_FROM = "HolaRevi <info@holarevi.com>"
-ADMIN_API_KEY = "9265312c346a6044bf130977e21bff2d0e3413827db3e576fedb7c2d41309f44"
 
 [postMerge]
 path = "scripts/post-merge.sh"
