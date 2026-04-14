@@ -237,6 +237,47 @@ function isAdminAuthenticated(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  app.get("/robots.txt", (_req, res) => {
+    const domain = "https://holarevi.com";
+    res.type("text/plain").send(
+      `User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /affiliate/\nDisallow: /api/\n\nSitemap: ${domain}/sitemap.xml\n`
+    );
+  });
+
+  app.get("/sitemap.xml", async (_req, res) => {
+    const domain = "https://holarevi.com";
+    const staticPages = [
+      "", "/pricing", "/contact", "/privacy", "/terms", "/blog",
+      "/auth", "/google-permissions",
+    ];
+    const langs = ["es", "en"];
+
+    const escapeXml = (s: string) =>
+      s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+
+    let urls = "";
+    for (const lang of langs) {
+      for (const page of staticPages) {
+        urls += `  <url><loc>${escapeXml(`${domain}/${lang}${page}`)}</loc><changefreq>${page === "" ? "daily" : "weekly"}</changefreq><priority>${page === "" ? "1.0" : "0.8"}</priority></url>\n`;
+      }
+    }
+
+    try {
+      const blogPosts = await storage.getPublishedBlogs();
+      for (const post of blogPosts) {
+        const lang = post.language || "es";
+        const slug = encodeURIComponent(post.slug);
+        urls += `  <url><loc>${escapeXml(`${domain}/${lang}/blog/${slug}`)}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>\n`;
+      }
+    } catch (e: any) {
+      console.error("[Sitemap] Error fetching blogs for sitemap:", e?.message);
+    }
+
+    res.type("application/xml").send(
+      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}</urlset>\n`
+    );
+  });
+
   // Prelaunch middleware - must be first to block all routes when active
   app.use(createPrelaunchMiddleware());
 
