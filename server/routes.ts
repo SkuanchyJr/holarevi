@@ -284,6 +284,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
+  // Redirect legacy /api/login GET requests to the frontend auth page
+  app.get("/api/login", (_req, res) => {
+    res.redirect(302, "/es/auth");
+  });
+
   // Google OAuth routes
   setupGoogleAuth(app);
 
