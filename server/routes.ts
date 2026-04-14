@@ -4,25 +4,26 @@ import { storage } from "./storage";
 import { db } from "./db";
 import { eq, desc, asc, and, sql, gte, lte, or, isNull } from "drizzle-orm";
 import { reviews, restaurants } from "@shared/schema";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, isAuthenticated } from "./auth";
 import { setupGoogleAuth } from "./googleAuth";
 import { getUncachableStripeClient, getStripePublishableKey } from "./stripeClient";
+import { onboardingRouter } from "./onboarding";
+import { alertsRouter } from "./alerts";
 import { generateReviewReply, analyzeReviewSummary } from "./openai";
 import { insertRestaurantSchema, insertReviewSchema, insertTeamMemberSchema, insertTonePresetSchema } from "@shared/schema";
-import { 
-  fetchGoogleAccounts, 
-  fetchGoogleLocations, 
+import {
+  fetchGoogleAccounts,
+  fetchGoogleLocations,
   syncReviewsForRestaurant,
   syncAllConnectedRestaurants,
   postReplyToGoogle,
 } from "./googleBusiness";
 import { PLANS, TRIAL_CONFIG, getStripePriceId, getPlanFromPriceId, type PlanId, type BillingCycle } from "@shared/plans";
-import { 
-  canAddLocation, 
+import {
+  canAddLocation,
   canAddTeamMember,
   canAddTonePreset,
   canSendReply,
-  canAccessAdvancedAnalytics,
   canAccessMultiLocationDashboard,
   canAddExtraLocation,
   getMonthlyReplyUsage,
@@ -32,7 +33,19 @@ import {
 import { createPrelaunchMiddleware, setPrelaunchEnabled, isPrelaunchEnabled } from "./prelaunchMiddleware";
 import Database from "@replit/database";
 
-const replitDb = new Database();
+let replitDb: any;
+if (process.env.REPLIT_DB_URL) {
+  replitDb = new Database();
+} else {
+  console.log("[DB] REPLIT_DB_URL not set, using in-memory mock for contacts.");
+  const mockDb = new Map<string, any>();
+  replitDb = {
+    set: async (k: string, v: any) => mockDb.set(k, v),
+    get: async (k: string) => mockDb.get(k),
+    delete: async (k: string) => mockDb.delete(k),
+    list: async (prefix: string) => Array.from(mockDb.keys()).filter(k => k.startsWith(prefix))
+  };
+}
 
 // Types for subscription management
 interface ActiveSubscription {
@@ -67,7 +80,7 @@ async function getActiveSubscription(
     // - unpaid: Payment required but subscription not yet canceled
     // - incomplete: Initial payment pending (e.g., 3D Secure)
     const liveStatuses = ['active', 'trialing', 'past_due', 'unpaid', 'incomplete'];
-    
+
     const activeSub = subscriptions.data.find(
       (sub: any) => liveStatuses.includes(sub.status)
     );
@@ -134,7 +147,7 @@ async function upgradeSubscription(
     });
 
     console.log(`[Subscription] Successfully upgraded subscription ${subscriptionId} to plan ${planId}`);
-    
+
     return { success: true, subscription: updatedSubscription };
   } catch (error: any) {
     console.error(`[Subscription] Error upgrading subscription:`, error?.message);
@@ -145,9 +158,9 @@ async function upgradeSubscription(
 // Helper to verify and get/create a valid Stripe customer
 // Handles test→live mode migration by recreating customers that don't exist
 async function getOrCreateStripeCustomer(
-  stripe: any, 
-  userId: string, 
-  existingCustomerId: string | null, 
+  stripe: any,
+  userId: string,
+  existingCustomerId: string | null,
   email: string | null
 ): Promise<string> {
   // If we have an existing customer ID, verify it exists and is not deleted
@@ -170,17 +183,17 @@ async function getOrCreateStripeCustomer(
       }
     }
   }
-  
+
   // Create a new customer
   const customer = await stripe.customers.create({
     email: email || undefined,
     metadata: { userId },
   });
-  
+
   // Update user with new customer ID
   await storage.updateUserStripeInfo(userId, { stripeCustomerId: customer.id });
   console.log(`[Stripe] Created new customer ${customer.id} for user ${userId}`);
-  
+
   return customer.id;
 }
 
@@ -189,7 +202,7 @@ const adminSessions = new Map<string, { createdAt: number }>();
 
 // Admin credentials from environment variables
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "H0l@Revi!9X#3qT7M$";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "H0l@Revi!9Qf#T2XkM8";
 
 // Generate a simple random token
 function generateToken(): string {
@@ -199,7 +212,7 @@ function generateToken(): string {
 // Admin authentication middleware
 function isAdminAuthenticated(req: Request, res: Response, next: NextFunction) {
   const token = req.cookies?.admin_token;
-  
+
   if (!token || !adminSessions.has(token)) {
     // Check if this is an API request or browser request
     if (req.headers.accept?.includes('application/json')) {
@@ -208,7 +221,7 @@ function isAdminAuthenticated(req: Request, res: Response, next: NextFunction) {
     // Redirect to login page for browser requests
     return res.redirect('/admin/login');
   }
-  
+
   // Check if session is still valid (24 hours)
   const session = adminSessions.get(token);
   const maxAge = 24 * 60 * 60 * 1000; // 24 hours
@@ -219,47 +232,47 @@ function isAdminAuthenticated(req: Request, res: Response, next: NextFunction) {
     }
     return res.redirect('/admin/login');
   }
-  
+
   next();
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Prelaunch middleware - must be first to block all routes when active
   app.use(createPrelaunchMiddleware());
-  
+
   // Auth middleware
   await setupAuth(app);
-  
+
   // Google OAuth routes
   setupGoogleAuth(app);
 
-  // Admin login endpoint
-  app.post("/api/admin/login", (req, res) => {
-    const { username, password } = req.body;
-    
-    if (!username || !password) {
-      return res.status(400).json({ success: false, message: "Username and password required" });
-    }
-    
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      const token = generateToken();
-      adminSessions.set(token, { createdAt: Date.now() });
-      
-      // Set cookie (24 hours, httpOnly for security)
-      // Only use secure flag when actually over HTTPS
-      const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
-      res.cookie('admin_token', token, {
-        httpOnly: true,
-        secure: isSecure,
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        sameSite: 'lax'
-      });
-      
-      return res.json({ success: true, message: "Login successful" });
-    }
-    
-    return res.status(401).json({ success: false, message: "Invalid credentials" });
-  });
+    // Admin login endpoint
+    app.post("/api/admin/login", (req, res) => {
+        const { username, password } = req.body;
+
+        if (!username || !password) {
+            return res.status(400).json({ success: false, message: "Username and password required" });
+        }
+
+        if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+            const token = generateToken();
+            adminSessions.set(token, { createdAt: Date.now() });
+
+            // Set cookie (24 hours, httpOnly for security)
+            // Only use secure flag when actually over HTTPS
+            const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
+            res.cookie('admin_token', token, {
+                httpOnly: true,
+                secure: isSecure,
+                maxAge: 24 * 60 * 60 * 1000, // 24 hours
+                sameSite: 'lax'
+            });
+
+            return res.json({ success: true, message: "Login successful" });
+        }
+
+        return res.status(401).json({ success: false, message: "Invalid credentials" });
+    });
 
   // Admin logout endpoint
   app.post("/api/admin/logout", (req, res) => {
@@ -302,7 +315,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!path || typeof path !== 'string' || path.length > 500) {
         return res.status(400).json({ success: false, message: "Valid path required (max 500 chars)" });
       }
-      
+
       // Get or create session ID from cookie
       let sessionId = req.cookies?.session_id;
       if (!sessionId) {
@@ -314,14 +327,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           sameSite: 'lax'
         });
       }
-      
+
       await storage.trackPageView({
         path,
         sessionId,
         userAgent: req.headers['user-agent'] || null,
         referrer: req.headers['referer'] || null,
       });
-      
+
       return res.json({ success: true });
     } catch (error) {
       console.error("Error tracking page view:", error);
@@ -336,24 +349,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const parsed = new URL(url);
       const hostname = parsed.hostname.toLowerCase();
       const pathname = parsed.pathname.toLowerCase();
-      
+
       // Block known Google redirector paths that can redirect to any domain
       const blockedPaths = ['/url', '/amp/s', '/interstitialredirect', '/pagead'];
       if (blockedPaths.some(blocked => pathname.startsWith(blocked))) {
         return false;
       }
-      
+
       // Check for g.page short links (Google Business Profile - safe, review-specific)
       if (hostname === 'g.page' || hostname === 'www.g.page') {
         return true;
       }
-      
+
       // Check for maps.app.goo.gl (Google Maps specific short links)
       // Note: generic goo.gl is NOT allowed as it can redirect to any domain
       if (hostname === 'maps.app.goo.gl') {
         return true;
       }
-      
+
       // Check for search.google.* domains with review-specific paths
       const searchGooglePattern = /^search\.google\.(com|es|co\.uk|de|fr|it|pt|nl|be|at|ch|ca|com\.mx|com\.ar|com\.br|com\.au|co\.in|co\.jp|co\.kr|com\.sg|pl|ru|se|no|dk|fi|ie|cz|hu|ro|bg|gr|sk|si|hr|lt|lv|ee|lu|mt|cy)$/;
       if (searchGooglePattern.test(hostname)) {
@@ -363,14 +376,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         return false;
       }
-      
+
       // Check for maps.google.* domains (Google Maps URLs for reviews)
       const mapsGooglePattern = /^maps\.google\.(com|es|co\.uk|de|fr|it|pt|nl|be|at|ch|ca|com\.mx|com\.ar|com\.br|com\.au|co\.in|co\.jp|co\.kr|com\.sg|pl|ru|se|no|dk|fi|ie|cz|hu|ro|bg|gr|sk|si|hr|lt|lv|ee|lu|mt|cy)$/;
       if (mapsGooglePattern.test(hostname)) {
         // Maps URLs are review-safe as they point to places
         return true;
       }
-      
+
       // Check for www.google.*/maps paths (Google Maps embedded in main site)
       const googleDomainPattern = /^(www\.)?google\.(com|es|co\.uk|de|fr|it|pt|nl|be|at|ch|ca|com\.mx|com\.ar|com\.br|com\.au|co\.in|co\.jp|co\.kr|com\.sg|pl|ru|se|no|dk|fi|ie|cz|hu|ro|bg|gr|sk|si|hr|lt|lv|ee|lu|mt|cy)$/;
       if (googleDomainPattern.test(hostname)) {
@@ -381,7 +394,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         return false;
       }
-      
+
       return false;
     } catch {
       return false;
@@ -393,28 +406,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { qrId } = req.params;
       const qr = await storage.getReviewQr(qrId);
-      
+
       if (!qr || !qr.isActive) {
         return res.status(404).send("QR code not found or inactive");
       }
-      
+
       // Validate stored URL is safe before redirecting (prevents legacy malicious URLs)
       if (!isValidGoogleReviewUrl(qr.googleReviewUrl)) {
         console.error(`Blocked invalid redirect URL for QR ${qrId}: ${qr.googleReviewUrl}`);
         return res.status(400).send("Invalid redirect URL");
       }
-      
+
       // Store scan event (non-blocking)
       const ip = req.headers['x-forwarded-for']?.toString().split(',')[0] || req.socket.remoteAddress || '';
       const userAgent = req.headers['user-agent'] || '';
-      
+
       storage.createReviewQrEvent({
         qrId: qr.id,
         ip,
         userAgent,
         country: null,
       }).catch(err => console.error("Error logging QR scan:", err));
-      
+
       // Redirect to Google Reviews URL
       return res.redirect(302, qr.googleReviewUrl);
     } catch (error) {
@@ -589,7 +602,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const stripe = await getUncachableStripeClient();
-      
+
       // Query Stripe Promotion Codes API for the code (preserve casing - Stripe is case-sensitive)
       const promotionCodes = await stripe.promotionCodes.list({
         code: code.trim(),
@@ -635,7 +648,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Blog routes - Public endpoints
   app.get("/api/blogs", async (req, res) => {
     try {
-      const blogPosts = await storage.getPublishedBlogs();
+      const { lang } = req.query;
+      const blogPosts = await storage.getPublishedBlogs(lang as string);
       return res.json({ success: true, blogs: blogPosts });
     } catch (error) {
       console.error("Error fetching blogs:", error);
@@ -647,11 +661,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { slug } = req.params;
       const blog = await storage.getBlogBySlug(slug);
-      
+
       if (!blog || !blog.published) {
         return res.status(404).json({ success: false, message: "Blog not found" });
       }
-      
+
       return res.json({ success: true, blog });
     } catch (error) {
       console.error("Error fetching blog:", error);
@@ -674,11 +688,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const blog = await storage.getBlogById(id);
-      
+
       if (!blog) {
         return res.status(404).json({ success: false, message: "Blog not found" });
       }
-      
+
       return res.json({ success: true, blog });
     } catch (error) {
       console.error("Error fetching blog:", error);
@@ -832,21 +846,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const { id } = req.params;
-      
+
       const qr = await storage.getReviewQr(id);
       if (!qr) {
         return res.status(404).json({ success: false, message: "QR code not found" });
       }
-      
+
       // Verify ownership
       const userRestaurants = await storage.getRestaurantsByUserId(userId);
       if (!userRestaurants.some(r => r.id === qr.restaurantId)) {
         return res.status(403).json({ success: false, message: "Not authorized" });
       }
-      
+
       // Get scan history grouped by day
       const scansByDay = await storage.getReviewQrScansByDay(id);
-      
+
       return res.json({ success: true, qr, scansByDay });
     } catch (error) {
       console.error("Error fetching review QR:", error);
@@ -858,29 +872,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const { restaurantId, name, googleReviewUrl } = req.body;
-      
+
       if (!restaurantId || !googleReviewUrl) {
         return res.status(400).json({ success: false, message: "Restaurant ID and Google Review URL are required" });
       }
-      
+
       // Validate URL is a legitimate Google domain
       if (!isValidGoogleReviewUrl(googleReviewUrl)) {
         return res.status(400).json({ success: false, message: "Invalid URL. Only Google review URLs are allowed" });
       }
-      
+
       // Verify ownership
       const userRestaurants = await storage.getRestaurantsByUserId(userId);
       if (!userRestaurants.some(r => r.id === restaurantId)) {
         return res.status(403).json({ success: false, message: "Not authorized to create QR for this restaurant" });
       }
-      
+
       const qr = await storage.createReviewQr({
         restaurantId,
         name: name?.trim() || null,
         googleReviewUrl: googleReviewUrl.trim(),
         isActive: true,
       });
-      
+
       return res.json({ success: true, qr });
     } catch (error) {
       console.error("Error creating review QR:", error);
@@ -893,18 +907,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const { id } = req.params;
       const { name, googleReviewUrl, isActive } = req.body;
-      
+
       const qr = await storage.getReviewQr(id);
       if (!qr) {
         return res.status(404).json({ success: false, message: "QR code not found" });
       }
-      
+
       // Verify ownership
       const userRestaurants = await storage.getRestaurantsByUserId(userId);
       if (!userRestaurants.some(r => r.id === qr.restaurantId)) {
         return res.status(403).json({ success: false, message: "Not authorized" });
       }
-      
+
       const updateData: Record<string, any> = {};
       if (name !== undefined) updateData.name = name?.trim() || null;
       if (googleReviewUrl !== undefined) {
@@ -914,7 +928,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         updateData.googleReviewUrl = googleReviewUrl.trim();
       }
       if (isActive !== undefined) updateData.isActive = Boolean(isActive);
-      
+
       const updated = await storage.updateReviewQr(id, updateData);
       return res.json({ success: true, qr: updated });
     } catch (error) {
@@ -927,18 +941,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const { id } = req.params;
-      
+
       const qr = await storage.getReviewQr(id);
       if (!qr) {
         return res.status(404).json({ success: false, message: "QR code not found" });
       }
-      
+
       // Verify ownership
       const userRestaurants = await storage.getRestaurantsByUserId(userId);
       if (!userRestaurants.some(r => r.id === qr.restaurantId)) {
         return res.status(403).json({ success: false, message: "Not authorized" });
       }
-      
+
       await storage.deleteReviewQr(id);
       return res.json({ success: true, message: "QR code deleted" });
     } catch (error) {
@@ -964,7 +978,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const { firstName, lastName } = req.body;
-      
+
       // Validate input
       const updateData: Record<string, any> = {};
       if (firstName !== undefined) {
@@ -979,11 +993,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         updateData.lastName = lastName.trim();
       }
-      
+
       if (Object.keys(updateData).length === 0) {
         return res.status(400).json({ message: "No valid fields to update" });
       }
-      
+
       const user = await storage.updateUserStripeInfo(userId, updateData);
       res.json(user);
     } catch (error) {
@@ -997,11 +1011,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
-      
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       // Cancel Stripe subscription if exists
       if (user.stripeSubscriptionId) {
         try {
@@ -1012,17 +1026,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.log(`Could not cancel subscription: ${stripeError.message}`);
         }
       }
-      
+
       // Delete user and all associated data
       await storage.deleteUser(userId);
-      
+
       // Clear the session
       req.logout((err: any) => {
         if (err) {
           console.error("Error logging out after account deletion:", err);
         }
       });
-      
+
       res.json({ success: true, message: "Account deleted successfully" });
     } catch (error) {
       console.error("Error deleting account:", error);
@@ -1058,27 +1072,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
-      
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       // Check location limits
       const currentCount = await storage.getRestaurantCount(userId);
       const locationCheck = canAddLocation(user, currentCount);
-      
+
       if (!locationCheck.allowed) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           error: PLAN_ERROR_CODES.LOCATION_LIMIT_REACHED,
           message: locationCheck.reason,
           limit: locationCheck.limit,
           current: locationCheck.current,
         });
       }
-      
+
       const data = insertRestaurantSchema.parse({ ...req.body, userId });
       const restaurant = await storage.createRestaurant(data);
-      
+
       // Auto-grant owner access to the restaurant creator
       await storage.grantRestaurantAccess({
         userId: userId,
@@ -1086,7 +1100,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         role: "owner",
         grantedBy: userId,
       });
-      
+
       res.json(restaurant);
     } catch (error) {
       console.error("Error creating restaurant:", error);
@@ -1147,14 +1161,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if user has access to this restaurant
       const userRole = await storage.getUserRestaurantRole(userId, id);
       const isOwner = restaurant.userId === userId;
-      
+
       if (!userRole && !isOwner) {
         return res.status(403).json({ message: "Access denied" });
       }
 
       // Get all members with access to this restaurant
       const accessList = await storage.getRestaurantAccessByRestaurantId(id);
-      
+
       const members = accessList.map(access => ({
         id: access.id,
         userId: access.userId,
@@ -1275,9 +1289,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       if (!restaurant.googleAccountId || !restaurant.googleLocationId) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           message: "Please select a Google Business location first",
-          needsLocationSelection: true 
+          needsLocationSelection: true
         });
       }
 
@@ -1285,9 +1299,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`[Sync] Using direct Google API for restaurant ${id}`);
       const result = await syncReviewsForRestaurant(restaurant);
 
-      res.json({ 
-        success: true, 
-        synced: result.synced, 
+      res.json({
+        success: true,
+        synced: result.synced,
         errors: result.errors,
         message: `Synced ${result.synced} reviews`,
         source: "google",
@@ -1346,18 +1360,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       if (!restaurant.googleAccountId || !restaurant.googleLocationId) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           message: "Please select a Google Business location first",
-          needsLocationSelection: true 
+          needsLocationSelection: true
         });
       }
 
       console.log(`[Resync] Manual resync for restaurant ${restaurantId}`);
       const result = await syncReviewsForRestaurant(restaurant);
 
-      res.json({ 
-        success: true, 
-        synced: result.synced, 
+      res.json({
+        success: true,
+        synced: result.synced,
         errors: result.errors,
         message: `Synced ${result.synced} reviews`,
       });
@@ -1372,8 +1386,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Use direct Google API
       console.log("[Sync] Using direct Google API for all restaurants");
       await syncAllConnectedRestaurants();
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         message: "Review sync started for all connected restaurants",
         source: "google",
       });
@@ -1385,7 +1399,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Partner API status - now disabled, using direct Google API
   app.get("/api/partner/status", async (req, res) => {
-    res.json({ 
+    res.json({
       configured: false,
       message: "Using direct Google API instead of Partner API",
     });
@@ -1413,7 +1427,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Try to get cached summary
       const cachedSummary = await storage.getReviewSummary(userId, restId, lang);
-      
+
       if (cachedSummary) {
         res.json({
           summary: cachedSummary.summary,
@@ -1447,7 +1461,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Get reviews for the user (or specific restaurant)
       let reviews = await storage.getReviewsByUserId(userId);
-      
+
       // Filter by restaurant if specified
       if (restId) {
         reviews = reviews.filter(r => r.restaurantId === restId);
@@ -1457,24 +1471,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (startDate || endDate) {
         let start: Date | null = null;
         let end: Date | null = null;
-        
+
         if (startDate) {
           start = new Date(startDate);
           // Set start date to beginning of day (00:00:00)
           start.setHours(0, 0, 0, 0);
         }
-        
+
         if (endDate) {
           end = new Date(endDate);
           // Set end date to end of day (23:59:59.999)
           end.setHours(23, 59, 59, 999);
         }
-        
+
         reviews = reviews.filter(r => {
           // Use reviewedAt (the actual review date from Google)
           const reviewDate = r.reviewedAt ? new Date(r.reviewedAt) : null;
           if (!reviewDate) return false;
-          
+
           if (start && reviewDate < start) return false;
           if (end && reviewDate > end) return false;
           return true;
@@ -1500,7 +1514,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Generate summary via AI
       const aiSummary = await analyzeReviewSummary(recentReviews, restaurantName, lang);
-      
+
       // Save to database
       const savedSummary = await storage.saveReviewSummary({
         userId,
@@ -1515,7 +1529,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         reviewCount: reviews.length,
         analyzedCount: recentReviews.length,
       });
-      
+
       res.json({
         summary: savedSummary.summary,
         overallSentiment: savedSummary.overallSentiment,
@@ -1539,21 +1553,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { id } = req.params;
       const { reply } = req.body;
       const userId = req.user.claims.sub;
-      
+
       const user = await storage.getUser(userId);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       // Check reply limits and handle monthly reset
       const { used, needsReset } = getMonthlyReplyUsage(user);
-      
+
       if (needsReset) {
         await storage.updateUserReplyUsage(userId, 0, new Date());
       }
-      
+
       const replyCheck = canSendReply(user);
-      
+
       if (!replyCheck.allowed && !needsReset) {
         return res.status(403).json({
           error: PLAN_ERROR_CODES.REPLY_LIMIT_REACHED,
@@ -1600,13 +1614,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         replyStatus: "posted",
         repliedAt: new Date(),
       });
-      
+
       // Increment monthly reply usage
       const currentUsed = needsReset ? 0 : (user.monthlyRepliesUsed || 0);
       await storage.updateUserReplyUsage(userId, currentUsed + 1);
 
-      res.json({ 
-        ...updated, 
+      res.json({
+        ...updated,
         postSource: restaurant.googleAccessToken ? "google" : "local",
       });
     } catch (error) {
@@ -1640,21 +1654,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { id } = req.params;
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
-      
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
 
       // Check reply limits and handle monthly reset
       const { used, needsReset } = getMonthlyReplyUsage(user);
-      
+
       if (needsReset) {
         // Reset the counter for the new month
         await storage.updateUserReplyUsage(userId, 0, new Date());
       }
-      
+
       const replyCheck = canSendReply(user);
-      
+
       if (!replyCheck.allowed && !needsReset) {
         return res.status(403).json({
           error: PLAN_ERROR_CODES.REPLY_LIMIT_REACHED,
@@ -1677,7 +1691,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Look up tone preset for custom instructions
       let customInstructions: string | undefined;
       let toneStyle = restaurant.toneOfVoice || "friendly";
-      
+
       if (restaurant.tonePresetId) {
         const tonePreset = await storage.getTonePreset(restaurant.tonePresetId);
         if (tonePreset) {
@@ -1718,7 +1732,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
-      
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
@@ -1768,7 +1782,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Look up tone preset for custom instructions
           let customInstructions: string | undefined;
           let toneStyle = restaurant.toneOfVoice || "friendly";
-          
+
           if (restaurant.tonePresetId) {
             const tonePreset = await storage.getTonePreset(restaurant.tonePresetId);
             if (tonePreset) {
@@ -1833,7 +1847,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const subscription = await storage.getSubscription(user.stripeSubscriptionId);
       const planInfo = getUserPlanInfo(user);
-      
+
       res.json({
         status: user.subscriptionStatus,
         plan: user.subscriptionPlan,
@@ -1892,7 +1906,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error(`[Checkout] Invalid planId: ${planId}`);
         return res.status(400).json({ message: "Invalid plan ID" });
       }
-      
+
       const validCycles: BillingCycle[] = ["monthly", "yearly"];
       if (!validCycles.includes(billingCycle)) {
         return res.status(400).json({ message: "Invalid billing cycle" });
@@ -1902,7 +1916,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let finalPriceId = priceId;
       let finalPlanId = planId;
       let finalBillingCycle = billingCycle;
-      
+
       if (planId && !priceId) {
         // New flow: use planId and billingCycle to get price ID
         finalPriceId = getStripePriceId(planId as PlanId, billingCycle as BillingCycle);
@@ -1916,9 +1930,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         } else {
           // CRITICAL: Reject unrecognized price IDs to prevent invalid plan data
           console.error(`[Checkout] Unrecognized priceId: ${priceId} - cannot derive plan info`);
-          return res.status(400).json({ 
+          return res.status(400).json({
             message: "Unrecognized price ID",
-            code: "INVALID_PRICE_ID" 
+            code: "INVALID_PRICE_ID"
           });
         }
       } else if (planId && priceId) {
@@ -1926,17 +1940,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const derivedPlan = getPlanFromPriceId(priceId);
         if (!derivedPlan) {
           console.error(`[Checkout] Unrecognized priceId: ${priceId}`);
-          return res.status(400).json({ 
+          return res.status(400).json({
             message: "Unrecognized price ID",
-            code: "INVALID_PRICE_ID" 
+            code: "INVALID_PRICE_ID"
           });
         }
         // Ensure planId matches the priceId
         if (derivedPlan.planId !== planId) {
           console.error(`[Checkout] planId/priceId mismatch: ${planId} vs ${derivedPlan.planId}`);
-          return res.status(400).json({ 
+          return res.status(400).json({
             message: "Plan ID and Price ID mismatch",
-            code: "PLAN_PRICE_MISMATCH" 
+            code: "PLAN_PRICE_MISMATCH"
           });
         }
         // Use derived billingCycle from priceId (authoritative)
@@ -1946,7 +1960,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!finalPriceId) {
         return res.status(400).json({ message: "Price ID or Plan ID is required" });
       }
-      
+
       // Ensure we have a valid planId at this point
       if (!finalPlanId) {
         console.error(`[Checkout] No valid planId determined`);
@@ -1970,17 +1984,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // CRITICAL: Check if customer already has an active subscription
       const activeSubscription = await getActiveSubscription(stripe, customerId);
-      
+
       if (activeSubscription) {
         // Customer already has active subscription - perform upgrade/downgrade instead
         console.log(`[Checkout] User ${userId} has active subscription ${activeSubscription.id}, upgrading instead of creating new`);
-        
+
         // Check if trying to switch to the same price (no change needed)
         if (activeSubscription.currentPriceId === finalPriceId) {
           console.log(`[Checkout] User ${userId} already on this plan, no change needed`);
-          return res.status(400).json({ 
+          return res.status(400).json({
             message: "Ya tienes este plan activo",
-            code: "SAME_PLAN" 
+            code: "SAME_PLAN"
           });
         }
 
@@ -1995,9 +2009,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         if (!upgradeResult.success) {
           console.error(`[Checkout] Upgrade failed for user ${userId}:`, upgradeResult.error);
-          return res.status(500).json({ 
+          return res.status(500).json({
             message: "Error al cambiar de plan",
-            details: upgradeResult.error 
+            details: upgradeResult.error
           });
         }
 
@@ -2010,11 +2024,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
 
         console.log(`[Checkout] User ${userId} upgraded to ${finalPlanId} successfully`);
-        
+
         // Return success with upgraded flag instead of URL
         const planName = PLANS[finalPlanId as PlanId]?.name || finalPlanId;
-        return res.json({ 
-          upgraded: true, 
+        return res.json({
+          upgraded: true,
           plan: finalPlanId,
           message: `Plan actualizado a ${planName}`
         });
@@ -2026,7 +2040,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if user is eligible for trial (Local plan only, never had a subscription before)
       // Step 1: Check local database for subscription history
       let hasHistory = await storage.hasSubscriptionHistory(userId);
-      
+
       // Step 2: Double-check with Stripe directly (Stripe is source of truth)
       // This catches cases where local DB was reset but user had prior subscriptions
       if (!hasHistory) {
@@ -2044,10 +2058,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Continue with local check result
         }
       }
-      
+
       const plan = PLANS[finalPlanId as PlanId];
       const isTrialEligible = !hasHistory && plan?.trialAllowed && finalPlanId === 'local';
-      
+
       console.log(`[Checkout] Trial eligibility for user ${userId}: hasHistory=${hasHistory}, trialAllowed=${plan?.trialAllowed}, plan=${finalPlanId}, eligible=${isTrialEligible}`);
 
       // Validate promo code via Stripe if provided (preserve casing - Stripe is case-sensitive)
@@ -2117,7 +2131,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error message:", error?.message);
       console.error("Error code:", error?.code);
       console.error("Full error:", JSON.stringify(error, null, 2));
-      
+
       res.status(500).json({ message: "Failed to create checkout session", details: error?.message || "Unknown error" });
     }
   });
@@ -2167,7 +2181,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const stripe = await getUncachableStripeClient();
-      
+
       // List all subscriptions for this customer
       const subscriptions = await stripe.subscriptions.list({
         customer: user.stripeCustomerId,
@@ -2189,8 +2203,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             stripeSubscriptionId: null,
           });
         }
-        return res.json({ 
-          success: true, 
+        return res.json({
+          success: true,
           message: "No active subscription found",
           status: 'pending'
         });
@@ -2199,7 +2213,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get plan info from subscription metadata or price lookup
       const planId = activeSubscription.metadata?.planId || null;
       const billingCycle = activeSubscription.metadata?.billingCycle || 'monthly';
-      
+
       // Determine status from Stripe (preserve trialing state)
       let status: 'active' | 'trialing' | 'past_due' | 'canceled' | 'pending' = 'active';
       if (activeSubscription.status === 'trialing') {
@@ -2222,9 +2236,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       console.log(`[Billing Sync] User ${userId} synced: plan=${planId}, status=${status}`);
-      
-      res.json({ 
-        success: true, 
+
+      res.json({
+        success: true,
         message: "Subscription synced successfully",
         status,
         plan: planId,
@@ -2251,20 +2265,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const stripe = await getUncachableStripeClient();
-      
+
       // If user is in trial period, cancel immediately (no charge)
       if (user.subscriptionStatus === "trialing" || user.subscriptionStatus === "trial") {
         await stripe.subscriptions.cancel(user.stripeSubscriptionId);
-        
+
         await storage.updateUserStripeInfo(userId, {
           subscriptionStatus: "canceled",
         });
-        
+
         console.log(`[Subscription] User ${userId} canceled trial subscription ${user.stripeSubscriptionId} immediately (no charge)`);
         res.json({ success: true, message: "Trial canceled - no charges applied" });
         return;
       }
-      
+
       // Active paid subscription: cancel at end of billing period (don't immediately revoke access)
       await stripe.subscriptions.update(user.stripeSubscriptionId, {
         cancel_at_period_end: true,
@@ -2293,10 +2307,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const stripe = await getUncachableStripeClient();
-      
+
       // Check if subscription is set to cancel at period end
       const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
-      
+
       if (!subscription.cancel_at_period_end) {
         return res.status(400).json({ message: "Subscription is not scheduled for cancellation" });
       }
@@ -2324,22 +2338,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
-      
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
 
       const stripe = await getUncachableStripeClient();
       const planInfo = getUserPlanInfo(user);
-      
+
       // Get usage stats
       const locationCount = await storage.getRestaurantCount(userId);
       const teamMemberCount = await storage.getTeamMemberCount(userId);
       const tonePresetCount = await storage.getTonePresetCount(userId);
-      
+
       // Get review stats from dashboard
       const dashboardStats = await storage.getDashboardStats(userId);
-      
+
       let subscriptionDetails: any = null;
       let invoices: any[] = [];
       let paymentMethod: any = null;
@@ -2352,11 +2366,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId, {
             expand: ['default_payment_method', 'latest_invoice']
           }) as any;
-          
+
           cancelAtPeriodEnd = subscription.cancel_at_period_end;
           currentPeriodEnd = subscription.current_period_end ? new Date(subscription.current_period_end * 1000) : null;
           currentPeriodStart = subscription.current_period_start ? new Date(subscription.current_period_start * 1000) : null;
-          
+
           subscriptionDetails = {
             id: subscription.id,
             status: subscription.status,
@@ -2365,7 +2379,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             currentPeriodEnd,
             startDate: subscription.start_date ? new Date(subscription.start_date * 1000) : null,
           };
-          
+
           // Get payment method
           if (subscription.default_payment_method && typeof subscription.default_payment_method === 'object') {
             const pm = subscription.default_payment_method as any;
@@ -2390,7 +2404,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             customer: user.stripeCustomerId,
             limit: 10,
           });
-          
+
           invoices = invoiceList.data.map((inv: any) => ({
             id: inv.id,
             number: inv.number,
@@ -2411,7 +2425,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const maxTeamMembers = typeof planInfo.limits.maxTeamMembers === 'number' ? planInfo.limits.maxTeamMembers : 999;
       const maxTonePresets = typeof planInfo.limits.maxTonePresets === 'number' ? planInfo.limits.maxTonePresets : 999;
       const maxReplies = typeof planInfo.limits.maxRepliesPerMonth === 'number' ? planInfo.limits.maxRepliesPerMonth : 999;
-      
+
       const usage = {
         locations: {
           used: locationCount,
@@ -2439,8 +2453,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get plan pricing
       const plan = PLANS[planInfo.planId as PlanId] || PLANS.local;
       const billingCycle = (user.billingCycle as BillingCycle) || 'monthly';
-      const currentPrice = billingCycle === 'yearly' 
-        ? Math.round((plan.price.yearly / 12) * 100) / 100 
+      const currentPrice = billingCycle === 'yearly'
+        ? Math.round((plan.price.yearly / 12) * 100) / 100
         : plan.price.monthly;
 
       res.json({
@@ -2477,18 +2491,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Validate required fields
       if (!name || !email || !message) {
-        return res.status(400).json({ 
-          success: false, 
-          message: "Name, email, and message are required" 
+        return res.status(400).json({
+          success: false,
+          message: "Name, email, and message are required"
         });
       }
 
       // Validate email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        return res.status(400).json({ 
-          success: false, 
-          message: "Invalid email format" 
+        return res.status(400).json({
+          success: false,
+          message: "Invalid email format"
         });
       }
 
@@ -2556,29 +2570,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/admin/review-qrs", isAdminAuthenticated, async (req: any, res) => {
     try {
       const { restaurantId, name, googleReviewUrl } = req.body;
-      
+
       if (!restaurantId || !googleReviewUrl) {
         return res.status(400).json({ success: false, message: "Restaurant ID and Google Review URL are required" });
       }
-      
+
       // Validate that restaurant exists
       const restaurant = await storage.getRestaurant(restaurantId);
       if (!restaurant) {
         return res.status(400).json({ success: false, message: "Restaurant not found" });
       }
-      
+
       // Validate URL is a legitimate Google domain
       if (!isValidGoogleReviewUrl(googleReviewUrl)) {
         return res.status(400).json({ success: false, message: "Invalid URL. Only Google review URLs are allowed" });
       }
-      
+
       const qr = await storage.createReviewQr({
         restaurantId,
         name: name?.trim() || null,
         googleReviewUrl: googleReviewUrl.trim(),
         isActive: true,
       });
-      
+
       return res.json({ success: true, qr });
     } catch (error) {
       console.error("Error creating admin review QR:", error);
@@ -2591,12 +2605,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const { name, googleReviewUrl, isActive } = req.body;
-      
+
       const qr = await storage.getReviewQr(id);
       if (!qr) {
         return res.status(404).json({ success: false, message: "QR code not found" });
       }
-      
+
       const updateData: Record<string, any> = {};
       if (name !== undefined) updateData.name = name?.trim() || null;
       if (googleReviewUrl !== undefined) {
@@ -2606,7 +2620,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         updateData.googleReviewUrl = googleReviewUrl.trim();
       }
       if (typeof isActive === 'boolean') updateData.isActive = isActive;
-      
+
       const updated = await storage.updateReviewQr(id, updateData);
       return res.json({ success: true, qr: updated });
     } catch (error) {
@@ -2632,7 +2646,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const page = parseInt(req.query.page as string) || 1;
       const limit = 25;
       const offset = (page - 1) * limit;
-      
+
       const rating = req.query.rating ? parseInt(req.query.rating as string) : undefined;
       const restaurantId = req.query.restaurant_id as string | undefined;
       const fromDate = req.query.from_date as string | undefined;
@@ -2642,27 +2656,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Build query conditions
       const conditions: any[] = [];
-      
+
       if (rating && rating >= 1 && rating <= 5) {
         conditions.push(eq(reviews.rating, rating));
       }
-      
+
       if (restaurantId) {
         conditions.push(eq(reviews.restaurantId, restaurantId));
       }
-      
+
       if (fromDate) {
         const start = new Date(fromDate);
         start.setHours(0, 0, 0, 0);
         conditions.push(gte(reviews.reviewedAt, start));
       }
-      
+
       if (toDate) {
         const end = new Date(toDate);
         end.setHours(23, 59, 59, 999);
         conditions.push(lte(reviews.reviewedAt, end));
       }
-      
+
       if (replied === 'true') {
         conditions.push(eq(reviews.replyStatus, 'posted'));
       } else if (replied === 'false') {
@@ -2676,12 +2690,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .select({ count: sql<number>`count(*)` })
         .from(reviews)
         .where(whereClause);
-      
+
       const totalCount = Number(countResult[0]?.count || 0);
       const totalPages = Math.ceil(totalCount / limit) || 1;
 
       // Determine sort order (default: newest reviews first by reviewedAt)
-      const sortOrder = sort === 'oldest' 
+      const sortOrder = sort === 'oldest'
         ? [asc(reviews.reviewedAt), asc(reviews.createdAt)]
         : [desc(reviews.reviewedAt), desc(reviews.createdAt)];
 
@@ -2744,7 +2758,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // Get all keys starting with "contact_"
       const keysResult = await replitDb.list("contact_");
-      
+
       // Handle different return formats from Replit database
       let keys: string[] = [];
       if (Array.isArray(keysResult)) {
@@ -2752,7 +2766,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else if (keysResult && typeof keysResult === 'object' && 'value' in keysResult) {
         keys = (keysResult as any).value || [];
       }
-      
+
       // Fetch all contact entries and unwrap the Replit DB result format
       const contactsRaw = await Promise.all(
         keys.map(async (key: string) => {
@@ -2764,12 +2778,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return result;
         })
       );
-      
+
       // Filter out any null/undefined values
       const contacts = contactsRaw.filter((c) => c != null);
 
       // Sort by createdAt descending (newest first)
-      contacts.sort((a: any, b: any) => 
+      contacts.sort((a: any, b: any) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
 
@@ -2784,11 +2798,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/admin/contacts/:id", isAdminAuthenticated, async (req, res) => {
     try {
       const { id } = req.params;
-      
+
       // Delete the contact from Replit database
       await replitDb.delete(id);
       console.log(`[Admin] Contact deleted: ${id}`);
-      
+
       res.json({ success: true });
     } catch (error) {
       console.error("Error deleting contact:", error);
@@ -2865,8 +2879,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ============================
+  // ADMIN CRM PANEL
+  // ============================
+
+  // Get all leads across all affiliates (for CRM board)
+  app.get("/api/admin/crm/leads", isAdminAuthenticated, async (req, res) => {
+    try {
+      const leads = await storage.getAllAffiliateLeadsWithAffiliate();
+      res.json({ success: true, leads });
+    } catch (error) {
+      console.error("Error fetching CRM leads:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch CRM leads" });
+    }
+  });
+
+  // Update lead status (for Kanban drag-and-drop)
+  app.patch("/api/admin/crm/leads/:id/status", isAdminAuthenticated, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      if (!status) return res.status(400).json({ success: false, message: "Status required" });
+      const lead = await storage.updateAffiliateLeadStatus(id, status);
+      if (!lead) return res.status(404).json({ success: false, message: "Lead not found" });
+      res.json({ success: true, lead });
+    } catch (error) {
+      console.error("Error updating CRM lead status:", error);
+      res.status(500).json({ success: false, message: "Failed to update lead status" });
+    }
+  });
+
+  // Update lead notes
+  app.patch("/api/admin/crm/leads/:id/notes", isAdminAuthenticated, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { notes } = req.body;
+      const lead = await storage.updateAffiliateLeadNotes(id, notes || "");
+      if (!lead) return res.status(404).json({ success: false, message: "Lead not found" });
+      res.json({ success: true, lead });
+    } catch (error) {
+      console.error("Error updating CRM lead notes:", error);
+      res.status(500).json({ success: false, message: "Failed to update lead notes" });
+    }
+  });
+
+  // Get CRM pipeline stats
+  app.get("/api/admin/crm/stats", isAdminAuthenticated, async (req, res) => {
+    try {
+      const leads = await storage.getAllAffiliateLeadsWithAffiliate();
+      const statuses = ["pending", "called", "call_later", "not_interested", "sale_closed"];
+      const pipeline: Record<string, number> = {};
+      statuses.forEach(s => { pipeline[s] = 0; });
+      leads.forEach(l => { pipeline[l.status || "pending"] = (pipeline[l.status || "pending"] || 0) + 1; });
+      const total = leads.length;
+      const closed = pipeline["sale_closed"] || 0;
+      const conversionRate = total > 0 ? Math.round((closed / total) * 100) : 0;
+      res.json({ success: true, stats: { total, pipeline, conversionRate, closed } });
+    } catch (error) {
+      console.error("Error fetching CRM stats:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch CRM stats" });
+    }
+  });
+
+  // ============================
   // ADMIN AFFILIATE MANAGEMENT
   // ============================
+
 
   // Get all affiliates
   app.get("/api/admin/affiliates", isAdminAuthenticated, async (req, res) => {
@@ -2901,21 +2978,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/admin/affiliates", isAdminAuthenticated, async (req, res) => {
     try {
       const { username, password, zone, commissionPct } = req.body;
-      
+
       if (!username || !password) {
         return res.status(400).json({ success: false, message: "Username and password required" });
       }
-      
+
       // Check if username already exists
       const existing = await storage.getAffiliateByUsername(username);
       if (existing) {
         return res.status(400).json({ success: false, message: "Username already exists" });
       }
-      
+
       // Hash password
       const bcrypt = await import("bcryptjs");
       const passwordHash = await bcrypt.hash(password, 10);
-      
+
       const affiliate = await storage.createAffiliate({
         username,
         passwordHash,
@@ -2923,10 +3000,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         commissionPct: commissionPct || 15,
         status: "active",
       });
-      
-      res.json({ 
-        success: true, 
-        affiliate: { ...affiliate, passwordHash: undefined } 
+
+      res.json({
+        success: true,
+        affiliate: { ...affiliate, passwordHash: undefined }
       });
     } catch (error) {
       console.error("Error creating affiliate:", error);
@@ -2939,27 +3016,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const { username, password, zone, commissionPct, status } = req.body;
-      
+
       const updateData: any = {};
       if (username) updateData.username = username;
       if (zone !== undefined) updateData.zone = zone;
       if (commissionPct !== undefined) updateData.commissionPct = commissionPct;
       if (status) updateData.status = status;
-      
+
       // If password is provided, hash it
       if (password) {
         const bcrypt = await import("bcryptjs");
         updateData.passwordHash = await bcrypt.hash(password, 10);
       }
-      
+
       const affiliate = await storage.updateAffiliate(id, updateData);
       if (!affiliate) {
         return res.status(404).json({ success: false, message: "Affiliate not found" });
       }
-      
-      res.json({ 
-        success: true, 
-        affiliate: { ...affiliate, passwordHash: undefined } 
+
+      res.json({
+        success: true,
+        affiliate: { ...affiliate, passwordHash: undefined }
       });
     } catch (error) {
       console.error("Error updating affiliate:", error);
@@ -2996,11 +3073,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const { businessName, contactName, phone, email, notes } = req.body;
-      
+
       if (!businessName) {
         return res.status(400).json({ success: false, message: "Business name required" });
       }
-      
+
       const lead = await storage.createAffiliateLead({
         affiliateId: id,
         businessName,
@@ -3010,7 +3087,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         notes: notes || null,
         status: "pending",
       });
-      
+
       res.json({ success: true, lead });
     } catch (error) {
       console.error("Error creating lead:", error);
@@ -3023,17 +3100,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const { leads } = req.body;
-      
+
       if (!Array.isArray(leads) || leads.length === 0) {
         return res.status(400).json({ success: false, message: "Leads array required" });
       }
-      
+
       // Validate affiliate exists
       const affiliate = await storage.getAffiliateById(id);
       if (!affiliate) {
         return res.status(404).json({ success: false, message: "Affiliate not found" });
       }
-      
+
       // Prepare leads for insertion
       const leadsToInsert = leads.map((lead: any) => ({
         affiliateId: id,
@@ -3044,7 +3121,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         notes: lead.notes || null,
         status: "pending" as const,
       }));
-      
+
       const insertedLeads = await storage.createAffiliateLeadsBulk(leadsToInsert);
       res.json({ success: true, imported: insertedLeads.length, leads: insertedLeads });
     } catch (error) {
@@ -3081,20 +3158,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const { status } = req.body;
-      
+
       const validStatuses = ["pending", "validated", "paid"];
       if (!status || !validStatuses.includes(status)) {
-        return res.status(400).json({ 
-          success: false, 
-          message: `Invalid status. Must be one of: ${validStatuses.join(", ")}` 
+        return res.status(400).json({
+          success: false,
+          message: `Invalid status. Must be one of: ${validStatuses.join(", ")}`
         });
       }
-      
+
       const sale = await storage.updateAffiliateSaleStatus(id, status);
       if (!sale) {
         return res.status(404).json({ success: false, message: "Sale not found" });
       }
-      
+
       res.json({ success: true, sale });
     } catch (error) {
       console.error("Error updating sale status:", error);
@@ -3105,7 +3182,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ============================
   // TEAM MEMBER ENDPOINTS
   // ============================
-  
+
   app.get("/api/team", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
@@ -3121,18 +3198,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       console.log(`[team] Creating team member invite for user ${userId}`, req.body);
-      
+
       const user = await storage.getUser(userId);
-      
+
       if (!user) {
         console.log(`[team] User not found: ${userId}`);
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       // Check team member limits
       const currentCount = await storage.getTeamMemberCount(userId);
       const teamCheck = canAddTeamMember(user, currentCount);
-      
+
       if (!teamCheck.allowed) {
         console.log(`[team] Team limit reached for user ${userId}:`, teamCheck);
         return res.status(403).json({
@@ -3142,7 +3219,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           current: teamCheck.current,
         });
       }
-      
+
       const data = insertTeamMemberSchema.parse({ ...req.body, ownerId: userId });
       console.log(`[team] Parsed invite data:`, data);
       const member = await storage.createTeamMember(data);
@@ -3158,15 +3235,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const userId = req.user.claims.sub;
-      
+
       // Verify ownership by checking if member belongs to user's team
       const members = await storage.getTeamMembers(userId);
       const member = members.find((m) => m.id === id);
-      
+
       if (!member) {
         return res.status(404).json({ message: "Team member not found" });
       }
-      
+
       const updated = await storage.updateTeamMember(id, req.body);
       res.json(updated);
     } catch (error) {
@@ -3179,15 +3256,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const userId = req.user.claims.sub;
-      
+
       // Verify ownership
       const members = await storage.getTeamMembers(userId);
       const member = members.find((m) => m.id === id);
-      
+
       if (!member) {
         return res.status(404).json({ message: "Team member not found" });
       }
-      
+
       await storage.deleteTeamMember(id);
       res.json({ success: true });
     } catch (error) {
@@ -3199,6 +3276,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ============================
   // INVITATION ENDPOINTS
   // ============================
+
+  // Attach modular routes
+  app.use("/api/onboarding", onboardingRouter);
+  app.use("/api/alerts", alertsRouter);
 
   // Get pending invitations for the current user
   app.get("/api/invitations/pending", isAuthenticated, async (req: any, res) => {
@@ -3221,31 +3302,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { id } = req.params;
       const userId = req.user.claims.sub;
       const userEmail = req.user.claims.email;
-      
+
       // Get the invitation
       const invitation = await storage.getTeamMemberById(id);
-      
+
       if (!invitation) {
         return res.status(404).json({ message: "Invitation not found" });
       }
-      
+
       // Verify this invitation is for the current user
       if (invitation.email.toLowerCase() !== userEmail?.toLowerCase()) {
         return res.status(403).json({ message: "This invitation is not for you" });
       }
-      
+
       // Verify it's still pending
       if (invitation.status !== "pending") {
         return res.status(400).json({ message: "Invitation is no longer pending" });
       }
-      
+
       // Accept the invitation and link to the accepting user
       const updated = await storage.updateTeamMember(id, {
         status: "active",
         userId: userId,
         acceptedAt: new Date(),
       });
-      
+
       // Grant the invitee access to all restaurants the inviter has access to
       const inviterAccess = await storage.getRestaurantAccessByUserId(invitation.ownerId);
       for (const access of inviterAccess) {
@@ -3256,7 +3337,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           grantedBy: invitation.ownerId,
         });
       }
-      
+
       res.json({ success: true, member: updated });
     } catch (error) {
       console.error("Error accepting invitation:", error);
@@ -3269,27 +3350,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const userEmail = req.user.claims.email;
-      
+
       // Get the invitation
       const invitation = await storage.getTeamMemberById(id);
-      
+
       if (!invitation) {
         return res.status(404).json({ message: "Invitation not found" });
       }
-      
+
       // Verify this invitation is for the current user
       if (invitation.email.toLowerCase() !== userEmail?.toLowerCase()) {
         return res.status(403).json({ message: "This invitation is not for you" });
       }
-      
+
       // Verify it's still pending
       if (invitation.status !== "pending") {
         return res.status(400).json({ message: "Invitation is no longer pending" });
       }
-      
+
       // Delete the invitation (declined)
       await storage.deleteTeamMember(id);
-      
+
       res.json({ success: true });
     } catch (error) {
       console.error("Error declining invitation:", error);
@@ -3300,7 +3381,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ============================
   // TONE PRESET ENDPOINTS
   // ============================
-  
+
   app.get("/api/tone-presets", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
@@ -3316,15 +3397,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
-      
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       // Check tone preset limits
       const currentCount = await storage.getTonePresetCount(userId);
       const presetCheck = canAddTonePreset(user, currentCount);
-      
+
       if (!presetCheck.allowed) {
         return res.status(403).json({
           error: PLAN_ERROR_CODES.TONE_PRESET_LIMIT_REACHED,
@@ -3333,7 +3414,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           current: presetCheck.current,
         });
       }
-      
+
       const data = insertTonePresetSchema.parse({ ...req.body, userId });
       const preset = await storage.createTonePreset(data);
       res.json(preset);
@@ -3347,13 +3428,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const userId = req.user.claims.sub;
-      
+
       // Verify ownership
       const preset = await storage.getTonePreset(id);
       if (!preset || preset.userId !== userId) {
         return res.status(404).json({ message: "Tone preset not found" });
       }
-      
+
       const updated = await storage.updateTonePreset(id, req.body);
       res.json(updated);
     } catch (error) {
@@ -3366,13 +3447,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const userId = req.user.claims.sub;
-      
+
       // Verify ownership
       const preset = await storage.getTonePreset(id);
       if (!preset || preset.userId !== userId) {
         return res.status(404).json({ message: "Tone preset not found" });
       }
-      
+
       await storage.deleteTonePreset(id);
       res.json({ success: true });
     } catch (error) {
@@ -3382,28 +3463,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ============================
-  // ADVANCED ANALYTICS ENDPOINT (Pro+ only)
+  // ANALYTICS ENDPOINT (all users)
   // ============================
-  
+
   app.get("/api/analytics/advanced", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      
-      // Check feature access
-      const accessCheck = canAccessAdvancedAnalytics(user);
-      if (!accessCheck.allowed) {
-        return res.status(403).json({
-          error: PLAN_ERROR_CODES.FEATURE_NOT_IN_PLAN,
-          message: accessCheck.reason,
-          feature: "advanced_analytics",
-        });
-      }
-      
+
       const analytics = await storage.getAdvancedAnalytics(userId);
       res.json(analytics);
     } catch (error) {
@@ -3415,16 +3481,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ============================
   // MULTI-LOCATION DASHBOARD (Business+ only)
   // ============================
-  
+
   app.get("/api/locations/overview", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
-      
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       // Check feature access
       const accessCheck = canAccessMultiLocationDashboard(user);
       if (!accessCheck.allowed) {
@@ -3434,7 +3500,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           feature: "multi_location_dashboard",
         });
       }
-      
+
       const overview = await storage.getLocationOverview(userId);
       res.json(overview);
     } catch (error) {
@@ -3446,16 +3512,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ============================
   // ADD EXTRA LOCATION (Business plan only)
   // ============================
-  
+
   app.post("/api/billing/add-extra-location", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
-      
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       // Check if user can add extra locations (Business plan only)
       if (!canAddExtraLocation(user)) {
         return res.status(403).json({
@@ -3463,9 +3529,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Extra locations are only available on the Business plan.",
         });
       }
-      
+
       const stripe = await getUncachableStripeClient();
-      
+
       // Get or create customer (handles test→live mode migration)
       const customerId = await getOrCreateStripeCustomer(
         stripe,
@@ -3473,7 +3539,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         user.stripeCustomerId,
         user.email
       );
-      
+
       // Create checkout session for extra location
       // Use a price ID for the extra location addon (€39/month)
       const session = await stripe.checkout.sessions.create({
@@ -3507,7 +3573,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           },
         },
       });
-      
+
       res.json({ url: session.url });
     } catch (error) {
       console.error("Error creating extra location checkout:", error);
@@ -3518,46 +3584,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ============================
   // ADMIN: PLAN LIMITS TESTING ENDPOINT
   // ============================
-  
+
   app.post("/api/admin/test-plan-limits", isAdminAuthenticated, async (req, res) => {
     try {
       const { userId, action, value } = req.body;
-      
+
       if (!userId || !action) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           message: "userId and action are required",
           availableActions: [
             "set_monthly_replies",
-            "reset_monthly_replies", 
+            "reset_monthly_replies",
             "set_plan",
             "get_user_limits"
           ]
         });
       }
-      
+
       const user = await storage.getUser(userId);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       switch (action) {
         case "set_monthly_replies":
           const replyCount = parseInt(value) || 0;
           await storage.updateUserReplyUsage(userId, replyCount, user.monthlyRepliesPeriodStart || new Date());
-          return res.json({ 
-            success: true, 
+          return res.json({
+            success: true,
             message: `Set monthly replies to ${replyCount}`,
             user: await storage.getUser(userId)
           });
-          
+
         case "reset_monthly_replies":
           await storage.updateUserReplyUsage(userId, 0, new Date());
-          return res.json({ 
-            success: true, 
+          return res.json({
+            success: true,
             message: "Reset monthly replies to 0",
             user: await storage.getUser(userId)
           });
-          
+
         case "set_plan":
           const validPlans = ["local", "pro", "business", "enterprise"];
           if (!validPlans.includes(value)) {
@@ -3567,23 +3633,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
             subscriptionPlan: value,
             subscriptionStatus: "active",
           });
-          return res.json({ 
-            success: true, 
+          return res.json({
+            success: true,
             message: `Set plan to ${value}`,
             user: await storage.getUser(userId)
           });
-          
+
         case "get_user_limits":
           const planInfo = getUserPlanInfo(user);
           const locationCount = await storage.getRestaurantCount(userId);
           const teamMemberCount = await storage.getTeamMemberCount(userId);
           const tonePresetCount = await storage.getTonePresetCount(userId);
-          
+
           const locationCheck = canAddLocation(user, locationCount);
           const teamCheck = canAddTeamMember(user, teamMemberCount);
           const toneCheck = canAddTonePreset(user, tonePresetCount);
           const replyCheck = canSendReply(user);
-          
+
           return res.json({
             success: true,
             planInfo,
@@ -3600,13 +3666,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
               reply: replyCheck,
             }
           });
-          
+
         default:
-          return res.status(400).json({ 
+          return res.status(400).json({
             message: "Unknown action",
             availableActions: [
               "set_monthly_replies",
-              "reset_monthly_replies", 
+              "reset_monthly_replies",
               "set_plan",
               "set_trial_status",
               "get_user_limits"
@@ -3622,21 +3688,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ============================
   // PLAN INFO ENDPOINT
   // ============================
-  
+
   app.get("/api/plan-info", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
-      
+
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       const planInfo = getUserPlanInfo(user);
       const locationCount = await storage.getRestaurantCount(userId);
       const teamMemberCount = await storage.getTeamMemberCount(userId);
       const tonePresetCount = await storage.getTonePresetCount(userId);
-      
+
       res.json({
         ...planInfo,
         currentUsage: {
@@ -3655,67 +3721,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ============================
   // AFFILIATE SYSTEM ROUTES
   // ============================
-  
+
   // Affiliate session management (in-memory like admin sessions)
   const affiliateSessions = new Map<string, { affiliateId: string; createdAt: number }>();
-  
+
   // Affiliate authentication middleware
   function isAffiliateAuthenticated(req: Request, res: Response, next: NextFunction) {
     const token = req.cookies?.affiliate_token;
-    
+
     if (!token || !affiliateSessions.has(token)) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
-    
+
     const session = affiliateSessions.get(token);
     const maxAge = 24 * 60 * 60 * 1000; // 24 hours
     if (session && Date.now() - session.createdAt > maxAge) {
       affiliateSessions.delete(token);
       return res.status(401).json({ success: false, message: "Session expired" });
     }
-    
+
     // Attach affiliate info to request
     (req as any).affiliateId = session!.affiliateId;
     next();
   }
-  
+
   // Helper to get current affiliate from request
   async function getCurrentAffiliate(req: Request) {
     const affiliateId = (req as any).affiliateId;
     if (!affiliateId) return null;
     return await storage.getAffiliateById(affiliateId);
   }
-  
+
   // Affiliate login
   app.post("/api/affiliate/login", async (req, res) => {
     try {
       const { username, password } = req.body;
-      
+
       if (!username || !password) {
         return res.status(400).json({ success: false, message: "Username and password required" });
       }
-      
+
       const affiliate = await storage.getAffiliateByUsername(username);
       if (!affiliate) {
         return res.status(401).json({ success: false, message: "Invalid credentials" });
       }
-      
+
       // Verify password using bcrypt
       const bcrypt = await import("bcryptjs");
       const isValid = await bcrypt.compare(password, affiliate.passwordHash);
       if (!isValid) {
         return res.status(401).json({ success: false, message: "Invalid credentials" });
       }
-      
+
       // Check if affiliate is paused
       if (affiliate.status === "paused") {
         return res.status(403).json({ success: false, message: "Account paused. Contact administrator." });
       }
-      
+
       // Create session token
       const token = generateToken();
       affiliateSessions.set(token, { affiliateId: affiliate.id, createdAt: Date.now() });
-      
+
       const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
       res.cookie('affiliate_token', token, {
         httpOnly: true,
@@ -3723,9 +3789,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         maxAge: 24 * 60 * 60 * 1000,
         sameSite: 'lax'
       });
-      
-      return res.json({ 
-        success: true, 
+
+      return res.json({
+        success: true,
         message: "Login successful",
         affiliate: {
           id: affiliate.id,
@@ -3740,7 +3806,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ success: false, message: "Login failed" });
     }
   });
-  
+
   // Affiliate logout
   app.post("/api/affiliate/logout", (req, res) => {
     const token = req.cookies?.affiliate_token;
@@ -3750,7 +3816,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.clearCookie('affiliate_token');
     return res.json({ success: true, message: "Logged out" });
   });
-  
+
   // Get current affiliate
   app.get("/api/affiliate/me", isAffiliateAuthenticated, async (req, res) => {
     try {
@@ -3758,12 +3824,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!affiliate) {
         return res.status(404).json({ success: false, message: "Affiliate not found" });
       }
-      
+
       // Check if paused
       if (affiliate.status === "paused") {
         return res.status(403).json({ success: false, message: "Account paused" });
       }
-      
+
       return res.json({
         id: affiliate.id,
         username: affiliate.username,
@@ -3777,7 +3843,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ success: false, message: "Failed to fetch affiliate" });
     }
   });
-  
+
   // Get affiliate leads
   app.get("/api/affiliate/leads", isAffiliateAuthenticated, async (req, res) => {
     try {
@@ -3785,7 +3851,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!affiliate || affiliate.status === "paused") {
         return res.status(403).json({ success: false, message: "Access denied" });
       }
-      
+
       const leads = await storage.getAffiliateLeads(affiliate.id);
       return res.json(leads);
     } catch (error) {
@@ -3793,32 +3859,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ success: false, message: "Failed to fetch leads" });
     }
   });
-  
+
   // Update lead status
   app.patch("/api/affiliate/leads/:id/status", isAffiliateAuthenticated, async (req, res) => {
     try {
       const { id } = req.params;
       const { status } = req.body;
-      
+
       const validStatuses = ["pending", "called", "not_interested", "call_later", "sale_closed"];
       if (!status || !validStatuses.includes(status)) {
-        return res.status(400).json({ 
-          success: false, 
-          message: `Invalid status. Must be one of: ${validStatuses.join(", ")}` 
+        return res.status(400).json({
+          success: false,
+          message: `Invalid status. Must be one of: ${validStatuses.join(", ")}`
         });
       }
-      
+
       const affiliate = await getCurrentAffiliate(req);
       if (!affiliate || affiliate.status === "paused") {
         return res.status(403).json({ success: false, message: "Access denied" });
       }
-      
+
       // Verify lead belongs to this affiliate
       const lead = await storage.getAffiliateLead(id);
       if (!lead || lead.affiliateId !== affiliate.id) {
         return res.status(404).json({ success: false, message: "Lead not found" });
       }
-      
+
       const updated = await storage.updateAffiliateLeadStatus(id, status);
       return res.json(updated);
     } catch (error) {
@@ -3826,28 +3892,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ success: false, message: "Failed to update lead status" });
     }
   });
-  
+
   // Update lead notes
   app.patch("/api/affiliate/leads/:id/notes", isAffiliateAuthenticated, async (req, res) => {
     try {
       const { id } = req.params;
       const { notes } = req.body;
-      
+
       if (typeof notes !== "string") {
         return res.status(400).json({ success: false, message: "Notes must be a string" });
       }
-      
+
       const affiliate = await getCurrentAffiliate(req);
       if (!affiliate || affiliate.status === "paused") {
         return res.status(403).json({ success: false, message: "Access denied" });
       }
-      
+
       // Verify lead belongs to this affiliate
       const lead = await storage.getAffiliateLead(id);
       if (!lead || lead.affiliateId !== affiliate.id) {
         return res.status(404).json({ success: false, message: "Lead not found" });
       }
-      
+
       const updated = await storage.updateAffiliateLeadNotes(id, notes);
       return res.json(updated);
     } catch (error) {
@@ -3855,33 +3921,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ success: false, message: "Failed to update lead notes" });
     }
   });
-  
+
   // Create affiliate sale
   app.post("/api/affiliate/sales", isAffiliateAuthenticated, async (req, res) => {
     try {
       const { leadId, businessEmail, planSoldEur, comment } = req.body;
-      
+
       const affiliate = await getCurrentAffiliate(req);
       if (!affiliate || affiliate.status === "paused") {
         return res.status(403).json({ success: false, message: "Access denied" });
       }
-      
+
       // Validate required fields
       if (!planSoldEur || typeof planSoldEur !== "number" || planSoldEur <= 0) {
         return res.status(400).json({ success: false, message: "Valid plan price in EUR required" });
       }
-      
+
       // If leadId is provided, verify it belongs to this affiliate
       if (leadId) {
         const lead = await storage.getAffiliateLead(leadId);
         if (!lead || lead.affiliateId !== affiliate.id) {
           return res.status(404).json({ success: false, message: "Lead not found" });
         }
-        
+
         // Update lead status to sale_closed
         await storage.updateAffiliateLeadStatus(leadId, "sale_closed");
       }
-      
+
       const sale = await storage.createAffiliateSale({
         affiliateId: affiliate.id,
         leadId: leadId || null,
@@ -3890,14 +3956,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         comment: comment || null,
         status: "pending",
       });
-      
+
       return res.json(sale);
     } catch (error) {
       console.error("Error creating affiliate sale:", error);
       return res.status(500).json({ success: false, message: "Failed to create sale" });
     }
   });
-  
+
   // Get affiliate sales
   app.get("/api/affiliate/sales", isAffiliateAuthenticated, async (req, res) => {
     try {
@@ -3905,7 +3971,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!affiliate || affiliate.status === "paused") {
         return res.status(403).json({ success: false, message: "Access denied" });
       }
-      
+
       const sales = await storage.getAffiliateSales(affiliate.id);
       return res.json(sales);
     } catch (error) {

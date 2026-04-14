@@ -18,17 +18,17 @@ function shouldAutoPublish(
   if (!restaurant.autoPostEnabled) {
     return false;
   }
-  
+
   // Check review type filters
   const allowWithComment = restaurant.autoPublishWithComment ?? true;
   const allowWithoutComment = restaurant.autoPublishWithoutComment ?? true;
   const allowNegative = restaurant.autoPublishNegative ?? true;
-  
+
   // Check minimum star threshold (default: 1 = all reviews)
   // BUT: if allowNegative is true and rating is 1-2 stars, bypass the min star check
   const minStars = restaurant.autoPublishMinStars ?? 1;
   const isNegativeReview = rating <= 2;
-  
+
   if (isNegativeReview) {
     // For negative reviews, check if they're explicitly allowed
     if (!allowNegative) {
@@ -43,18 +43,18 @@ function shouldAutoPublish(
       return false;
     }
   }
-  
+
   // Check comment filter
   if (hasComment && !allowWithComment) {
     console.log(`[Auto-Publish] Skipped: Reviews with comments not allowed`);
     return false;
   }
-  
+
   if (!hasComment && !allowWithoutComment) {
     console.log(`[Auto-Publish] Skipped: Reviews without comments not allowed`);
     return false;
   }
-  
+
   // Check language filter (if specified)
   // "auto" and "all" both mean accept all languages
   const allowedLanguage = restaurant.autoPublishLanguage;
@@ -64,7 +64,7 @@ function shouldAutoPublish(
       return false;
     }
   }
-  
+
   return true;
 }
 
@@ -152,12 +152,12 @@ export async function fetchGoogleAccounts(restaurant: Restaurant): Promise<any[]
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`[Google Business] Failed to fetch accounts - Status: ${response.status}, Error:`, errorText);
-      
+
       // Parse error for more details
       try {
         const errorData = JSON.parse(errorText);
         console.error("[Google Business] Error details:", JSON.stringify(errorData, null, 2));
-        
+
         // Check for common API access issues
         if (response.status === 403) {
           console.error("[Google Business] 403 FORBIDDEN - This usually means:");
@@ -173,12 +173,12 @@ export async function fetchGoogleAccounts(restaurant: Restaurant): Promise<any[]
 
     const data = await response.json();
     console.log("[Google Business] Fetched accounts:", JSON.stringify(data, null, 2));
-    
+
     // Handle case where user has no Business Profile accounts
     if (!data.accounts || data.accounts.length === 0) {
       console.log("[Google Business] No accounts found - User may not have Business Profile API access approved");
     }
-    
+
     return data.accounts || [];
   } catch (error) {
     console.error("[Google Business] Error fetching accounts:", error);
@@ -196,14 +196,14 @@ export async function fetchGoogleLocations(restaurant: Restaurant, accountId: st
   try {
     // Ensure accountId is in the correct format (without 'accounts/' prefix for the URL)
     const cleanAccountId = accountId.replace(/^accounts\//, '');
-    
+
     // Build URL with required readMask parameter
     // The readMask specifies which fields to return
     const url = new URL(`${GOOGLE_API_BASE}/accounts/${cleanAccountId}/locations`);
     url.searchParams.set('readMask', 'name,title,storefrontAddress,metadata');
-    
+
     console.log(`[Google Business] Fetching locations from: ${url.toString()}`);
-    
+
     const response = await fetch(url.toString(), {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -214,11 +214,11 @@ export async function fetchGoogleLocations(restaurant: Restaurant, accountId: st
       const errorText = await response.text();
       console.error(`[Google Business] Failed to fetch locations - Status: ${response.status}`);
       console.error(`[Google Business] Error response:`, errorText);
-      
+
       try {
         const errorData = JSON.parse(errorText);
         console.error("[Google Business] Error details:", JSON.stringify(errorData, null, 2));
-        
+
         if (response.status === 403) {
           console.error("[Google Business] 403 FORBIDDEN - Possible causes:");
           console.error("  1. The account ID might be incorrect");
@@ -235,11 +235,11 @@ export async function fetchGoogleLocations(restaurant: Restaurant, accountId: st
 
     const data = await response.json();
     console.log("[Google Business] Fetched locations response:", JSON.stringify(data, null, 2));
-    
+
     // Handle different response formats
     const locations = data.locations || [];
     console.log(`[Google Business] Found ${locations.length} locations`);
-    
+
     return locations;
   } catch (error) {
     console.error("[Google Business] Error fetching locations:", error);
@@ -260,20 +260,20 @@ export async function fetchGoogleReviews(restaurant: Restaurant): Promise<any[]>
   }
 
   try {
-    const accountName = restaurant.googleAccountId.startsWith("accounts/") 
-      ? restaurant.googleAccountId 
+    const accountName = restaurant.googleAccountId.startsWith("accounts/")
+      ? restaurant.googleAccountId
       : `accounts/${restaurant.googleAccountId}`;
     const locationName = restaurant.googleLocationId.startsWith("locations/")
       ? restaurant.googleLocationId
       : `locations/${restaurant.googleLocationId}`;
-    
+
     const baseUrl = `https://mybusiness.googleapis.com/v4/${accountName}/${locationName}/reviews`;
-    
+
     // Fetch ALL reviews with pagination - no limit for syncing
     const allReviews: any[] = [];
     let pageToken: string | undefined = undefined;
     let pageCount = 0;
-    
+
     do {
       // Build URL with pagination parameters
       const url = new URL(baseUrl);
@@ -281,12 +281,15 @@ export async function fetchGoogleReviews(restaurant: Restaurant): Promise<any[]>
       if (pageToken) {
         url.searchParams.set('pageToken', pageToken);
       }
-      
+
       console.log(`[Google Business] Fetching reviews page ${pageCount + 1} from: ${url.toString()}`);
-      
+
       const response = await fetch(url.toString(), {
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          // Request reviews in their original language to avoid Google auto-translating
+          // and concatenating "(Translated by Google)...(Original)..." into the comment field
+          "Accept-Language": "*",
         },
       });
 
@@ -299,15 +302,15 @@ export async function fetchGoogleReviews(restaurant: Restaurant): Promise<any[]>
       const data = await response.json();
       const pageReviews = data.reviews || [];
       allReviews.push(...pageReviews);
-      
+
       // Get next page token for pagination
       pageToken = data.nextPageToken;
       pageCount++;
-      
+
       console.log(`[Google Business] Page ${pageCount}: fetched ${pageReviews.length} reviews (total: ${allReviews.length})`);
-      
+
     } while (pageToken); // Continue until no more pages
-    
+
     console.log(`[Google Business] Fetched ALL ${allReviews.length} reviews across ${pageCount} page(s)`);
     return allReviews;
   } catch (error) {
@@ -329,10 +332,10 @@ function mapStarRating(starRating: string): number {
 
 function detectLanguage(text: string): string {
   if (!text) return "en";
-  
+
   const spanishPatterns = /\b(muy|bueno|excelente|gracias|comida|servicio|restaurante|pero|porque|también|está|están)\b/i;
   const catalanPatterns = /\b(molt|bo|excel·lent|gràcies|menjar|servei|restaurant|però|perquè|també|està|estan)\b/i;
-  
+
   if (catalanPatterns.test(text)) return "ca";
   if (spanishPatterns.test(text)) return "es";
   return "en";
@@ -346,7 +349,7 @@ function analyzeSentiment(rating: number, comment: string): string {
 
 export async function syncReviewsForRestaurant(restaurant: Restaurant): Promise<{ synced: number; errors: number }> {
   console.log(`[Google Business] Starting review sync for restaurant: ${restaurant.name} (${restaurant.id})`);
-  
+
   if (!restaurant.isConnected || !restaurant.googleAccountId || !restaurant.googleLocationId) {
     console.log(`[Google Business] Restaurant not fully connected, skipping sync`);
     return { synced: 0, errors: 0 };
@@ -359,7 +362,7 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant): Promise<
   for (const googleReview of googleReviews) {
     try {
       const googleReviewId = googleReview.reviewId || googleReview.name?.split("/").pop();
-      
+
       const existingReview = await storage.getReviewByGoogleId(googleReviewId);
       if (existingReview) {
         console.log(`[Google Business] Review ${googleReviewId} already exists, skipping`);
@@ -367,7 +370,24 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant): Promise<
       }
 
       const rating = mapStarRating(googleReview.starRating);
-      const comment = googleReview.comment || "";
+      const rawComment = googleReview.comment || "";
+
+      // Google API may concatenate: "(Translated by Google) <translated> (Original) <original>"
+      // Extract only the original text for storage and language detection
+      let comment = rawComment;
+      const originalMatch = rawComment.match(/\(Original\)\s*([\s\S]+)$/i);
+      if (originalMatch) {
+        comment = originalMatch[1].trim();
+      } else {
+        // Fallback: strip any leftover labels
+        comment = rawComment
+          .replace(/\(Translated by Google\)\s*/gi, "")
+          .replace(/\(Traducido por Google\)\s*/gi, "")
+          .replace(/\(Traduït per Google\)\s*/gi, "")
+          .replace(/\(Original\)\s*/gi, "")
+          .trim();
+      }
+
       const language = detectLanguage(comment);
       const sentiment = analyzeSentiment(rating, comment);
 
@@ -389,20 +409,20 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant): Promise<
         replyStatus: hasExistingReply ? "posted" : "pending",
         // Store the existing reply if present
         postedReply: existingGoogleReply,
-        repliedAt: hasExistingReply && googleReview.reviewReply?.updateTime 
-          ? new Date(googleReview.reviewReply.updateTime) 
+        repliedAt: hasExistingReply && googleReview.reviewReply?.updateTime
+          ? new Date(googleReview.reviewReply.updateTime)
           : (hasExistingReply ? new Date() : undefined),
         reviewedAt: googleReview.createTime ? new Date(googleReview.createTime) : new Date(),
       };
 
       const savedReview = await storage.createReview(reviewData);
-      
+
       if (hasExistingReply) {
         console.log(`[Google Business] Saved review ${savedReview.id} with existing Google reply (marked as posted)`);
         synced++;
         continue; // Skip AI generation for reviews that already have replies
       }
-      
+
       console.log(`[Google Business] Saved review: ${savedReview.id}`);
 
       try {
@@ -413,24 +433,24 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant): Promise<
           synced++;
           continue;
         }
-        
+
         // Check and possibly reset monthly usage
         const { used, needsReset } = getMonthlyReplyUsage(user);
         if (needsReset) {
           await storage.updateUserReplyUsage(user.id, 0, new Date());
         }
-        
+
         const replyCheck = canSendReply(user);
         if (!replyCheck.allowed && !needsReset) {
           console.log(`[Google Business] User ${user.id} has reached reply limit (${replyCheck.current}/${replyCheck.limit}), skipping AI reply`);
           synced++;
           continue;
         }
-        
+
         // Fetch tone preset for custom instructions
         let customInstructions: string | undefined;
         let toneStyle = restaurant.toneOfVoice || "friendly";
-        
+
         if (restaurant.tonePresetId) {
           const tonePreset = await storage.getTonePreset(restaurant.tonePresetId);
           if (tonePreset && tonePreset.userId === restaurant.userId) {
@@ -439,7 +459,7 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant): Promise<
             console.log(`[Google Business] Using tone preset "${tonePreset.name}" for restaurant ${restaurant.id}`);
           }
         }
-        
+
         const aiReply = await generateReviewReply({
           reviewerName: reviewData.reviewerName || "Customer",
           rating,
@@ -456,7 +476,7 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant): Promise<
         });
 
         console.log(`[Google Business] Generated AI reply for review: ${savedReview.id}`);
-        
+
         // Increment usage after successful generation
         const currentUsed = needsReset ? 0 : (user.monthlyRepliesUsed || 0);
         await storage.updateUserReplyUsage(user.id, currentUsed + 1);
@@ -470,6 +490,28 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant): Promise<
         }
       } catch (aiError) {
         console.error(`[Google Business] AI reply generation failed:`, aiError);
+      }
+
+      // Check if this is a negative review (rating <= 2) and trigger an alert
+      if (rating <= 2) {
+        try {
+          // Prevent duplicates by checking if an alert already exists for this reviewId
+          const existingAlert = await storage.getAlertByReviewId(savedReview.id);
+          if (!existingAlert) {
+            await storage.createAlert({
+              userId: restaurant.userId,
+              restaurantId: restaurant.id,
+              reviewId: savedReview.id,
+              type: "NEGATIVE_REVIEW",
+              resolved: false,
+            });
+            console.log(`[Google Business] Negative review alert created for review: ${savedReview.id}`);
+          } else {
+            console.log(`[Google Business] Alert for review ${savedReview.id} already exists, skipping alert creation`);
+          }
+        } catch (alertErr) {
+          console.error(`[Google Business] Failed to create alert for negative review:`, alertErr);
+        }
       }
 
       synced++;
@@ -503,7 +545,7 @@ export async function postReplyToGoogle(restaurant: Restaurant, reviewId: string
     const locationName = restaurant.googleLocationId?.startsWith("locations/")
       ? restaurant.googleLocationId
       : `locations/${restaurant.googleLocationId}`;
-    
+
     const url = `https://mybusiness.googleapis.com/v4/${accountName}/${locationName}/reviews/${review.googleReviewId}/reply`;
 
     const response = await fetch(url, {
@@ -537,7 +579,7 @@ export async function postReplyToGoogle(restaurant: Restaurant, reviewId: string
 
 export async function syncAllConnectedRestaurants(): Promise<void> {
   console.log("[Google Business] Starting sync for all connected restaurants...");
-  
+
   const connectedRestaurants = await storage.getConnectedRestaurants();
   console.log(`[Google Business] Found ${connectedRestaurants.length} connected restaurants`);
 

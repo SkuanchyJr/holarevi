@@ -59,6 +59,8 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import type { Blog } from "@shared/schema";
 import { SiInstagram, SiTiktok } from "react-icons/si";
+import { Seo } from "@/components/seo";
+import { useLanguage } from "@/lib/i18n";
 
 type BillingCycle = "monthly" | "yearly";
 
@@ -70,161 +72,23 @@ const PRICING = {
 
 type PlanKey = keyof typeof PRICING | "enterprise";
 
-const PRICING_CONTENT: Record<
-  PlanKey,
-  {
-    name: string;
-    description: string;
-    accent: "emerald" | "primary" | "amber" | "slate";
-    icon: JSX.Element;
-    priceLabel?: string;
-    ctaLabel: string;
-    ctaHref: string;
-    footnote?: string;
-    features: { icon: JSX.Element; text: string }[];
-    mostPopular?: boolean;
-  }
-> = {
-  local: {
-    name: "Local",
-    description: "Para un negocio con una ubicación.",
-    accent: "emerald",
-    icon: <MapPin className="h-5 w-5" />,
-    ctaLabel: "Probar 7 días gratis",
-    ctaHref: "/api/login",
-    footnote:
-      "Sin compromiso. Si no cancelas antes de 7 días, se cobrará automáticamente 49€/mes.",
-    features: [
-      { icon: <MapPin className="h-4 w-4" />, text: "1 ubicación" },
-      {
-        icon: <Sparkles className="h-4 w-4" />,
-        text: "Respuestas automáticas ilimitadas a reseñas nuevas",
-      },
-      { icon: <Reply className="h-4 w-4" />, text: "Responder reseñas antiguas" },
-      {
-        icon: <Settings className="h-4 w-4" />,
-        text: "Modo automático o revisión antes de publicar",
-      },
-      {
-        icon: <BarChart3 className="h-4 w-4" />,
-        text: "Analítica básica (tendencia y sentimiento)",
-      },
-      { icon: <User className="h-4 w-4" />, text: "1 usuario" },
-      { icon: <Palette className="h-4 w-4" />, text: "Plantillas y tono de marca" },
-    ],
-  },
-  pro: {
-    name: "Pro",
-    description: "Para equipos y operaciones con varias ubicaciones.",
-    accent: "primary",
-    icon: <Zap className="h-5 w-5" />,
-    ctaLabel: "Empezar ahora",
-    ctaHref: "/api/login",
-    mostPopular: true,
-    features: [
-      { icon: <MapPin className="h-4 w-4" />, text: "Hasta 3 ubicaciones" },
-      {
-        icon: <Sparkles className="h-4 w-4" />,
-        text: "Respuestas automáticas ilimitadas a reseñas nuevas",
-      },
-      { icon: <Reply className="h-4 w-4" />, text: "Responder reseñas antiguas" },
-      { icon: <BarChart3 className="h-4 w-4" />, text: "Analítica y control por ubicación" },
-      {
-        icon: <Zap className="h-4 w-4" />,
-        text: "Prioridad en mejoras y nuevas funciones",
-      },
-      { icon: <Users className="h-4 w-4" />, text: "Hasta 3 usuarios" },
-      {
-        icon: <Palette className="h-4 w-4" />,
-        text: "Plantillas avanzadas y tono consistente",
-      },
-      { icon: <Headphones className="h-4 w-4" />, text: "Soporte prioritario" },
-    ],
-  },
-  business: {
-    name: "Business",
-    description: "Para cadenas y operaciones multi-ubicación con control.",
-    accent: "amber",
-    icon: <Building2 className="h-5 w-5" />,
-    ctaLabel: "Probar gratis",
-    ctaHref: "/api/login",
-    footnote: "Ubicación extra: se aplica un coste adicional (según configuración).",
-    features: [
-      { icon: <MapPin className="h-4 w-4" />, text: "Ubicaciones incluidas (según plan)" },
-      { icon: <MapPin className="h-4 w-4" />, text: "Añade ubicaciones extra según necesidad" },
-      { icon: <LayoutDashboard className="h-4 w-4" />, text: "Panel avanzado multi-ubicación" },
-      { icon: <Users className="h-4 w-4" />, text: "Equipo y colaboración" },
-      { icon: <Shield className="h-4 w-4" />, text: "Roles y permisos" },
-      { icon: <Headphones className="h-4 w-4" />, text: "SLA y soporte avanzado" },
-      { icon: <FileCheck className="h-4 w-4" />, text: "Cumplimiento y buenas prácticas (GDPR)" },
-      { icon: <UserCheck className="h-4 w-4" />, text: "Onboarding asistido" },
-      { icon: <User className="h-4 w-4" />, text: "Responsable de cuenta" },
-    ],
-  },
-  enterprise: {
-    name: "Enterprise",
-    description: "Integraciones, auditoría y escalabilidad a medida.",
-    accent: "slate",
-    icon: <Building2 className="h-5 w-5" />,
-    priceLabel: "A medida",
-    ctaLabel: "Hablar con ventas",
-    ctaHref: "/contact",
-    features: [
-      { icon: <Settings className="h-4 w-4" />, text: "API e integraciones" },
-      {
-        icon: <LayoutDashboard className="h-4 w-4" />,
-        text: "Conexión con CRM / sistemas internos",
-      },
-      { icon: <Zap className="h-4 w-4" />, text: "Automatizaciones y flujos" },
-      { icon: <FileCheck className="h-4 w-4" />, text: "Auditoría y trazabilidad" },
-      { icon: <BarChart3 className="h-4 w-4" />, text: "Reporting avanzado" },
-      { icon: <Shield className="h-4 w-4" />, text: "SLA dedicado" },
-      { icon: <User className="h-4 w-4" />, text: "Account manager" },
-      { icon: <UserCheck className="h-4 w-4" />, text: "Onboarding y migración" },
-    ],
-  },
-};
+// Pricing moved inside component for i18n
 
 const STATS = [
-  { label: "Reseñas respondidas", value: "+18.400" },
-  { label: "Tiempo medio de respuesta", value: "2 min" },
-  { label: "Ubicaciones gestionadas", value: "120+" },
+  { label: "landing.stats.reviews", value: "+18.400" },
+  { label: "landing.stats.responseTime", value: "2 min" },
+  { label: "landing.stats.locations", value: "120+" },
 ];
 
-const LOGOS = [
-  "Restaurantes",
-  "Hoteles",
-  "Clínicas",
-  "Estética",
-  "Talleres",
-  "Retail",
-];
+// LOGOS moved inside component
 
 const FAQ = [
-  {
-    q: "¿HolaRevi publica las respuestas automáticamente?",
-    a: "Sí. Puedes activar el modo automático y HolaRevi publica cada respuesta en cuanto llega la reseña. También puedes elegir el modo de revisión: la IA genera la respuesta y tú la apruebas antes de publicar.",
-  },
-  {
-    q: "¿Funciona con mi perfil de Google Business?",
-    a: "Sí. HolaRevi se conecta directamente con Google Business Profile para leer reseñas y publicar respuestas en tu nombre.",
-  },
-  {
-    q: "¿Puedo controlar el tono y el estilo de las respuestas?",
-    a: "Sí. Configuras el tono, las plantillas y las instrucciones de marca. Las respuestas siempre suenan a tu negocio, no a un bot.",
-  },
-  {
-    q: "¿Qué pasa con reseñas antiguas sin responder?",
-    a: "Puedes responder reseñas antiguas además de automatizar las nuevas. La idea es recuperar reputación sin un esfuerzo manual masivo.",
-  },
-  {
-    q: "¿Funciona para varias ubicaciones?",
-    a: "Sí. La plataforma está pensada para multi-ubicación: panel unificado, comparativas y control por local. El límite depende del plan.",
-  },
-  {
-    q: "¿Necesito una tarjeta para la prueba gratuita?",
-    a: "Depende de la configuración actual. Si se solicita, es para evitar interrupciones al finalizar la prueba. No se cobra durante el periodo gratuito.",
-  },
+  { q: "landing.faq.q1", a: "landing.faq.a1" },
+  { q: "landing.faq.q2", a: "landing.faq.a2" },
+  { q: "landing.faq.q3", a: "landing.faq.a3" },
+  { q: "landing.faq.q4", a: "landing.faq.a4" },
+  { q: "landing.faq.q5", a: "landing.faq.a5" },
+  { q: "landing.faq.q6", a: "landing.faq.a6" },
 ];
 
 function cn(...classes: Array<string | false | undefined | null>) {
@@ -310,6 +174,7 @@ function ReviewCard({
   response?: string;
   delay?: number;
 }) {
+  const { t } = useLanguage();
   return (
     <div
       className="rounded-2xl border bg-background p-4 shadow-sm"
@@ -337,7 +202,7 @@ function ReviewCard({
         <div className="mt-3 rounded-xl bg-primary/5 border border-primary/10 p-3">
           <div className="flex items-center gap-1.5 mb-1">
             <Sparkles className="h-3 w-3 text-primary" />
-            <span className="text-xs font-medium text-primary">Respuesta automática · IA</span>
+            <span className="text-xs font-medium text-primary">{t("reviews.aiGeneratedReply")}</span>
           </div>
           <p className="text-xs text-muted-foreground">{response}</p>
         </div>
@@ -347,9 +212,93 @@ function ReviewCard({
 }
 
 export default function Landing() {
+  const { t, language } = useLanguage();
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [billingCycle, setBillingCycle] = useState<BillingCycle>("monthly");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  const PRICING_CONTENT: Record<
+    PlanKey,
+    {
+      name: string;
+      description: string;
+      accent: "emerald" | "primary" | "amber" | "slate";
+      icon: JSX.Element;
+      priceLabel?: string;
+      ctaLabel: string;
+      ctaHref: string;
+      footnote?: string;
+      features: { icon: JSX.Element; text: string }[];
+      mostPopular?: boolean;
+    }
+  > = {
+    local: {
+      name: t("pricing.local.name"),
+      description: t("pricing.local.description"),
+      accent: "emerald",
+      icon: <MapPin className="h-5 w-5" />,
+      ctaLabel: t("pricing.local.cta"),
+      ctaHref: `/${language}/auth`,
+      footnote: t("pricing.local.footnote"),
+      features: [
+        { icon: <MapPin className="h-4 w-4" />, text: t("pricing.local.f1") },
+        { icon: <Sparkles className="h-4 w-4" />, text: t("pricing.local.f2") },
+        { icon: <Reply className="h-4 w-4" />, text: t("pricing.local.f3") },
+        { icon: <Settings className="h-4 w-4" />, text: t("pricing.local.f4") },
+        { icon: <BarChart3 className="h-4 w-4" />, text: t("pricing.local.f5") },
+        { icon: <User className="h-4 w-4" />, text: t("pricing.local.f6") },
+        { icon: <Palette className="h-4 w-4" />, text: t("pricing.local.f7") },
+      ],
+    },
+    pro: {
+      name: t("pricing.pro.name"),
+      description: t("pricing.pro.description"),
+      accent: "primary",
+      icon: <Zap className="h-5 w-5" />,
+      ctaLabel: t("pricing.pro.cta"),
+      ctaHref: `/${language}/auth`,
+      mostPopular: true,
+      features: [
+        { icon: <MapPin className="h-4 w-4" />, text: t("pricing.pro.f1") },
+        { icon: <Sparkles className="h-4 w-4" />, text: t("pricing.pro.f2") },
+        { icon: <BarChart3 className="h-4 w-4" />, text: t("pricing.pro.f3") },
+        { icon: <Zap className="h-4 w-4" />, text: t("pricing.pro.f4") },
+        { icon: <Users className="h-4 w-4" />, text: t("pricing.pro.f5") },
+        { icon: <Headphones className="h-4 w-4" />, text: t("pricing.pro.f6") },
+      ],
+    },
+    business: {
+      name: t("pricing.business.name"),
+      description: t("pricing.business.description"),
+      accent: "amber",
+      icon: <Building2 className="h-5 w-5" />,
+      ctaLabel: t("pricing.business.cta"),
+      ctaHref: `/${language}/auth`,
+      footnote: t("pricing.business.footnote"),
+      features: [
+        { icon: <MapPin className="h-4 w-4" />, text: t("pricing.business.f1") },
+        { icon: <LayoutDashboard className="h-4 w-4" />, text: t("pricing.business.f2") },
+        { icon: <Users className="h-4 w-4" />, text: t("pricing.business.f3") },
+        { icon: <Shield className="h-4 w-4" />, text: t("pricing.business.f4") },
+        { icon: <Headphones className="h-4 w-4" />, text: t("pricing.business.f5") },
+      ],
+    },
+    enterprise: {
+      name: t("pricing.enterprise.name"),
+      description: t("pricing.enterprise.description"),
+      accent: "slate",
+      icon: <Building2 className="h-5 w-5" />,
+      priceLabel: t("common.custom"),
+      ctaLabel: t("pricing.enterprise.cta"),
+      ctaHref: `/${language}/contact`,
+      features: [
+        { icon: <Settings className="h-4 w-4" />, text: t("pricing.enterprise.f1") },
+        { icon: <LayoutDashboard className="h-4 w-4" />, text: t("pricing.enterprise.f2") },
+        { icon: <BarChart3 className="h-4 w-4" />, text: t("pricing.enterprise.f3") },
+        { icon: <User className="h-4 w-4" />, text: t("pricing.enterprise.f4") },
+      ],
+    },
+  };
 
   const { data: blogsData } = useQuery<{ success: boolean; blogs: Blog[] }>({
     queryKey: ["/api/blogs"],
@@ -358,16 +307,16 @@ export default function Landing() {
 
   const testimonials = [
     {
-      text: "Antes tardábamos días en responder. Ahora cada reseña tiene respuesta en minutos, con el tono exacto que queremos. La valoración media ha subido medio punto en dos meses.",
-      author: "Responsable de operaciones, cadena de restaurantes",
+      text: t("landing.testimonials.t1.text"),
+      author: t("landing.testimonials.t1.author"),
     },
     {
-      text: "Tenemos 4 clínicas y gestionar las reseñas era imposible. HolaRevi lo hace solo. Solo revisamos las negativas antes de publicar.",
-      author: "Directora, grupo de clínicas privadas",
+      text: t("landing.testimonials.t2.text"),
+      author: t("landing.testimonials.t2.author"),
     },
     {
-      text: "El hotel siempre tuvo buenas reseñas pero pocas respuestas. Desde que usamos HolaRevi, respondemos el 100% y los clientes lo notan.",
-      author: "Manager, hotel boutique",
+      text: t("landing.testimonials.t3.text"),
+      author: t("landing.testimonials.t3.author"),
     },
   ];
   const totalTestimonials = testimonials.length;
@@ -398,8 +347,22 @@ export default function Landing() {
     return () => clearInterval(interval);
   }, [totalTestimonials]);
 
+  const LOGOS = [
+    t("landing.industries.restaurants"),
+    t("landing.industries.hotels"),
+    t("landing.industries.clinics"),
+    t("landing.industries.beauty"),
+    t("landing.industries.repairs"),
+    t("landing.industries.retail"),
+  ];
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
+      <Seo 
+        title={t("seo.home.title")}
+        description={t("seo.home.description")}
+        keywords={t("seo.home.keywords")}
+      />
       <LandingHeader />
 
       {/* ─── A) HERO ────────────────────────────────────────────────────── */}
@@ -417,36 +380,35 @@ export default function Landing() {
             <div className="flex justify-center mb-8">
               <Badge variant="secondary" className="gap-1.5 px-4 py-1.5 text-sm">
                 <Sparkles className="h-3.5 w-3.5 text-primary" />
-                Automatización de reseñas con IA
+                {t("hero.badge")}
               </Badge>
             </div>
 
             {/* Headline */}
             <h1 className="text-center text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl max-w-4xl mx-auto leading-[1.1]">
-              Responde todas tus reseñas de Google{" "}
-              <span className="text-primary">con IA, automáticamente</span>
+              {t("hero.titlePrefix")}{" "}
+              <span className="text-primary">{t("hero.titleHighlight")}</span>
             </h1>
 
             <p className="mt-6 text-center text-lg text-muted-foreground max-w-2xl mx-auto sm:text-xl">
-              HolaRevi genera y publica respuestas personalizadas a cada reseña de Google,
-              en tu tono de marca, sin que tengas que hacer nada.
+              {t("hero.subtitle")}
             </p>
 
             {/* CTAs */}
             <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <Button size="lg" asChild className="text-base px-8" data-testid="button-hero-try-free">
-                <a href="/api/login">
-                  Empezar gratis — 7 días sin coste
+                <a href={`/${language}/auth`}>
+                  {t("hero.ctaPrimary")}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </a>
               </Button>
               <Button size="lg" variant="outline" asChild className="text-base" data-testid="button-hero-demo">
-                <Link href="/contact">Ver cómo funciona</Link>
+                <a href="#demo">{t("hero.ctaSecondary")}</a>
               </Button>
             </div>
 
             <p className="mt-3 text-center text-sm text-muted-foreground">
-              Sin tarjeta de crédito · Conecta en minutos · Cancela cuando quieras
+              {t("hero.footerText")}
             </p>
 
             {/* Social proof strip */}
@@ -454,7 +416,7 @@ export default function Landing() {
               {STATS.map((s) => (
                 <div key={s.label} className="flex flex-col items-center gap-1">
                   <span className="text-2xl font-bold text-foreground">{s.value}</span>
-                  <span className="text-xs">{s.label}</span>
+                  <span className="text-xs">{t(s.label)}</span>
                 </div>
               ))}
             </div>
@@ -517,16 +479,16 @@ export default function Landing() {
       <section className="py-10 border-y bg-muted/20">
         <div className="container mx-auto px-4">
           <p className="text-center text-sm text-muted-foreground mb-6">
-            Negocios locales que ya automatizan sus reseñas con HolaRevi
+            {t("landing.logos.title")}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             {[
-              { icon: <Utensils className="h-4 w-4" />, label: "Restaurantes" },
-              { icon: <Hotel className="h-4 w-4" />, label: "Hoteles" },
-              { icon: <Stethoscope className="h-4 w-4" />, label: "Clínicas" },
-              { icon: <HeartHandshake className="h-4 w-4" />, label: "Centros de estética" },
-              { icon: <Wrench className="h-4 w-4" />, label: "Talleres" },
-              { icon: <Store className="h-4 w-4" />, label: "Retail" },
+              { icon: <Utensils className="h-4 w-4" />, label: t("landing.logos.restaurants") },
+              { icon: <Hotel className="h-4 w-4" />, label: t("landing.logos.hotels") },
+              { icon: <Stethoscope className="h-4 w-4" />, label: t("landing.logos.clinics") },
+              { icon: <HeartHandshake className="h-4 w-4" />, label: t("landing.logos.beauty") },
+              { icon: <Wrench className="h-4 w-4" />, label: t("landing.logos.repairs") },
+              { icon: <Store className="h-4 w-4" />, label: t("landing.logos.retail") },
             ].map(({ icon, label }) => (
               <div
                 key={label}
@@ -546,12 +508,12 @@ export default function Landing() {
           <div className="mx-auto max-w-6xl">
 
             <div className="text-center mb-12">
-              <Badge variant="secondary" className="mb-4">El problema</Badge>
+              <Badge variant="secondary" className="mb-4">{t("landing.problem.eyebrow")}</Badge>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                La mayoría de negocios ignoran sus reseñas
+                {t("landing.problem.title")}
               </h2>
               <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-                Y eso tiene un coste real: menos confianza, peor posicionamiento y clientes que se van a la competencia.
+                {t("landing.problem.subtitle")}
               </p>
             </div>
 
@@ -560,24 +522,24 @@ export default function Landing() {
                 {
                   icon: <XCircle className="h-6 w-6" />,
                   stat: "63%",
-                  title: "Sin respuesta",
-                  desc: "De media, más de la mitad de las reseñas de Google quedan sin responder. Cada una es una oportunidad perdida.",
+                  title: t("landing.problem.c1.title"),
+                  desc: t("landing.problem.c1.desc"),
                   color: "text-destructive",
                   bg: "bg-destructive/10",
                 },
                 {
                   icon: <Clock className="h-6 w-6" />,
                   stat: "3–5 días",
-                  title: "Respuesta tardía",
-                  desc: "Cuando se responde, muchas veces es demasiado tarde. El cliente ya ha tomado otra decisión.",
+                  title: t("landing.problem.c2.title"),
+                  desc: t("landing.problem.c2.desc"),
                   color: "text-amber-600",
                   bg: "bg-amber-500/10",
                 },
                 {
                   icon: <AlertCircle className="h-6 w-6" />,
                   stat: "Sin tono",
-                  title: "Respuestas inconsistentes",
-                  desc: "Cada empleado escribe diferente. El resultado es una imagen de marca fragmentada y poco profesional.",
+                  title: t("landing.problem.c3.title"),
+                  desc: t("landing.problem.c3.desc"),
                   color: "text-orange-600",
                   bg: "bg-orange-500/10",
                 },
@@ -606,36 +568,35 @@ export default function Landing() {
 
               {/* Left: copy */}
               <div>
-                <Badge variant="secondary" className="mb-4">La solución</Badge>
+                <Badge variant="secondary" className="mb-4">{t("landing.solution.eyebrow")}</Badge>
                 <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                  Tus reseñas, respondidas automáticamente
+                  {t("landing.solution.title")}
                 </h2>
                 <p className="mt-4 text-muted-foreground text-lg">
-                  HolaRevi usa IA para generar respuestas personalizadas a cada reseña de Google.
-                  Entiende el contexto de tu negocio, mantiene tu tono de marca y publica sin que tengas que hacer nada.
+                  {t("landing.solution.subtitle")}
                 </p>
 
                 <ul className="mt-8 space-y-4">
                   {[
                     {
                       icon: <Sparkles className="h-5 w-5 text-primary" />,
-                      text: "Respuestas generadas por IA, personalizadas para cada reseña",
+                      text: t("landing.solution.points.p1"),
                     },
                     {
                       icon: <CheckCircle2 className="h-5 w-5 text-primary" />,
-                      text: "Publicación automática en Google Business Profile",
+                      text: t("landing.solution.points.p2"),
                     },
                     {
                       icon: <Palette className="h-5 w-5 text-primary" />,
-                      text: "Tono de marca y plantillas configurables por ti",
+                      text: t("landing.solution.points.p3"),
                     },
                     {
                       icon: <Settings className="h-5 w-5 text-primary" />,
-                      text: "Modo revisión: aprueba antes de publicar si lo prefieres",
+                      text: t("landing.solution.points.p4"),
                     },
                     {
                       icon: <Globe className="h-5 w-5 text-primary" />,
-                      text: "Funciona 24/7, incluso cuando tu equipo no está",
+                      text: t("landing.solution.points.p5"),
                     },
                   ].map((item) => (
                     <li key={item.text} className="flex items-start gap-3">
@@ -647,13 +608,13 @@ export default function Landing() {
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button size="lg" asChild data-testid="button-solution-try">
-                    <a href="/api/login">
-                      Empezar gratis
+                    <a href={`/${language}/auth`}>
+                      {t("landing.solution.ctaPrimary")}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
                   <Button size="lg" variant="outline" asChild data-testid="button-solution-demo">
-                    <Link href="/contact">Hablar con el equipo</Link>
+                    <Link href={`/${language}/contact`}>{t("landing.solution.ctaSecondary")}</Link>
                   </Button>
                 </div>
               </div>
@@ -663,27 +624,27 @@ export default function Landing() {
                 {[
                   {
                     icon: <Reply className="h-5 w-5 text-primary" />,
-                    title: "Respuestas automáticas",
-                    desc: "La IA lee la reseña y genera una respuesta coherente al instante.",
-                    badge: "Core",
+                    title: t("landing.solution.c1.title"),
+                    desc: t("landing.solution.c1.desc"),
+                    badge: t("landing.solution.c1.badge"),
                   },
                   {
                     icon: <Palette className="h-5 w-5 text-primary" />,
-                    title: "Tono de marca",
-                    desc: "Configuras el estilo una vez. Cada respuesta suena a tu negocio.",
-                    badge: "Config",
+                    title: t("landing.solution.c2.title"),
+                    desc: t("landing.solution.c2.desc"),
+                    badge: t("landing.solution.c2.badge"),
                   },
                   {
                     icon: <BarChart3 className="h-5 w-5 text-primary" />,
-                    title: "Analítica de reseñas",
-                    desc: "Tendencia, sentimiento y evolución de tu reputación en el tiempo.",
-                    badge: "Insights",
+                    title: t("landing.solution.c3.title"),
+                    desc: t("landing.solution.c3.desc"),
+                    badge: t("landing.solution.c3.badge"),
                   },
                   {
                     icon: <MapPin className="h-5 w-5 text-primary" />,
-                    title: "Multi-ubicación",
-                    desc: "Gestiona varios locales desde un panel unificado.",
-                    badge: "Pro+",
+                    title: t("landing.solution.c4.title"),
+                    desc: t("landing.solution.c4.desc"),
+                    badge: t("landing.solution.c4.badge"),
                   },
                 ].map((f) => (
                   <Card key={f.title} className="rounded-2xl">
@@ -706,13 +667,20 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ─── DEMO INTERACTIVA ───────────────────────────────────────────── */}
+      <section id="demo" className="py-16 sm:py-24 border-y bg-background">
+        <div className="container mx-auto px-4">
+          <ReviewDemo />
+        </div>
+      </section>
+
       {/* ─── E) CÓMO FUNCIONA ───────────────────────────────────────────── */}
       <section id="how" className="py-16 sm:py-24">
         <div className="container mx-auto px-4">
           <SectionHeader
-            eyebrow="Cómo funciona"
-            title="En marcha en menos de 10 minutos"
-            subtitle="Tres pasos simples. Sin técnicos. Sin configuraciones complejas."
+            eyebrow={t("landing.how.eyebrow")}
+            title={t("landing.how.title")}
+            subtitle={t("landing.how.subtitle")}
           />
 
           <div className="mx-auto mt-12 max-w-5xl">
@@ -721,20 +689,20 @@ export default function Landing() {
                 {
                   step: "01",
                   icon: <Store className="h-7 w-7" />,
-                  title: "Conecta tu Google Business",
-                  desc: "Vincula tu perfil de Google Business Profile en un clic. HolaRevi empieza a leer tus reseñas al instante.",
+                  title: t("landing.how.step1.title"),
+                  desc: t("landing.how.step1.desc"),
                 },
                 {
                   step: "02",
                   icon: <Palette className="h-7 w-7" />,
-                  title: "Configura tu tono de marca",
-                  desc: "Dinos cómo quieres sonar: formal, cercano, con humor… La IA aprende y mantiene ese tono en cada respuesta.",
+                  title: t("landing.how.step2.title"),
+                  desc: t("landing.how.step2.desc"),
                 },
                 {
                   step: "03",
                   icon: <Zap className="h-7 w-7" />,
-                  title: "La IA responde por ti",
-                  desc: "Cada nueva reseña recibe una respuesta personalizada y publicada automáticamente. Tú lo ves todo en el panel.",
+                  title: t("landing.how.step3.title"),
+                  desc: t("landing.how.step3.desc"),
                 },
               ].map((step, i) => (
                 <div key={step.step} className="relative">
@@ -763,8 +731,8 @@ export default function Landing() {
 
             <div className="mt-8 text-center">
               <Button size="lg" asChild data-testid="button-how-try">
-                <a href="/api/login">
-                  Empezar ahora — gratis
+                <a href={`/${language}/auth`}>
+                  {t("landing.how.cta")}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </a>
               </Button>
@@ -777,32 +745,32 @@ export default function Landing() {
       <section className="py-16 sm:py-24 bg-muted/20">
         <div className="container mx-auto px-4">
           <SectionHeader
-            eyebrow="Beneficios"
-            title="El impacto en tu negocio es inmediato"
-            subtitle="Más reputación, más confianza, más ventas. Sin trabajo manual adicional."
+            eyebrow={t("landing.benefits.eyebrow")}
+            title={t("landing.benefits.title")}
+            subtitle={t("landing.benefits.subtitle")}
           />
 
           <div className="mx-auto mt-12 max-w-6xl grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {[
               {
                 icon: <TrendingUp className="h-6 w-6" />,
-                title: "Mejor posicionamiento en Google",
-                desc: "Google premia a los negocios que responden activamente a sus reseñas.",
+                title: t("landing.benefits.b1.title"),
+                desc: t("landing.benefits.b1.desc"),
               },
               {
                 icon: <Star className="h-6 w-6" />,
-                title: "Más valoración media",
-                desc: "Responder bien a reseñas negativas convierte la crítica en confianza.",
+                title: t("landing.benefits.b2.title"),
+                desc: t("landing.benefits.b2.desc"),
               },
               {
                 icon: <Users className="h-6 w-6" />,
-                title: "Mayor engagement con clientes",
-                desc: "Un cliente que recibe respuesta tiene más probabilidad de volver y recomendar.",
+                title: t("landing.benefits.b3.title"),
+                desc: t("landing.benefits.b3.desc"),
               },
               {
                 icon: <Clock className="h-6 w-6" />,
-                title: "Horas de trabajo ahorradas",
-                desc: "Tu equipo deja de gestionar reseñas manualmente. La IA lo hace por vosotros.",
+                title: t("landing.benefits.b4.title"),
+                desc: t("landing.benefits.b4.desc"),
               },
             ].map((b) => (
               <Card key={b.title} className="rounded-2xl">
@@ -823,9 +791,9 @@ export default function Landing() {
       <section id="testimonials" className="py-16 sm:py-24">
         <div className="container mx-auto px-4">
           <SectionHeader
-            eyebrow="Lo que dicen los clientes"
-            title="Resultados reales de negocios locales"
-            subtitle="De restaurantes a clínicas. El resultado es el mismo: más reputación, menos trabajo."
+            eyebrow={t("landing.testimonials.eyebrow")}
+            title={t("landing.testimonials.title")}
+            subtitle={t("landing.testimonials.subtitle")}
           />
 
           <div className="mx-auto mt-12 max-w-3xl">
@@ -849,7 +817,7 @@ export default function Landing() {
                       variant="outline"
                       size="icon"
                       onClick={goPrev}
-                      aria-label="Testimonio anterior"
+                      aria-label={t("landing.testimonials.prev")}
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
@@ -857,7 +825,7 @@ export default function Landing() {
                       variant="outline"
                       size="icon"
                       onClick={goNext}
-                      aria-label="Siguiente testimonio"
+                      aria-label={t("landing.testimonials.next")}
                     >
                       <ChevronRight className="h-4 w-4" />
                     </Button>
@@ -879,17 +847,16 @@ export default function Landing() {
 
             <div className="text-center mb-12">
               <Badge variant="outline" className="mb-4 border-primary/30 text-primary">
-                Soluciones avanzadas
+                {t("landing.extraSolutions.eyebrow")}
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                ¿Necesitas más que automatización de reseñas?
+                {t("landing.extraSolutions.title")}
               </h2>
               <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-                HolaRevi se centra en la automatización de reseñas. Para negocios con necesidades más complejas,
-                ofrecemos soluciones personalizadas adicionales.
+                {t("landing.extraSolutions.subtitle")}
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Estas soluciones <strong>no forman parte del producto estándar</strong> y requieren contactar con el equipo.
+                {t("landing.extraSolutions.disclaimer")}
               </p>
             </div>
 
@@ -897,15 +864,15 @@ export default function Landing() {
               {[
                 {
                   icon: <Globe className="h-6 w-6" />,
-                  title: "Webs de alta conversión automatizadas",
-                  desc: "Páginas web diseñadas para convertir visitantes en clientes. Optimizadas, rápidas y conectadas a tus reseñas de Google para generar confianza desde el primer segundo.",
-                  tags: ["Diseño", "Conversión", "Automatización"],
+                  title: t("landing.extraSolutions.s1.title"),
+                  desc: t("landing.extraSolutions.s1.desc"),
+                  tags: [t("landing.extraSolutions.s1.tag1"), t("landing.extraSolutions.s1.tag2"), t("landing.extraSolutions.s1.tag3")],
                 },
                 {
                   icon: <Workflow className="h-6 w-6" />,
-                  title: "Infraestructura avanzada de automatización",
-                  desc: "Para negocios con alto volumen de reseñas que necesitan flujos personalizados, integraciones con su CRM, auditoría avanzada y un sistema de atención completo.",
-                  tags: ["Alto volumen", "Integraciones", "A medida"],
+                  title: t("landing.extraSolutions.s2.title"),
+                  desc: t("landing.extraSolutions.s2.desc"),
+                  tags: [t("landing.extraSolutions.s2.tag1"), t("landing.extraSolutions.s2.tag2"), t("landing.extraSolutions.s2.tag3")],
                 },
               ].map((s) => (
                 <Card
@@ -934,8 +901,8 @@ export default function Landing() {
 
             <div className="mt-8 text-center">
               <Button variant="outline" size="lg" asChild data-testid="button-advanced-contact">
-                <Link href="/contact">
-                  Contactar para soluciones avanzadas
+                <Link href={`/${language}/contact`}>
+                  {t("landing.extraSolutions.cta")}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -948,17 +915,17 @@ export default function Landing() {
       <section id="faq" className="py-16 sm:py-24">
         <div className="container mx-auto px-4">
           <SectionHeader
-            eyebrow="Preguntas frecuentes"
-            title="Todo lo que necesitas saber"
-            subtitle="Respuestas claras para que decidas con confianza."
+            eyebrow={t("landing.faq.eyebrow")}
+            title={t("landing.faq.title")}
+            subtitle={t("landing.faq.subtitle")}
           />
 
           <div className="mx-auto mt-12 max-w-3xl space-y-4">
             {FAQ.map((item, idx) => (
               <FAQItem
                 key={item.q}
-                q={item.q}
-                a={item.a}
+                q={t(item.q)}
+                a={t(item.a)}
                 open={openFaq === idx}
                 onToggle={() => setOpenFaq(openFaq === idx ? null : idx)}
               />
@@ -971,39 +938,34 @@ export default function Landing() {
       <section className="py-16 sm:py-24 bg-muted/20">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
-            <Badge variant="secondary" className="mb-6">Empieza hoy</Badge>
+            <Badge variant="secondary" className="mb-6">{t("landing.finalCta.eyebrow")}</Badge>
             <h2 className="text-3xl font-bold tracking-tight sm:text-5xl">
-              Empieza a automatizar tus reseñas hoy
+              {t("landing.finalCta.title")}
             </h2>
             <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto">
-              7 días gratis. Sin tarjeta. Sin complicaciones.
-              Conecta tu Google Business y deja que la IA trabaje por ti.
+              {t("landing.finalCta.subtitle")}
             </p>
 
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Button size="lg" asChild className="text-base px-10" data-testid="button-final-cta-try">
-                <a href="/api/login">
-                  Empezar gratis — 7 días
+                <a href={`/${language}/auth`}>
+                  {t("landing.finalCta.ctaPrimary")}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </a>
               </Button>
               <Button size="lg" variant="outline" asChild className="text-base" data-testid="button-final-cta-contact">
-                <Link href="/contact">Hablar con ventas</Link>
+                <Link href={`/${language}/contact`}>{t("landing.finalCta.ctaSecondary")}</Link>
               </Button>
             </div>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
               <span className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-primary" />
-                Sin tarjeta de crédito
+                {t("landing.finalCta.feature1")}
               </span>
               <span className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-primary" />
-                Conecta en minutos
-              </span>
-              <span className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-primary" />
-                Cancela cuando quieras
+                {t("landing.finalCta.feature2")}
               </span>
             </div>
           </div>
@@ -1016,18 +978,18 @@ export default function Landing() {
           <div className="container mx-auto px-4">
             <div className="mx-auto max-w-4xl">
               <div className="text-center mb-12">
-                <Badge variant="secondary" className="mb-4">Blog</Badge>
+                <Badge variant="secondary" className="mb-4">{t("landing.blogSection.eyebrow")}</Badge>
                 <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                  Ideas prácticas para tu reputación online
+                  {t("landing.blogSection.title")}
                 </h2>
                 <p className="mt-4 text-muted-foreground">
-                  Guías cortas para mejorar operación, respuesta y consistencia.
+                  {t("landing.blogSection.description")}
                 </p>
               </div>
 
               <div className="grid gap-6 md:grid-cols-3">
                 {blogs.map((blog) => (
-                  <Link key={blog.id} href={`/blog/${blog.slug}`}>
+                  <Link key={blog.id} href={`/${language}/blog/${blog.slug}`}>
                     <Card
                       className="h-full cursor-pointer transition-all rounded-2xl hover:shadow-md"
                       data-testid={`card-landing-blog-${blog.id}`}
@@ -1048,7 +1010,7 @@ export default function Landing() {
                           ...
                         </p>
                         <div className="flex items-center gap-1 mt-3 text-primary font-medium text-xs">
-                          Leer más
+                          {t("landing.blogSection.readMore")}
                           <ArrowRight className="h-3 w-3" />
                         </div>
                       </CardContent>
@@ -1059,8 +1021,8 @@ export default function Landing() {
 
               <div className="text-center mt-8">
                 <Button variant="outline" asChild>
-                  <Link href="/blog">
-                    Ver todos los artículos
+                  <Link href={`/${language}/blog`}>
+                    {t("landing.blogSection.viewAll")}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
@@ -1089,44 +1051,44 @@ export default function Landing() {
 
             <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
               <Link
-                href="/privacy"
+                href={`/${language}/privacy`}
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 data-testid="link-footer-privacy"
               >
-                Privacidad
+                {t("landing.footer.privacy")}
               </Link>
               <Link
-                href="/terms"
+                href={`/${language}/terms`}
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 data-testid="link-footer-terms"
               >
-                Términos
+                {t("landing.footer.terms")}
               </Link>
               <Link
-                href="/google-permissions"
+                href={`/${language}/google-permissions`}
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 data-testid="link-footer-google-permissions"
               >
-                Google Permissions
+                {t("landing.footer.googlePermissions")}
               </Link>
               <Link
-                href="/contact"
+                href={`/${language}/contact`}
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 data-testid="link-footer-contact"
               >
-                Contacto
+                {t("landing.footer.contact")}
               </Link>
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
               <span className="inline-flex items-center gap-2">
-                <Shield className="h-4 w-4" /> Datos seguros
+                <Shield className="h-4 w-4" /> {t("landing.footer.secureData")}
               </span>
               <span className="inline-flex items-center gap-2">
-                <Wifi className="h-4 w-4" /> Google Business API oficial
+                <Wifi className="h-4 w-4" /> {t("landing.footer.officialApi")}
               </span>
               <span className="inline-flex items-center gap-2">
-                <Headphones className="h-4 w-4" /> Soporte en español
+                <Headphones className="h-4 w-4" /> {t("landing.footer.support")}
               </span>
             </div>
 
@@ -1154,7 +1116,7 @@ export default function Landing() {
             </div>
 
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} HolaRevi. Todos los derechos reservados.
+              © {new Date().getFullYear()} HolaRevi. {t("landing.footer.rights")}
             </p>
           </div>
         </div>

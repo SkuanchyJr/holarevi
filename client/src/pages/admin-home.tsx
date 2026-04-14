@@ -19,9 +19,16 @@ import {
   FileText,
   MessageSquare,
   QrCode,
+  HandshakeIcon,
 } from "lucide-react";
 
 const adminSections = [
+  {
+    title: "CRM de Ventas",
+    description: "Pipeline Kanban de leads comerciales",
+    href: "/admin/crm",
+    icon: HandshakeIcon,
+  },
   {
     title: "Contacts",
     description: "View and manage contact form submissions",

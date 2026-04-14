@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Sparkles, Check, Star } from "lucide-react";
-import { useLanguage, translations } from "@/lib/i18n";
+import { useLanguage } from "@/lib/i18n";
 
 type BusinessType =
   | "restaurant"
@@ -49,8 +49,7 @@ function StarRating({ count }: { count: number }) {
 }
 
 export function ReviewDemo() {
-  const { language } = useLanguage();
-  const t = translations[language];
+  const { t } = useLanguage();
   
   const [businessType, setBusinessType] = useState<BusinessType>("restaurant");
   const [selectedReviewIndex, setSelectedReviewIndex] = useState<number | null>(
@@ -61,9 +60,10 @@ export function ReviewDemo() {
   const [showDemoPopup, setShowDemoPopup] = useState(false);
   const [timeSaved, setTimeSaved] = useState(0);
 
-  const reviewTexts = t.generator.reviews[businessType];
-  const replyTexts = t.generator.replies[businessType];
-  const businessLabels = t.generator.businessTypes;
+  // Cast since we know the structure in the JSON
+  const reviewTexts = t(`generator.reviews.${businessType}`, { returnObjects: true }) as string[];
+  const replyTexts = t(`generator.replies.${businessType}`, { returnObjects: true }) as string[];
+  const businessLabels = t("generator.businessTypes", { returnObjects: true }) as Record<BusinessType, string>;
 
   const reviews: Review[] = reviewTexts.map((text, index) => ({
     text,
@@ -106,13 +106,13 @@ export function ReviewDemo() {
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center mb-12">
           <Badge variant="secondary" className="mb-4">
-            {t.generator.badge}
+            {t("generator.badge")}
           </Badge>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            {t.generator.sectionTitle}
+            {t("generator.sectionTitle")}
           </h2>
           <p className="mt-4 text-muted-foreground">
-            {t.generator.sectionDescription}
+            {t("generator.sectionDescription")}
           </p>
         </div>
 
@@ -121,12 +121,12 @@ export function ReviewDemo() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
-                {t.generator.cardTitle}
+                {t("generator.cardTitle")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="business-type">{t.generator.businessTypeLabel}</Label>
+                <Label htmlFor="business-type">{t("generator.businessTypeLabel")}</Label>
                 <Select
                   value={businessType}
                   onValueChange={(val) =>
@@ -155,7 +155,7 @@ export function ReviewDemo() {
               </div>
 
               <div className="space-y-3">
-                <Label>{t.generator.selectReviewLabel}</Label>
+                <Label>{t("generator.selectReviewLabel")}</Label>
                 <div className="grid gap-3">
                   {reviews.map((review, index) => (
                     <Card
@@ -188,11 +188,11 @@ export function ReviewDemo() {
                 data-testid="button-generate"
               >
                 {isGenerating ? (
-                  <span className="animate-pulse">{t.generator.typingText}</span>
+                  <span className="animate-pulse">{t("generator.typingText")}</span>
                 ) : (
                   <>
                     <Sparkles className="mr-2 h-4 w-4" />
-                    {t.generator.generateButton}
+                    {t("generator.generateButton")}
                   </>
                 )}
               </Button>
@@ -200,7 +200,7 @@ export function ReviewDemo() {
               {generatedReply && (
                 <div className="space-y-4 pt-4 border-t">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-lg">{t.generator.responseTitle}</h3>
+                    <h3 className="font-semibold text-lg">{t("generator.responseTitle")}</h3>
                     <Badge variant="secondary">
                       {businessLabels[businessType]}
                     </Badge>
@@ -222,13 +222,13 @@ export function ReviewDemo() {
                       data-testid="button-approve"
                     >
                       <Check className="mr-2 h-4 w-4" />
-                      {t.generator.approveButton}
+                      {t("generator.approveButton")}
                     </Button>
                     <span
                       className="text-sm text-muted-foreground"
                       data-testid="text-time-saved"
                     >
-                      {t.generator.timeSaved} <strong>{timeSaved}</strong> {t.generator.timeUnit}
+                      {t("generator.timeSaved")} <strong>{timeSaved}</strong> {t("generator.timeUnit")}
                     </span>
                   </div>
                 </div>
@@ -242,9 +242,9 @@ export function ReviewDemo() {
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
           <Card className="max-w-sm mx-4 animate-in fade-in zoom-in duration-200">
             <CardContent className="pt-6 text-center">
-              <p className="text-lg font-medium">{t.generator.demoPopupTitle}</p>
+              <p className="text-lg font-medium">{t("generator.demoPopupTitle")}</p>
               <p className="text-muted-foreground mt-2">
-                {t.generator.demoPopupDescription}
+                {t("generator.demoPopupDescription")}
               </p>
             </CardContent>
           </Card>

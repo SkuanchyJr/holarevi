@@ -27,6 +27,7 @@ export const sessions = pgTable(
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   email: varchar("email").unique(),
+  passwordHash: varchar("password_hash"),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
@@ -40,6 +41,8 @@ export const users = pgTable("users", {
   monthlyRepliesPeriodStart: timestamp("monthly_replies_period_start"), // When the current billing period started
   trialEndsAt: timestamp("trial_ends_at"),
   hasUsedProTrial: boolean("has_used_pro_trial").default(false), // Prevent multiple Pro trials
+  onboardingStep: varchar("onboarding_step").default('connect_google'),
+  onboardingCompleted: boolean("onboarding_completed").default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -165,6 +168,7 @@ export const affiliateLeads = pgTable("affiliate_leads", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   affiliateId: varchar("affiliate_id").notNull().references(() => affiliates.id, { onDelete: "cascade" }),
   businessName: varchar("business_name").notNull(),
+  contactName: varchar("contact_name"),
   city: varchar("city"),
   category: varchar("category"),
   totalReviews: integer("total_reviews"),
@@ -253,6 +257,7 @@ export const blogs = pgTable("blogs", {
   subtitle: varchar("subtitle", { length: 500 }),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   content: text("content").notNull(),
+  language: varchar("language", { length: 5 }).notNull().default("es"), // es, en, ca
   metaTitle: varchar("meta_title", { length: 255 }),
   metaDescription: text("meta_description"),
   published: boolean("published").default(false).notNull(),
@@ -261,6 +266,7 @@ export const blogs = pgTable("blogs", {
 }, (table) => [
   index("idx_blogs_slug").on(table.slug),
   index("idx_blogs_published").on(table.published),
+  index("idx_blogs_language").on(table.language),
 ]);
 
 // Review QR codes table - for tracking Google Review QR scans
@@ -505,6 +511,46 @@ export type InsertAffiliateLead = z.infer<typeof insertAffiliateLeadSchema>;
 export type AffiliateLead = typeof affiliateLeads.$inferSelect;
 export type InsertAffiliateSale = z.infer<typeof insertAffiliateSaleSchema>;
 export type AffiliateSale = typeof affiliateSales.$inferSelect;
+
+// Alerts table for 1-star reviews
+export const alerts = pgTable("alerts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  restaurantId: varchar("restaurant_id").references(() => restaurants.id, { onDelete: "cascade" }),
+  reviewId: varchar("review_id").references(() => reviews.id, { onDelete: "cascade" }),
+  type: varchar("type").notNull(), // e.g., "NEGATIVE_REVIEW"
+  createdAt: timestamp("created_at").defaultNow(),
+  resolved: boolean("resolved").default(false),
+}, (table) => [
+  index("IDX_alerts_user_id").on(table.userId),
+  index("IDX_alerts_resolved").on(table.resolved),
+  index("IDX_alerts_created_at").on(table.createdAt)
+]);
+
+// Weekly email logs table — tracks sent weekly analytics emails per user
+export const weeklyEmailLogs = pgTable("weekly_email_logs", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  restaurantId: varchar("restaurant_id").references(() => restaurants.id, { onDelete: "set null" }),
+  weekStart: timestamp("week_start").notNull(), // Monday of the week — used for idempotency
+  sentAt: timestamp("sent_at").defaultNow(),
+  status: varchar("status").notNull(), // 'success' | 'error'
+  errorMessage: text("error_message"),
+}, (table) => [
+  index("idx_weekly_email_logs_user").on(table.userId),
+  index("idx_weekly_email_logs_week").on(table.userId, table.weekStart),
+]);
+
+export const insertWeeklyEmailLogSchema = createInsertSchema(weeklyEmailLogs).omit({
+  id: true,
+  sentAt: true,
+});
+
+export const insertAlertSchema = createInsertSchema(alerts);
+export type InsertAlert = z.infer<typeof insertAlertSchema>;
+export type Alert = typeof alerts.$inferSelect;
+export type InsertWeeklyEmailLog = z.infer<typeof insertWeeklyEmailLogSchema>;
+export type WeeklyEmailLog = typeof weeklyEmailLogs.$inferSelect;
 export type InsertPromoCode = z.infer<typeof insertPromoCodeSchema>;
 export type PromoCode = typeof promoCodes.$inferSelect;
 export type InsertReviewSummary = z.infer<typeof insertReviewSummarySchema>;
@@ -532,6 +578,9 @@ export type AdvancedAnalytics = {
   totalReviews: number;
   totalReplies: number;
   averageRating: number;
+  responseRate: number; // percentage 0-100
+  averageReplyTimeHours: number | null; // avg hours between review and reply
+  unansweredReviews: number;
   sentimentBreakdown: {
     positive: number;
     neutral: number;
@@ -547,11 +596,47 @@ export type AdvancedAnalytics = {
     replies: number;
     averageRating: number;
   }[];
+  weeklyTrends: {
+    week: string; // ISO week e.g. "2026-W13"
+    reviews: number;
+    replies: number;
+    averageRating: number;
+  }[];
+  reviewsByDayOfWeek: {
+    day: number; // 0=Sunday, 6=Saturday
+    count: number;
+    averageRating: number;
+  }[];
+  reviewsByLanguage: {
+    language: string;
+    count: number;
+    averageRating: number;
+  }[];
+  replyStatusBreakdown: {
+    pending: number;
+    approved: number;
+    posted: number;
+    dismissed: number;
+  };
+  ratingOverTime: {
+    date: string; // YYYY-MM
+    rating: number;
+  }[];
   topPerformingLocations: {
     restaurantId: string;
     name: string;
     reviewCount: number;
     averageRating: number;
+    responseRate: number;
+  }[];
+  recentNegativeReviews: {
+    id: string;
+    reviewerName: string | null;
+    rating: number;
+    comment: string | null;
+    restaurantName: string;
+    createdAt: string | null;
+    replyStatus: string | null;
   }[];
 };
 

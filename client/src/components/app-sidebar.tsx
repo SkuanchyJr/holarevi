@@ -124,7 +124,7 @@ interface PlanInfo {
 
 export function AppSidebar() {
   const [location] = useLocation();
-  const { user } = useAuth();
+  const { user, logoutMutation } = useAuth();
   const { t } = useLanguage();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
@@ -309,11 +309,13 @@ export function AppSidebar() {
                 {t("sidebar.nav.settings")}
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <a href="/api/logout" data-testid="menu-item-logout" className="text-destructive focus:text-destructive">
-                <LogOut className="mr-2 h-4 w-4" />
-                {t("common.logout")}
-              </a>
+            <DropdownMenuItem
+              data-testid="menu-item-logout"
+              className="text-destructive focus:text-destructive cursor-pointer"
+              onClick={() => logoutMutation.mutate()}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              {t("common.logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

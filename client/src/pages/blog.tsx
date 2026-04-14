@@ -19,7 +19,12 @@ export default function BlogPage() {
   const { t, language } = useLanguage();
   
   const { data: blogsData, isLoading } = useQuery<{ success: boolean; blogs: Blog[] }>({
-    queryKey: ["/api/blogs"],
+    queryKey: ["/api/blogs", language],
+    queryFn: async () => {
+      const res = await fetch(`/api/blogs?lang=${language}`);
+      if (!res.ok) throw new Error("Failed to fetch blogs");
+      return res.json();
+    }
   });
 
   const blogs = blogsData?.blogs || [];

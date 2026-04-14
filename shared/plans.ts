@@ -38,8 +38,8 @@ export interface Plan {
 }
 
 export const TRIAL_CONFIG = {
-  trialDays: 7, // Local plan trial duration (managed by Stripe)
-  maxTrialReplies: 100, // Generous trial experience
+  trialDays: 3, // Local plan trial duration (managed by Stripe)
+  maxTrialReplies: 10, // Limited trial experience
 };
 
 export const PRO_TRIAL_CONFIG = {
@@ -71,7 +71,7 @@ export const PLANS: Record<PlanId, Plan> = {
       "1 Google location",
       "100 AI replies/month",
       "Manual or auto-reply",
-      "Basic analytics",
+      "Analytics & sentiment",
       "1 user",
       "1 tone preset",
       "Weekly performance report",
@@ -104,7 +104,7 @@ export const PLANS: Record<PlanId, Plan> = {
     features: [
       "Up to 5 locations",
       "300 AI replies/month",
-      "Advanced analytics & sentiment",
+      "Analytics & sentiment",
       "Faster performance",
       "Priority reply engine",
       "3 users",
@@ -114,7 +114,7 @@ export const PLANS: Record<PlanId, Plan> = {
     hasYearly: true,
     isCustomPricing: false,
     isPopular: true,
-    trialAllowed: true,
+    trialAllowed: false,
   },
   business: {
     id: "business",

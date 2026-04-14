@@ -12,8 +12,10 @@ import { LanguageProvider, useLanguage } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { Loader2 } from "lucide-react";
+import { HelmetProvider } from "react-helmet-async";
 
 import Landing from "@/pages/landing";
+import AuthPage from "@/pages/auth";
 import Contact from "@/pages/contact";
 import PrivacyPolicy from "@/pages/privacy";
 import TermsOfService from "@/pages/terms";
@@ -43,13 +45,15 @@ import AdminPromoCodes from "@/pages/admin-promo-codes";
 import AdminBlogs from "@/pages/admin-blogs";
 import AdminReviews from "@/pages/admin-reviews";
 import AdminQRReviews from "@/pages/admin-qr-reviews";
+import AdminCRM from "@/pages/admin-crm";
 import AdminHome from "@/pages/admin-home";
 import Prelaunch from "@/pages/prelaunch";
-import Onboarding from "@/pages/onboarding";
+import OnboardingPage from "@/pages/onboarding";
 import SelectPlan from "@/pages/select-plan";
 import Paywall from "@/pages/paywall";
 import BlogPage from "@/pages/blog";
 import BlogPostPage from "@/pages/blog-post";
+import Pricing from "@/pages/pricing";
 import NotFound from "@/pages/not-found";
 import { InvitationPopup } from "@/components/invitation-popup";
 
@@ -64,7 +68,6 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
       <div className="flex h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-          {/* Top header bar */}
           <header className="flex items-center justify-between gap-2 px-4 py-2.5 border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-40 h-12">
             <SidebarTrigger
               data-testid="button-sidebar-toggle"
@@ -96,64 +99,46 @@ function LoadingScreen() {
 
 function usePrelaunchGuard() {
   const [location, setLocation] = useLocation();
-
   const isAdminRoute = location.startsWith("/admin");
+  const allowedPaths = ["/prelaunch", "/contact", "/privacy", "/terms", "/google-permissions"];
+  const isAllowedPath = isAdminRoute || allowedPaths.some(p => location.includes(p));
 
-  const allowedPaths = [
-    "/prelaunch",
-    "/contact",
-    "/privacy",
-    "/terms",
-    "/google-permissions",
-  ];
-  const isAllowedPath = isAdminRoute || allowedPaths.some(
-    (p) => location === p || location.startsWith(p + "/"),
-  );
-
-  const {
-    data: prelaunchStatus,
-    isFetched,
-    isFetching,
-  } = useQuery<{ success: boolean; prelaunchEnabled: boolean }>({
+  const { data: prelaunchStatus, isFetched, isFetching } = useQuery<{ success: boolean; prelaunchEnabled: boolean }>({
     queryKey: ["/api/prelaunch-status"],
     staleTime: 30000,
     retry: false,
   });
 
-  const isPrelaunchActive =
-    prelaunchStatus?.success && prelaunchStatus?.prelaunchEnabled;
-  const shouldBlockRoute = isPrelaunchActive && !isAllowedPath;
+  const isPrelaunchActive = prelaunchStatus?.success && prelaunchStatus?.prelaunchEnabled;
+  
+  useEffect(() => {
+    if (isPrelaunchActive && !isAllowedPath && isFetched && !isFetching && location !== "/prelaunch") {
+      setLocation("/prelaunch");
+    }
+  }, [isPrelaunchActive, isAllowedPath, isFetched, isFetching, location, setLocation]);
 
-  const isLoading = !isFetched || isFetching;
-
-  if (shouldBlockRoute && isFetched && !isFetching) {
-    setLocation("/prelaunch");
-  }
-
-  return {
-    isPrelaunchActive: isPrelaunchActive ?? false,
-    shouldBlockRoute,
-    isLoading,
-  };
-}
-
-function PageTracker() {
-  usePageTracking();
-  return null;
+  return { isLoading: !isFetched || isFetching };
 }
 
 function Router() {
-  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
+  const [location, setLocation] = useLocation();
+  const { language } = useLanguage();
   const { isLoading: prelaunchLoading } = usePrelaunchGuard();
-  const [location] = useLocation();
 
-  if (prelaunchLoading) {
-    return <LoadingScreen />;
-  }
+  useEffect(() => {
+    const isPrefixed = location.startsWith("/en") || location.startsWith("/es");
+    if (!isPrefixed && !location.startsWith("/admin") && !location.startsWith("/affiliate") && !location.startsWith("/api")) {
+      const targetLang = language || "es";
+      setLocation(`/${targetLang}${location === "/" ? "" : location}`);
+    }
+  }, [location, language, setLocation]);
+
+  if (prelaunchLoading) return <LoadingScreen />;
+
+  const currentPath = location.replace(/^\/(en|es)/, "") || "/";
 
   return (
     <Switch>
-      {/* Admin routes */}
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin" component={AdminHome} />
       <Route path="/admin/contacts" component={AdminContacts} />
@@ -167,109 +152,101 @@ function Router() {
       <Route path="/admin/blogs" component={AdminBlogs} />
       <Route path="/admin/reviews" component={AdminReviews} />
       <Route path="/admin/qr-reviews" component={AdminQRReviews} />
-      {/* Affiliate routes */}
+      <Route path="/admin/crm" component={AdminCRM} />
+      
       <Route path="/affiliate/login" component={AffiliateLogin} />
       <Route path="/affiliate/dashboard" component={AffiliateDashboard} />
 
-      {/* Prelaunch */}
-      <Route path="/prelaunch" component={Prelaunch} />
+      <Route path="/:lang(en|es)?/*">
+        {() => <LocalizedRouter currentPath={currentPath} />}
+      </Route>
+    </Switch>
+  );
+}
 
-      {/* Main app routes */}
+function LocalizedRouter({ currentPath }: { currentPath: string }) {
+  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
+  const [location, setLocation] = useLocation();
+  const { language } = useLanguage();
+
+  if (authLoading && user === undefined) return <LoadingScreen />;
+
+  const isPublicRoute = currentPath === "/" || currentPath === "/auth" || currentPath === "/prelaunch" || currentPath.startsWith("/blog") || currentPath === "/contact" || currentPath === "/select-plan" || currentPath === "/pricing";
+  const isOnboardingRoute = currentPath === "/onboarding";
+
+  // SUBSCRIPTION CHECK MUST COME FIRST
+  // A new user with subscriptionStatus="pending" must select a plan before onboarding
+  if (user?.subscriptionStatus === "pending") {
+    const normalizedPath = currentPath.replace("_", "-");
+    if (normalizedPath !== "/select-plan") {
+      return <Redirect to={`/${language}/select-plan`} />;
+    }
+    return <SelectPlan />;
+  }
+
+  // Unauthenticated users see public pages
+  if (!isAuthenticated) {
+    return (
+      <Switch>
+        <Route path="/:lang/auth" component={AuthPage} />
+        <Route path="/:lang/" component={Landing} />
+        <Route path="/:lang/contact" component={Contact} />
+        <Route path="/:lang/privacy" component={PrivacyPolicy} />
+        <Route path="/:lang/terms" component={TermsOfService} />
+        <Route path="/:lang/blog/:slug" component={BlogPostPage} />
+        <Route path="/:lang/blog" component={BlogPage} />
+        <Route path="/:lang/pricing" component={Pricing} />
+        <Route path="/:lang/google-permissions" component={GooglePermissions} />
+        <Route path="/:lang/prelaunch" component={Prelaunch} />
+        <Route path="/:lang/*" component={NotFound} />
+      </Switch>
+    );
+  }
+
+  // Onboarding check comes AFTER subscription is resolved
+  if (!user?.onboardingCompleted && !isPublicRoute && !isOnboardingRoute) {
+    return <Redirect to={`/${language}/onboarding`} />;
+  }
+
+  if (currentPath === "/select-plan") return <Redirect to={`/${language}/`} />;
+
+  const isTrialExpired = (user?.subscriptionStatus === "trial" || user?.subscriptionStatus === "trialing") &&
+    user?.trialEndsAt && new Date(user.trialEndsAt) < new Date();
+  const isSubscriptionInactive = user?.subscriptionStatus === "canceled" || user?.subscriptionStatus === "past_due";
+  
+  if (isTrialExpired || isSubscriptionInactive) {
+    if (currentPath !== "/paywall" && currentPath !== "/billing") return <Redirect to={`/${language}/paywall`} />;
+    if (currentPath === "/paywall") return <Paywall />;
+    return <AuthenticatedLayout><Billing /></AuthenticatedLayout>;
+  }
+
+  if (currentPath === "/paywall") return <Redirect to={`/${language}/`} />;
+
+  return (
+    <Switch>
+      <Route path="/:lang/blog/:slug" component={BlogPostPage} />
+      <Route path="/:lang/blog" component={BlogPage} />
+      <Route path="/:lang/onboarding" component={OnboardingPage} />
       <Route>
-        {() => {
-          if (authLoading) {
-            return <LoadingScreen />;
-          }
-
-          if (!isAuthenticated) {
-            return (
-              <Switch>
-                <Route path="/" component={Landing} />
-                <Route path="/contact" component={Contact} />
-                <Route path="/privacy" component={PrivacyPolicy} />
-                <Route path="/terms" component={TermsOfService} />
-                <Route path="/blog/:slug" component={BlogPostPage} />
-                <Route path="/blog" component={BlogPage} />
-                <Route path="/google-permissions" component={GooglePermissions} />
-                <Route component={Landing} />
-              </Switch>
-            );
-          }
-
-          if (user?.subscriptionStatus === "pending") {
-            if (location !== "/select-plan") {
-              return <Redirect to="/select-plan" />;
-            }
-            return <SelectPlan />;
-          }
-
-          if (location === "/select-plan") {
-            return <Redirect to="/" />;
-          }
-
-          const isTrialExpired = (user?.subscriptionStatus === "trial" || user?.subscriptionStatus === "trialing") &&
-            user?.trialEndsAt &&
-            new Date(user.trialEndsAt) < new Date();
-
-          const isSubscriptionInactive = user?.subscriptionStatus === "canceled" ||
-            user?.subscriptionStatus === "past_due";
-
-          const needsPaywall = isTrialExpired || isSubscriptionInactive;
-
-          if (needsPaywall) {
-            const allowedPaywallPaths = ["/paywall", "/billing"];
-            const isAllowedPath = allowedPaywallPaths.some(p => location === p || location.startsWith(p + "/"));
-
-            if (!isAllowedPath) {
-              return <Redirect to="/paywall" />;
-            }
-
-            if (location === "/paywall") {
-              return <Paywall />;
-            }
-
-            return (
-              <AuthenticatedLayout>
-                <Billing />
-              </AuthenticatedLayout>
-            );
-          }
-
-          if (location === "/paywall") {
-            return <Redirect to="/" />;
-          }
-
-          return (
-            <Switch>
-              <Route path="/blog/:slug" component={BlogPostPage} />
-              <Route path="/blog" component={BlogPage} />
-              <Route path="/onboarding" component={Onboarding} />
-
-              <Route>
-                {() => (
-                  <AuthenticatedLayout>
-                    <InvitationPopup />
-                    <Switch>
-                      <Route path="/" component={Dashboard} />
-                      <Route path="/reviews" component={Reviews} />
-                      <Route path="/review-summary" component={ReviewSummary} />
-                      <Route path="/restaurants" component={Restaurants} />
-                      <Route path="/locations" component={Locations} />
-                      <Route path="/analytics" component={Analytics} />
-                      <Route path="/qr-reviews" component={QRReviews} />
-                      <Route path="/team" component={Team} />
-                      <Route path="/tone-presets" component={TonePresets} />
-                      <Route path="/billing" component={Billing} />
-                      <Route path="/settings" component={Settings} />
-                      <Route path="/contact" component={Contact} />
-                      <Route component={NotFound} />
-                    </Switch>
-                  </AuthenticatedLayout>
-                )}
-              </Route>
-            </Switch>
-          );
-        }}
+        <AuthenticatedLayout>
+          <InvitationPopup />
+          <Switch>
+            <Route path="/:lang/" component={Dashboard} />
+            <Route path="/:lang/dashboard" component={Dashboard} />
+            <Route path="/:lang/reviews" component={Reviews} />
+            <Route path="/:lang/review-summary" component={ReviewSummary} />
+            <Route path="/:lang/restaurants" component={Restaurants} />
+            <Route path="/:lang/locations" component={Locations} />
+            <Route path="/:lang/analytics" component={Analytics} />
+            <Route path="/:lang/qr-reviews" component={QRReviews} />
+            <Route path="/:lang/team" component={Team} />
+            <Route path="/:lang/tone-presets" component={TonePresets} />
+            <Route path="/:lang/billing" component={Billing} />
+            <Route path="/:lang/settings" component={Settings} />
+            <Route path="/:lang/contact" component={Contact} />
+            <Route path="/:lang/*" component={NotFound} />
+          </Switch>
+        </AuthenticatedLayout>
       </Route>
     </Switch>
   );
@@ -277,16 +254,23 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <TooltipProvider>
-          <PageTracker />
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </LanguageProvider>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <LanguageProvider>
+          <TooltipProvider>
+            <PageTracker />
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </LanguageProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
+}
+
+function PageTracker() {
+  usePageTracking();
+  return null;
 }
 
 export default App;

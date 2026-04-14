@@ -16,6 +16,7 @@ import {
   blogs,
   reviewQrs,
   reviewQrEvents,
+  alerts,
   type User,
   type UpsertUser,
   type Restaurant,
@@ -52,6 +53,8 @@ import {
   type ReviewQrWithStats,
   type ReviewQrScansByDay,
   type GlobalQrAnalytics,
+  type Alert,
+  type InsertAlert,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, sql, count, isNotNull, inArray, isNull } from "drizzle-orm";
@@ -59,8 +62,10 @@ import { eq, desc, and, sql, count, isNotNull, inArray, isNull } from "drizzle-o
 export interface IStorage {
   // User operations (required for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   getUserByStripeCustomerId(customerId: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  createUser(user: UpsertUser): Promise<User>;
   updateUserStripeInfo(userId: string, data: Partial<User>): Promise<User | undefined>;
   updateUserReplyUsage(userId: string, repliesUsed: number, periodStart?: Date): Promise<User | undefined>;
   deleteUser(userId: string): Promise<void>;
@@ -101,6 +106,13 @@ export interface IStorage {
   createTonePreset(data: InsertTonePreset): Promise<TonePreset>;
   updateTonePreset(id: string, data: Partial<TonePreset>): Promise<TonePreset | undefined>;
   deleteTonePreset(id: string): Promise<void>;
+
+  // Alert operations
+  getAlertsByUserId(userId: string, resolved?: boolean): Promise<Alert[]>;
+  getAlertByReviewId(reviewId: string): Promise<Alert | undefined>;
+  createAlert(data: InsertAlert): Promise<Alert>;
+  updateAlert(id: string, data: Partial<Alert>): Promise<Alert | undefined>;
+  deleteAlert(id: string): Promise<void>;
 
   // Analytics
   getAdvancedAnalytics(userId: string): Promise<AdvancedAnalytics>;
@@ -143,6 +155,7 @@ export interface IStorage {
   getAffiliateSales(affiliateId: string): Promise<AffiliateSale[]>;
   getAllAffiliateSales(): Promise<(AffiliateSale & { affiliate: Affiliate | null })[]>;
   updateAffiliateSaleStatus(id: string, status: string): Promise<AffiliateSale | undefined>;
+  getAllAffiliateLeadsWithAffiliate(): Promise<(AffiliateLead & { affiliateUsername: string | null })[]>;
 
   // Promo code operations
   getAllPromoCodes(): Promise<PromoCode[]>;
@@ -160,7 +173,7 @@ export interface IStorage {
 
   // Blog operations
   getAllBlogs(): Promise<Blog[]>;
-  getPublishedBlogs(): Promise<Blog[]>;
+  getPublishedBlogs(language?: string): Promise<Blog[]>;
   getBlogById(id: string): Promise<Blog | undefined>;
   getBlogBySlug(slug: string): Promise<Blog | undefined>;
   createBlog(data: InsertBlog): Promise<Blog>;
@@ -193,8 +206,18 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+
   async getUserByStripeCustomerId(customerId: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.stripeCustomerId, customerId));
+    return user;
+  }
+
+  async createUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db.insert(users).values(userData).returning();
     return user;
   }
 
@@ -227,7 +250,7 @@ export class DatabaseStorage implements IStorage {
     // 1. Delete reviews for user's restaurants
     const userRestaurants = await db.select({ id: restaurants.id }).from(restaurants).where(eq(restaurants.userId, userId));
     const restaurantIds = userRestaurants.map(r => r.id);
-    
+
     if (restaurantIds.length > 0) {
       // Delete review summaries for user's restaurants
       await db.delete(reviewSummaries).where(inArray(reviewSummaries.restaurantId, restaurantIds));
@@ -236,22 +259,22 @@ export class DatabaseStorage implements IStorage {
       // Delete restaurant access grants
       await db.delete(restaurantAccess).where(inArray(restaurantAccess.restaurantId, restaurantIds));
     }
-    
+
     // 2. Delete restaurants
     await db.delete(restaurants).where(eq(restaurants.userId, userId));
-    
+
     // 3. Delete tone presets
     await db.delete(tonePresets).where(eq(tonePresets.userId, userId));
-    
+
     // 4. Delete team members (where user is owner)
     await db.delete(teamMembers).where(eq(teamMembers.ownerId, userId));
-    
+
     // 5. Delete restaurant access where user was granted access
     await db.delete(restaurantAccess).where(eq(restaurantAccess.userId, userId));
-    
+
     // 6. Delete sessions
     await db.delete(sessions).where(sql`sess::jsonb->'passport'->>'user' = ${userId}`);
-    
+
     // 7. Finally delete the user
     await db.delete(users).where(eq(users.id, userId));
   }
@@ -336,7 +359,7 @@ export class DatabaseStorage implements IStorage {
     if (userRestaurants.length === 0) return [];
 
     const restaurantIds = userRestaurants.map((r) => r.id);
-    
+
     const reviewsData = await db
       .select()
       .from(reviews)
@@ -406,7 +429,7 @@ export class DatabaseStorage implements IStorage {
     const totalReviews = allReviews.length;
     const pendingReplies = allReviews.filter((r) => r.replyStatus === "pending").length;
     const postedReplies = allReviews.filter((r) => r.replyStatus === "posted").length;
-    
+
     // Count auto-posted (replies posted by auto-post restaurants)
     const autoPostRestaurantIds = userRestaurants
       .filter((r) => r.autoPostEnabled)
@@ -602,46 +625,110 @@ export class DatabaseStorage implements IStorage {
     await db.delete(tonePresets).where(eq(tonePresets.id, id));
   }
 
+  // Alert operations
+  async getAlertsByUserId(userId: string, resolved?: boolean): Promise<Alert[]> {
+    if (resolved !== undefined) {
+      return await db.select().from(alerts).where(and(eq(alerts.userId, userId), eq(alerts.resolved, resolved))).orderBy(desc(alerts.createdAt));
+    }
+    return await db.select().from(alerts).where(eq(alerts.userId, userId)).orderBy(desc(alerts.createdAt));
+  }
+
+  async getAlertByReviewId(reviewId: string): Promise<Alert | undefined> {
+    const [alert] = await db.select().from(alerts).where(eq(alerts.reviewId, reviewId));
+    return alert;
+  }
+
+  async createAlert(data: InsertAlert): Promise<Alert> {
+    const [alert] = await db.insert(alerts).values(data).returning();
+    return alert;
+  }
+
+  async updateAlert(id: string, data: Partial<Alert>): Promise<Alert | undefined> {
+    const [alert] = await db.update(alerts).set(data).where(eq(alerts.id, id)).returning();
+    return alert;
+  }
+
+  async deleteAlert(id: string): Promise<void> {
+    await db.delete(alerts).where(eq(alerts.id, id));
+  }
+
   // Advanced analytics
   async getAdvancedAnalytics(userId: string): Promise<AdvancedAnalytics> {
     const userRestaurants = await this.getRestaurantsByUserId(userId);
-    
+
+    const emptyResult: AdvancedAnalytics = {
+      totalReviews: 0,
+      totalReplies: 0,
+      averageRating: 0,
+      responseRate: 0,
+      averageReplyTimeHours: null,
+      unansweredReviews: 0,
+      sentimentBreakdown: { positive: 0, neutral: 0, negative: 0 },
+      ratingDistribution: [],
+      monthlyTrends: [],
+      weeklyTrends: [],
+      reviewsByDayOfWeek: [],
+      reviewsByLanguage: [],
+      replyStatusBreakdown: { pending: 0, approved: 0, posted: 0, dismissed: 0 },
+      ratingOverTime: [],
+      topPerformingLocations: [],
+      recentNegativeReviews: [],
+    };
+
     if (userRestaurants.length === 0) {
-      return {
-        totalReviews: 0,
-        totalReplies: 0,
-        averageRating: 0,
-        sentimentBreakdown: { positive: 0, neutral: 0, negative: 0 },
-        ratingDistribution: [],
-        monthlyTrends: [],
-        topPerformingLocations: [],
-      };
+      return emptyResult;
     }
 
     const restaurantIds = userRestaurants.map((r) => r.id);
-    
+    const restaurantNameMap = new Map(userRestaurants.map(r => [r.id, r.name]));
+
     const allReviews = await db
       .select()
       .from(reviews)
       .where(inArray(reviews.restaurantId, restaurantIds));
 
     const totalReviews = allReviews.length;
-    const totalReplies = allReviews.filter((r) => r.replyStatus === "posted").length;
-    const averageRating = totalReviews > 0 
-      ? Math.round((allReviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews) * 10) / 10 
-      : 0;
+    if (totalReviews === 0) return emptyResult;
 
+    const totalReplies = allReviews.filter((r) => r.replyStatus === "posted").length;
+    const averageRating = Math.round((allReviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews) * 10) / 10;
+    const responseRate = Math.round((totalReplies / totalReviews) * 100);
+    const unansweredReviews = allReviews.filter((r) => r.replyStatus === "pending" || !r.replyStatus).length;
+
+    // Average reply time (hours) — only for reviews that have been replied
+    const repliedReviews = allReviews.filter(r => r.repliedAt && r.reviewedAt);
+    let averageReplyTimeHours: number | null = null;
+    if (repliedReviews.length > 0) {
+      const totalMs = repliedReviews.reduce((sum, r) => {
+        const reviewDate = new Date(r.reviewedAt!).getTime();
+        const replyDate = new Date(r.repliedAt!).getTime();
+        return sum + Math.max(0, replyDate - reviewDate);
+      }, 0);
+      averageReplyTimeHours = Math.round((totalMs / repliedReviews.length / (1000 * 60 * 60)) * 10) / 10;
+    }
+
+    // Sentiment breakdown
     const sentimentBreakdown = {
       positive: allReviews.filter((r) => r.sentiment === "positive").length,
       neutral: allReviews.filter((r) => r.sentiment === "neutral" || !r.sentiment).length,
       negative: allReviews.filter((r) => r.sentiment === "negative").length,
     };
 
+    // Rating distribution
     const ratingDistribution = [1, 2, 3, 4, 5].map((rating) => ({
       rating,
       count: allReviews.filter((r) => r.rating === rating).length,
     }));
 
+    // Reply status breakdown
+    const replyStatusBreakdown = {
+      pending: allReviews.filter(r => r.replyStatus === "pending" || !r.replyStatus).length,
+      approved: allReviews.filter(r => r.replyStatus === "approved").length,
+      posted: allReviews.filter(r => r.replyStatus === "posted").length,
+      dismissed: allReviews.filter(r => r.replyStatus === "dismissed").length,
+    };
+
+    // Monthly trends (last 12 months)
     const monthlyTrendsMap = new Map<string, { reviews: number; replies: number; ratingSum: number }>();
     allReviews.forEach((review) => {
       const date = review.createdAt ? new Date(review.createdAt) : new Date();
@@ -663,40 +750,142 @@ export class DatabaseStorage implements IStorage {
         averageRating: Math.round((data.ratingSum / data.reviews) * 10) / 10,
       }));
 
+    // Weekly trends (last 12 weeks)
+    function getISOWeek(d: Date): string {
+      const date = new Date(d.getTime());
+      date.setHours(0, 0, 0, 0);
+      date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
+      const week1 = new Date(date.getFullYear(), 0, 4);
+      const weekNum = 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + ((week1.getDay() + 6) % 7)) / 7);
+      return `${date.getFullYear()}-W${String(weekNum).padStart(2, '0')}`;
+    }
+    const weeklyTrendsMap = new Map<string, { reviews: number; replies: number; ratingSum: number }>();
+    allReviews.forEach((review) => {
+      const date = review.createdAt ? new Date(review.createdAt) : new Date();
+      const week = getISOWeek(date);
+      const existing = weeklyTrendsMap.get(week) || { reviews: 0, replies: 0, ratingSum: 0 };
+      existing.reviews++;
+      existing.ratingSum += review.rating;
+      if (review.replyStatus === "posted") existing.replies++;
+      weeklyTrendsMap.set(week, existing);
+    });
+
+    const weeklyTrends = Array.from(weeklyTrendsMap.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .slice(-12)
+      .map(([week, data]) => ({
+        week,
+        reviews: data.reviews,
+        replies: data.replies,
+        averageRating: Math.round((data.ratingSum / data.reviews) * 10) / 10,
+      }));
+
+    // Reviews by day of week
+    const dayOfWeekMap = new Map<number, { count: number; ratingSum: number }>();
+    for (let i = 0; i < 7; i++) dayOfWeekMap.set(i, { count: 0, ratingSum: 0 });
+    allReviews.forEach((review) => {
+      const date = review.createdAt ? new Date(review.createdAt) : new Date();
+      const day = date.getDay();
+      const existing = dayOfWeekMap.get(day)!;
+      existing.count++;
+      existing.ratingSum += review.rating;
+    });
+    const reviewsByDayOfWeek = Array.from(dayOfWeekMap.entries()).map(([day, data]) => ({
+      day,
+      count: data.count,
+      averageRating: data.count > 0 ? Math.round((data.ratingSum / data.count) * 10) / 10 : 0,
+    }));
+
+    // Reviews by language
+    const langMap = new Map<string, { count: number; ratingSum: number }>();
+    allReviews.forEach((review) => {
+      const lang = review.language || "unknown";
+      const existing = langMap.get(lang) || { count: 0, ratingSum: 0 };
+      existing.count++;
+      existing.ratingSum += review.rating;
+      langMap.set(lang, existing);
+    });
+    const reviewsByLanguage = Array.from(langMap.entries())
+      .map(([language, data]) => ({
+        language,
+        count: data.count,
+        averageRating: Math.round((data.ratingSum / data.count) * 10) / 10,
+      }))
+      .sort((a, b) => b.count - a.count);
+
+    // Rating over time (monthly average rating — last 12 months)
+    const ratingOverTime = monthlyTrends.map(t => ({
+      date: t.month,
+      rating: t.averageRating,
+    }));
+
+    // Top performing locations with response rate
     const topPerformingLocations = userRestaurants.map((restaurant) => {
       const restaurantReviews = allReviews.filter((r) => r.restaurantId === restaurant.id);
-      const avgRating = restaurantReviews.length > 0
-        ? Math.round((restaurantReviews.reduce((sum, r) => sum + r.rating, 0) / restaurantReviews.length) * 10) / 10
+      const revCount = restaurantReviews.length;
+      const avgRating = revCount > 0
+        ? Math.round((restaurantReviews.reduce((sum, r) => sum + r.rating, 0) / revCount) * 10) / 10
         : 0;
+      const repCount = restaurantReviews.filter(r => r.replyStatus === "posted").length;
+      const locResponseRate = revCount > 0 ? Math.round((repCount / revCount) * 100) : 0;
       return {
         restaurantId: restaurant.id,
         name: restaurant.name,
-        reviewCount: restaurantReviews.length,
+        reviewCount: revCount,
         averageRating: avgRating,
+        responseRate: locResponseRate,
       };
     }).sort((a, b) => b.averageRating - a.averageRating);
+
+    // Recent negative reviews (1-2 stars, last 10)
+    const recentNegativeReviews = allReviews
+      .filter(r => r.rating <= 2)
+      .sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+      })
+      .slice(0, 10)
+      .map(r => ({
+        id: r.id,
+        reviewerName: r.reviewerName,
+        rating: r.rating,
+        comment: r.comment,
+        restaurantName: restaurantNameMap.get(r.restaurantId) || "Unknown",
+        createdAt: r.createdAt ? new Date(r.createdAt).toISOString() : null,
+        replyStatus: r.replyStatus,
+      }));
 
     return {
       totalReviews,
       totalReplies,
       averageRating,
+      responseRate,
+      averageReplyTimeHours,
+      unansweredReviews,
       sentimentBreakdown,
       ratingDistribution,
       monthlyTrends,
+      weeklyTrends,
+      reviewsByDayOfWeek,
+      reviewsByLanguage,
+      replyStatusBreakdown,
+      ratingOverTime,
       topPerformingLocations,
+      recentNegativeReviews,
     };
   }
 
   // Location overview for multi-location dashboard
   async getLocationOverview(userId: string): Promise<LocationOverview[]> {
     const userRestaurants = await this.getRestaurantsByUserId(userId);
-    
+
     if (userRestaurants.length === 0) {
       return [];
     }
 
     const restaurantIds = userRestaurants.map((r) => r.id);
-    
+
     const allReviews = await db
       .select()
       .from(reviews)
@@ -761,7 +950,7 @@ export class DatabaseStorage implements IStorage {
       .from(restaurantAccess)
       .leftJoin(restaurants, eq(restaurantAccess.restaurantId, restaurants.id))
       .where(eq(restaurantAccess.userId, userId));
-    
+
     return access.map(row => ({
       ...row.restaurant_access,
       restaurant: row.restaurants!,
@@ -774,7 +963,7 @@ export class DatabaseStorage implements IStorage {
       .from(restaurantAccess)
       .leftJoin(users, eq(restaurantAccess.userId, users.id))
       .where(eq(restaurantAccess.restaurantId, restaurantId));
-    
+
     return access.map(row => ({
       ...row.restaurant_access,
       user: row.users!,
@@ -790,7 +979,7 @@ export class DatabaseStorage implements IStorage {
         eq(restaurantAccess.userId, data.userId),
         eq(restaurantAccess.restaurantId, data.restaurantId)
       ));
-    
+
     if (existing) {
       // Update existing access role
       const [updated] = await db
@@ -800,7 +989,7 @@ export class DatabaseStorage implements IStorage {
         .returning();
       return updated;
     }
-    
+
     // Create new access
     const [access] = await db.insert(restaurantAccess).values(data).returning();
     return access;
@@ -876,6 +1065,37 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(affiliateLeads.createdAt));
   }
 
+  async getAllAffiliateLeadsWithAffiliate(): Promise<(AffiliateLead & { affiliateUsername: string | null })[]> {
+    const rows = await db
+      .select({
+        id: affiliateLeads.id,
+        affiliateId: affiliateLeads.affiliateId,
+        businessName: affiliateLeads.businessName,
+        contactName: affiliateLeads.contactName,
+        city: affiliateLeads.city,
+        category: affiliateLeads.category,
+        totalReviews: affiliateLeads.totalReviews,
+        unansweredReviews: affiliateLeads.unansweredReviews,
+        avgRating: affiliateLeads.avgRating,
+        reviewsPerDay: affiliateLeads.reviewsPerDay,
+        replyPct: affiliateLeads.replyPct,
+        website: affiliateLeads.website,
+        address: affiliateLeads.address,
+        phone: affiliateLeads.phone,
+        email: affiliateLeads.email,
+        googleMapsUrl: affiliateLeads.googleMapsUrl,
+        status: affiliateLeads.status,
+        notes: affiliateLeads.notes,
+        createdAt: affiliateLeads.createdAt,
+        updatedAt: affiliateLeads.updatedAt,
+        affiliateUsername: affiliates.username,
+      })
+      .from(affiliateLeads)
+      .leftJoin(affiliates, eq(affiliateLeads.affiliateId, affiliates.id))
+      .orderBy(desc(affiliateLeads.updatedAt));
+    return rows;
+  }
+
   async getAffiliateLead(id: string): Promise<AffiliateLead | undefined> {
     const [lead] = await db
       .select()
@@ -935,7 +1155,7 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(affiliateSales)
       .orderBy(desc(affiliateSales.createdAt));
-    
+
     // Join with affiliates
     const result = await Promise.all(
       sales.map(async (sale) => {
@@ -1017,13 +1237,13 @@ export class DatabaseStorage implements IStorage {
       eq(reviewSummaries.userId, userId),
       eq(reviewSummaries.language, language),
     ];
-    
+
     if (restaurantId) {
       conditions.push(eq(reviewSummaries.restaurantId, restaurantId));
     } else {
       conditions.push(isNull(reviewSummaries.restaurantId));
     }
-    
+
     const [summary] = await db
       .select()
       .from(reviewSummaries)
@@ -1037,19 +1257,19 @@ export class DatabaseStorage implements IStorage {
     // First delete existing summary for the same user/restaurant/language combination
     const conditions = [
       eq(reviewSummaries.userId, data.userId),
-      eq(reviewSummaries.language, data.language),
+      eq(reviewSummaries.language, data.language as string),
     ];
-    
+
     if (data.restaurantId) {
       conditions.push(eq(reviewSummaries.restaurantId, data.restaurantId));
     } else {
       conditions.push(isNull(reviewSummaries.restaurantId));
     }
-    
+
     await db.delete(reviewSummaries).where(and(...conditions));
-    
+
     // Insert the new summary
-    const [summary] = await db.insert(reviewSummaries).values(data).returning();
+    const [summary] = await db.insert(reviewSummaries).values(data as any).returning();
     return summary;
   }
 
@@ -1065,12 +1285,18 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(blogs.createdAt));
   }
 
-  async getPublishedBlogs(): Promise<Blog[]> {
-    return await db
+  async getPublishedBlogs(language?: string): Promise<Blog[]> {
+    const query = db
       .select()
       .from(blogs)
-      .where(eq(blogs.published, true))
+      .where(
+        language 
+          ? and(eq(blogs.published, true), eq(blogs.language, language))
+          : eq(blogs.published, true)
+      )
       .orderBy(desc(blogs.createdAt));
+    
+    return await query;
   }
 
   async getBlogById(id: string): Promise<Blog | undefined> {
@@ -1114,7 +1340,7 @@ export class DatabaseStorage implements IStorage {
   async getReviewQrsByUserId(userId: string): Promise<ReviewQrWithStats[]> {
     const userRestaurants = await db.select({ id: restaurants.id }).from(restaurants).where(eq(restaurants.userId, userId));
     const restaurantIds = userRestaurants.map(r => r.id);
-    
+
     if (restaurantIds.length === 0) {
       return [];
     }
@@ -1140,7 +1366,7 @@ export class DatabaseStorage implements IStorage {
     const qrIds = qrs.map(qr => qr.id);
     const fourteenDaysAgo = new Date();
     fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
-    
+
     const scansByDayData = qrIds.length > 0 ? await db
       .select({
         qrId: reviewQrEvents.qrId,
@@ -1202,7 +1428,7 @@ export class DatabaseStorage implements IStorage {
     const qrIds = qrs.map(qr => qr.id);
     const fourteenDaysAgo = new Date();
     fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
-    
+
     const scansByDayData = qrIds.length > 0 ? await db
       .select({
         qrId: reviewQrEvents.qrId,
@@ -1330,7 +1556,7 @@ export class DatabaseStorage implements IStorage {
     // Get user's restaurants
     const userRestaurants = await db.select({ id: restaurants.id }).from(restaurants).where(eq(restaurants.userId, userId));
     const restaurantIds = userRestaurants.map(r => r.id);
-    
+
     if (restaurantIds.length === 0) {
       return { totalScans: 0, scansToday: 0, scansLast7Days: 0, scansLast30Days: 0 };
     }
@@ -1338,7 +1564,7 @@ export class DatabaseStorage implements IStorage {
     // Get QR IDs for user's restaurants
     const userQrs = await db.select({ id: reviewQrs.id }).from(reviewQrs).where(inArray(reviewQrs.restaurantId, restaurantIds));
     const qrIds = userQrs.map(q => q.id);
-    
+
     if (qrIds.length === 0) {
       return { totalScans: 0, scansToday: 0, scansLast7Days: 0, scansLast30Days: 0 };
     }
@@ -1371,7 +1597,7 @@ export class DatabaseStorage implements IStorage {
   async hasSubscriptionHistory(userId: string): Promise<boolean> {
     const user = await this.getUser(userId);
     if (!user) return false;
-    
+
     // User has subscription history if:
     // 1. They have a stripe subscription ID (even if subscription is canceled)
     // 2. Their status indicates they had a subscription (active, canceled, past_due, trialing)
@@ -1380,12 +1606,12 @@ export class DatabaseStorage implements IStorage {
     // IMPORTANT: subscriptionStatus is NOT cleared on cancellation to preserve history
     const hasHadSubscription = !!(
       user.stripeSubscriptionId ||
-      (user.subscriptionStatus && 
-       user.subscriptionStatus !== 'pending' && 
-       user.subscriptionStatus !== 'trial' &&
-       user.subscriptionStatus !== null)
+      (user.subscriptionStatus &&
+        user.subscriptionStatus !== 'pending' &&
+        user.subscriptionStatus !== 'trial' &&
+        user.subscriptionStatus !== null)
     );
-    
+
     return hasHadSubscription;
   }
 }

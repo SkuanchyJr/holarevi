@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { storage } from "./storage";
-import { isAuthenticated } from "./replitAuth";
+import { isAuthenticated } from "./auth";
 
 const GOOGLE_OAUTH_SCOPES = [
   'https://www.googleapis.com/auth/business.manage',
@@ -12,7 +12,7 @@ const GOOGLE_OAUTH_SCOPES = [
 function getGoogleOAuthConfig() {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  
+
   if (!clientId || !clientSecret) {
     return null;
   }
@@ -46,14 +46,14 @@ export function setupGoogleAuth(app: Express) {
 
       // Use direct Google OAuth
       const config = getGoogleOAuthConfig();
-      
+
       if (!config) {
-        return res.status(500).json({ 
+        return res.status(500).json({
           error: "Google OAuth not configured",
           message: "Please add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to your environment variables"
         });
       }
-      
+
       const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
       authUrl.searchParams.set('client_id', config.clientId);
       authUrl.searchParams.set('redirect_uri', redirectUri);
@@ -78,26 +78,42 @@ export function setupGoogleAuth(app: Express) {
     try {
       const { code, state, error } = req.query;
 
+      // Determine redirect base: if user is in onboarding, redirect there
+      let redirectBase = '/restaurants';
+      let userId: string | null = null;
+      let restaurantId: string | null = null;
+
+      // Parse state first to get userId for onboarding check
+      let stateData: any = null;
+      if (state) {
+        try {
+          stateData = JSON.parse(Buffer.from(state as string, 'base64').toString());
+          userId = stateData.userId;
+          restaurantId = stateData.restaurantId;
+        } catch (e) {
+          // Will be handled below
+        }
+      }
+
+      // Check if the user is in onboarding flow
+      if (userId) {
+        const user = await storage.getUser(userId);
+        if (user && !user.onboardingCompleted) {
+          redirectBase = '/onboarding';
+        }
+      }
+
       if (error) {
         console.error("[Google OAuth Callback] Error from Google:", error);
-        return res.redirect('/restaurants?error=google_auth_failed');
+        return res.redirect(`${redirectBase}?error=google_auth_failed`);
       }
 
-      if (!code || !state) {
+      if (!code || !state || !stateData) {
         console.error("[Google OAuth Callback] Missing code or state. code:", !!code, "state:", !!state);
-        return res.redirect('/restaurants?error=missing_code');
+        return res.redirect(`${redirectBase}?error=missing_code`);
       }
 
-      let stateData;
-      try {
-        stateData = JSON.parse(Buffer.from(state as string, 'base64').toString());
-        console.log("[Google OAuth Callback] Parsed state:", JSON.stringify(stateData));
-      } catch (e) {
-        console.error("[Google OAuth Callback] Failed to parse state:", e);
-        return res.redirect('/restaurants?error=invalid_state');
-      }
-
-      const { restaurantId, userId } = stateData;
+      console.log("[Google OAuth Callback] Parsed state:", JSON.stringify(stateData));
       const redirectUri = getRedirectUri(req, false);
       console.log("[Google OAuth Callback] Restaurant ID:", restaurantId, "User ID:", userId, "Redirect URI:", redirectUri);
 
@@ -105,7 +121,7 @@ export function setupGoogleAuth(app: Express) {
       const config = getGoogleOAuthConfig();
       if (!config) {
         console.error("[Google OAuth Callback] Google OAuth not configured");
-        return res.redirect('/restaurants?error=not_configured');
+        return res.redirect(`${redirectBase}?error=not_configured`);
       }
 
       console.log("[Google OAuth Callback] Exchanging code for tokens...");
@@ -124,7 +140,7 @@ export function setupGoogleAuth(app: Express) {
       if (!tokenResponse.ok) {
         const errorData = await tokenResponse.text();
         console.error("[Google OAuth Callback] Token exchange failed:", errorData);
-        return res.redirect('/restaurants?error=token_exchange_failed');
+        return res.redirect(`${redirectBase}?error=token_exchange_failed`);
       }
       console.log("[Google OAuth Callback] Token exchange successful");
 
@@ -149,7 +165,7 @@ export function setupGoogleAuth(app: Express) {
         console.log('[Google OAuth] Could not fetch user info, continuing without account ID');
       }
 
-      await storage.updateRestaurant(restaurantId, {
+      await storage.updateRestaurant(restaurantId!, {
         googleAccessToken: access_token,
         googleRefreshToken: refresh_token,
         googleTokenExpiresAt: expiresAt,
@@ -158,7 +174,7 @@ export function setupGoogleAuth(app: Express) {
       });
 
       console.log(`[Google OAuth] Successfully connected restaurant ${restaurantId}`);
-      res.redirect('/restaurants?success=connected');
+      res.redirect(`${redirectBase}?success=connected`);
     } catch (error: any) {
       console.error("[OAuth] Callback error:", error);
       res.redirect('/restaurants?error=callback_failed');
@@ -196,7 +212,7 @@ export function setupGoogleAuth(app: Express) {
     const config = getGoogleOAuthConfig();
     res.json({
       configured: !!config,
-      message: config 
+      message: config
         ? "Google OAuth is configured"
         : "Google OAuth is not configured. Please add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables."
     });
