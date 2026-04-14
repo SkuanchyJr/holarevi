@@ -171,12 +171,13 @@ function LocalizedRouter({ currentPath }: { currentPath: string }) {
 
   if (authLoading && user === undefined) return <LoadingScreen />;
 
+  const subscriptionStatus = user?.subscriptionStatus?.trim();
   const isPublicRoute = currentPath === "/" || currentPath === "/auth" || currentPath === "/prelaunch" || currentPath.startsWith("/blog") || currentPath === "/contact" || currentPath === "/select-plan" || currentPath === "/pricing";
   const isOnboardingRoute = currentPath === "/onboarding";
 
   // SUBSCRIPTION CHECK MUST COME FIRST
   // A new user with subscriptionStatus="pending" must select a plan before onboarding
-  if (user?.subscriptionStatus === "pending") {
+  if (subscriptionStatus === "pending") {
     const normalizedPath = currentPath.replace("_", "-");
     if (normalizedPath !== "/select-plan") {
       return <Redirect to={`/${language}/select-plan`} />;
@@ -210,9 +211,9 @@ function LocalizedRouter({ currentPath }: { currentPath: string }) {
 
   if (currentPath === "/select-plan") return <Redirect to={`/${language}/`} />;
 
-  const isTrialExpired = (user?.subscriptionStatus === "trial" || user?.subscriptionStatus === "trialing") &&
+  const isTrialExpired = (subscriptionStatus === "trial" || subscriptionStatus === "trialing") &&
     user?.trialEndsAt && new Date(user.trialEndsAt) < new Date();
-  const isSubscriptionInactive = user?.subscriptionStatus === "canceled" || user?.subscriptionStatus === "past_due";
+  const isSubscriptionInactive = subscriptionStatus === "canceled" || subscriptionStatus === "past_due";
   
   if (isTrialExpired || isSubscriptionInactive) {
     if (currentPath !== "/paywall" && currentPath !== "/billing") return <Redirect to={`/${language}/paywall`} />;
