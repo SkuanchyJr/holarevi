@@ -1,0 +1,120 @@
+Actúa como un CTO senior + DevOps + Backend + Seguridad + Growth Engineer.
+
+Tu objetivo es auditar y preparar completamente mi aplicación SaaS (HolaRevi) para producción.
+
+Quiero que me digas TODO lo necesario para publicar la web en entorno real sin fallos, incluyendo lo que falta, lo que está mal y lo que debo mejorar.
+
+Contexto del producto:
+HolaRevi es un SaaS que automatiza la gestión de reseñas de Google con IA (respuestas automáticas, panel, reglas, analítica, QR, multiubicación). :contentReference[oaicite:0]{index=0}
+
+Stack aproximado:
+- Backend: Node.js / Express / TypeScript
+- DB: PostgreSQL (Neon serverless)
+- Frontend: (asume moderno: React / Next.js si aplica)
+- Emails: Nodemailer (SMTP pendiente o configurable)
+- IA: OpenAI API
+- Hosting: definir (Replit / VPS / Vercel / otro)
+
+---
+
+### 🔍 QUIERO QUE ANALICES Y ME DEVUELVAS:
+
+## 1. INFRAESTRUCTURA
+- Qué hosting usar (Vercel, AWS, VPS, etc.) y por qué
+- Cómo estructurar frontend + backend
+- CDN, dominio, DNS, SSL
+- Escalabilidad inicial y futura
+
+## 2. BACKEND (CRÍTICO)
+- Variables de entorno necesarias (lista completa)
+- Configuración segura de:
+  - DATABASE_URL
+  - JWT / sesiones
+  - API keys
+- Manejo de errores
+- Logs (qué implementar sí o sí)
+- Rate limiting
+- Seguridad (CORS, headers, etc.)
+
+## 3. BASE DE DATOS
+- Validar estructura (tablas necesarias)
+- Migraciones
+- Backups automáticos
+- Índices clave para rendimiento
+
+## 4. EMAIL / SMTP
+- Qué falta configurar exactamente
+- Proveedores recomendados (SendGrid, Resend, etc.)
+- Casos de uso:
+  - onboarding
+  - alertas
+  - reportes semanales
+- Problemas típicos a evitar (spam, deliverability)
+
+## 5. INTEGRACIONES EXTERNAS
+- OpenAI (uso correcto + límites + fallback)
+- Google Business Profile API (si aplica)
+- Webhooks necesarios
+- Manejo de errores externos
+
+## 6. AUTENTICACIÓN
+- Sistema recomendado (JWT / sessions / OAuth)
+- Seguridad básica obligatoria
+- Protección contra ataques
+
+## 7. FRONTEND
+- Variables de entorno
+- Manejo de errores del usuario
+- SEO básico (muy importante para HolaRevi)
+- Performance (lazy load, etc.)
+
+## 8. ANALYTICS Y TRACKING
+- Qué instalar sí o sí:
+  - Google Analytics / PostHog
+- Eventos clave a trackear:
+  - conversión
+  - uso del producto
+  - churn signals
+
+## 9. MONITORIZACIÓN
+- Logs (qué herramienta usar)
+- Alertas (qué eventos deben avisar)
+- Uptime monitoring
+
+## 10. SEGURIDAD
+- Checklist completo antes de lanzar:
+  - HTTPS
+  - protección API
+  - validación inputs
+  - evitar leaks de API keys
+
+## 11. LEGAL / GDPR (EU IMPORTANTE)
+- Cookies
+- Política de privacidad
+- Tratamiento de datos (reseñas, clientes)
+- Emails compliance
+
+## 12. DEPLOYMENT PASO A PASO
+- Guía exacta desde local → producción
+- Comandos necesarios
+- Errores típicos y cómo evitarlos
+
+## 13. CHECKLIST FINAL
+Hazme un checklist tipo:
+[ ] listo
+[ ] falta
+[ ] crítico
+
+---
+
+### ⚠️ MUY IMPORTANTE
+
+- Señala TODO lo que falta aunque no lo haya mencionado
+- Prioriza lo CRÍTICO para lanzar
+- No expliques teoría innecesaria, solo lo accionable
+- Si detectas riesgos (caídas, bugs, seguridad), destácalos claramente
+
+---
+
+Objetivo final:
+Que pueda lanzar HolaRevi en producción con confianza, sin errores graves y preparado para escalar.
