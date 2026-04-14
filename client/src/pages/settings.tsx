@@ -207,11 +207,6 @@ export default function Settings() {
         icon={<Bell className="h-4 w-4" />}
         title={t("settings.notifications.title")}
         description={t("settings.notifications.description")}
-        badge={
-          <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 text-amber-600 border-amber-300 bg-amber-50 dark:bg-amber-950/20 dark:text-amber-400">
-            {t("common.comingSoon").toUpperCase()}
-          </Badge>
-        }
       >
         <SettingRow
           label={t("settings.notifications.email")}
@@ -228,7 +223,7 @@ export default function Settings() {
         <SettingRow
           label={t("settings.notifications.weeklySummary")}
           description={t("settings.notifications.weeklySummaryDesc")}
-          control={<Switch data-testid="switch-weekly-summary" />}
+          control={<Switch data-testid="switch-weekly-summary" defaultChecked />}
         />
       </SettingsSection>
 
