@@ -74,6 +74,7 @@ export interface IStorage {
   getRestaurantsByUserId(userId: string): Promise<Restaurant[]>;
   getRestaurant(id: string): Promise<Restaurant | undefined>;
   getConnectedRestaurants(): Promise<Restaurant[]>;
+  getRestaurantsWithAutoSync(): Promise<Restaurant[]>;
   createRestaurant(data: InsertRestaurant): Promise<Restaurant>;
   updateRestaurant(id: string, data: Partial<Restaurant>): Promise<Restaurant | undefined>;
   deleteRestaurant(id: string): Promise<void>;
@@ -1235,7 +1236,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getRestaurantsWithAutoSync(): Promise<Restaurant[]> {
-    return await db.select().from(restaurants).where(eq(restaurants.autoSyncReviews, true));
+    return await db
+      .select()
+      .from(restaurants)
+      .where(
+        and(
+          eq(restaurants.isConnected, true),
+          eq(restaurants.autoSyncReviews, true),
+          isNotNull(restaurants.googleAccountId),
+          isNotNull(restaurants.googleLocationId)
+        )
+      );
   }
 
   // Review summary operations

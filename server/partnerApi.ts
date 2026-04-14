@@ -399,11 +399,13 @@ function analyzeSentiment(rating: number, comment: string): string {
   return "neutral";
 }
 
-export async function syncReviewsViaPartnerApi(restaurant: Restaurant): Promise<{ synced: number; errors: number }> {
-  console.log(`[Partner API] Starting review sync for restaurant: ${restaurant.name} (${restaurant.id})`);
+export async function syncReviewsViaPartnerApi(restaurant: Restaurant, options?: { isAutoSync?: boolean }): Promise<{ synced: number; errors: number }> {
+  const isAutoSync = options?.isAutoSync ?? false;
+  const logPrefix = isAutoSync ? "[Partner API AutoSync]" : "[Partner API]";
+  console.log(`${logPrefix} Starting review sync for restaurant: ${restaurant.name} (${restaurant.id})`);
   
   if (!restaurant.googleLocationId) {
-    console.log(`[Partner API] Restaurant has no location ID, skipping sync`);
+    console.log(`${logPrefix} Restaurant has no location ID, skipping sync`);
     return { synced: 0, errors: 0 };
   }
   
@@ -440,9 +442,14 @@ export async function syncReviewsViaPartnerApi(restaurant: Restaurant): Promise<
       };
       
       const savedReview = await storage.createReview(reviewData);
-      console.log(`[Partner API] Saved review: ${savedReview.id}`);
+      console.log(`${logPrefix} Saved review: ${savedReview.id}`);
       
       if (!partnerReview.hasReply) {
+        if (isAutoSync && !restaurant.autoPostEnabled) {
+          console.log(`${logPrefix} autoPostEnabled is OFF for ${restaurant.name}, skipping AI reply generation (review saved as pending)`);
+          synced++;
+          continue;
+        }
         try {
           // Check plan limits before generating AI reply
           const user = await storage.getUser(restaurant.userId);
@@ -556,20 +563,23 @@ export async function postReplyViaPartnerApi(
 }
 
 export async function syncAllRestaurantsViaPartnerApi(): Promise<void> {
-  console.log("[Partner API] Starting sync for all connected restaurants...");
+  console.log("[Partner API AutoSync] Starting sync for all restaurants with autoSync enabled...");
   
-  const connectedRestaurants = await storage.getConnectedRestaurants();
-  console.log(`[Partner API] Found ${connectedRestaurants.length} connected restaurants`);
+  const allConnected = await storage.getConnectedRestaurants();
+  const autoSyncRestaurants = await storage.getRestaurantsWithAutoSync();
+  const skippedCount = allConnected.length - autoSyncRestaurants.length;
+
+  console.log(`[Partner API AutoSync] ${autoSyncRestaurants.length} restaurants with autoSync enabled, ${skippedCount} skipped (autoSync disabled)`);
   
-  for (const restaurant of connectedRestaurants) {
+  for (const restaurant of autoSyncRestaurants) {
     try {
-      await syncReviewsViaPartnerApi(restaurant);
+      await syncReviewsViaPartnerApi(restaurant, { isAutoSync: true });
     } catch (error) {
-      console.error(`[Partner API] Error syncing restaurant ${restaurant.id}:`, error);
+      console.error(`[Partner API AutoSync] Error syncing restaurant ${restaurant.id} (${restaurant.name}):`, error);
     }
   }
   
-  console.log("[Partner API] Sync complete for all restaurants");
+  console.log("[Partner API AutoSync] Sync complete for all restaurants");
 }
 
 export function isPartnerApiConfigured(): boolean {

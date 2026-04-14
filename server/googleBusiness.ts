@@ -347,17 +347,21 @@ function analyzeSentiment(rating: number, comment: string): string {
   return "neutral";
 }
 
-export async function syncReviewsForRestaurant(restaurant: Restaurant): Promise<{ synced: number; errors: number }> {
-  console.log(`[Google Business] Starting review sync for restaurant: ${restaurant.name} (${restaurant.id})`);
+export async function syncReviewsForRestaurant(restaurant: Restaurant, options?: { isAutoSync?: boolean }): Promise<{ synced: number; errors: number; repliesGenerated: number; repliesPosted: number }> {
+  const isAutoSync = options?.isAutoSync ?? false;
+  const logPrefix = isAutoSync ? "[AutoSync]" : "[ManualSync]";
+  console.log(`${logPrefix} Starting review sync for restaurant: ${restaurant.name} (${restaurant.id})`);
 
   if (!restaurant.isConnected || !restaurant.googleAccountId || !restaurant.googleLocationId) {
-    console.log(`[Google Business] Restaurant not fully connected, skipping sync`);
-    return { synced: 0, errors: 0 };
+    console.log(`${logPrefix} Restaurant not fully connected, skipping sync`);
+    return { synced: 0, errors: 0, repliesGenerated: 0, repliesPosted: 0 };
   }
 
   const googleReviews = await fetchGoogleReviews(restaurant);
   let synced = 0;
   let errors = 0;
+  let repliesGenerated = 0;
+  let repliesPosted = 0;
 
   for (const googleReview of googleReviews) {
     try {
@@ -418,12 +422,18 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant): Promise<
       const savedReview = await storage.createReview(reviewData);
 
       if (hasExistingReply) {
-        console.log(`[Google Business] Saved review ${savedReview.id} with existing Google reply (marked as posted)`);
+        console.log(`${logPrefix} Saved review ${savedReview.id} with existing Google reply (marked as posted)`);
         synced++;
-        continue; // Skip AI generation for reviews that already have replies
+        continue;
       }
 
-      console.log(`[Google Business] Saved review: ${savedReview.id}`);
+      console.log(`${logPrefix} Saved review: ${savedReview.id}`);
+
+      if (isAutoSync && !restaurant.autoPostEnabled) {
+        console.log(`${logPrefix} autoPostEnabled is OFF for ${restaurant.name}, skipping AI reply generation (review saved as pending)`);
+        synced++;
+        continue;
+      }
 
       try {
         // Check plan limits before generating AI reply
@@ -475,18 +485,18 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant): Promise<
           sentiment: aiReply.sentiment,
         });
 
-        console.log(`[Google Business] Generated AI reply for review: ${savedReview.id}`);
+        console.log(`${logPrefix} Generated AI reply for review: ${savedReview.id}`);
+        repliesGenerated++;
 
-        // Increment usage after successful generation
         const currentUsed = needsReset ? 0 : (user.monthlyRepliesUsed || 0);
         await storage.updateUserReplyUsage(user.id, currentUsed + 1);
 
-        // Check if review should be auto-published based on rules
         if (shouldAutoPublish(restaurant, rating, !!comment, aiReply.language)) {
-          console.log(`[Google Business] Auto-publishing reply for review: ${savedReview.id}`);
-          await postReplyToGoogle(restaurant, savedReview.id, aiReply.reply);
+          console.log(`${logPrefix} Auto-publishing reply for review: ${savedReview.id}`);
+          const posted = await postReplyToGoogle(restaurant, savedReview.id, aiReply.reply);
+          if (posted) repliesPosted++;
         } else if (restaurant.autoPostEnabled) {
-          console.log(`[Google Business] Review ${savedReview.id} didn't match auto-publish rules, saving as draft`);
+          console.log(`${logPrefix} Review ${savedReview.id} didn't match auto-publish rules, saving as draft`);
         }
       } catch (aiError) {
         console.error(`[Google Business] AI reply generation failed:`, aiError);
@@ -521,8 +531,8 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant): Promise<
     }
   }
 
-  console.log(`[Google Business] Sync complete: ${synced} synced, ${errors} errors`);
-  return { synced, errors };
+  console.log(`${logPrefix} Sync complete for ${restaurant.name}: ${synced} reviews synced, ${repliesGenerated} replies generated, ${repliesPosted} replies posted, ${errors} errors`);
+  return { synced, errors, repliesGenerated, repliesPosted };
 }
 
 export async function postReplyToGoogle(restaurant: Restaurant, reviewId: string, reply: string): Promise<boolean> {
@@ -578,18 +588,31 @@ export async function postReplyToGoogle(restaurant: Restaurant, reviewId: string
 }
 
 export async function syncAllConnectedRestaurants(): Promise<void> {
-  console.log("[Google Business] Starting sync for all connected restaurants...");
+  console.log("[AutoSync] Starting sync for all restaurants with autoSync enabled...");
 
-  const connectedRestaurants = await storage.getConnectedRestaurants();
-  console.log(`[Google Business] Found ${connectedRestaurants.length} connected restaurants`);
+  const allConnected = await storage.getConnectedRestaurants();
+  const autoSyncRestaurants = await storage.getRestaurantsWithAutoSync();
+  const skippedCount = allConnected.length - autoSyncRestaurants.length;
 
-  for (const restaurant of connectedRestaurants) {
+  console.log(`[AutoSync] ${autoSyncRestaurants.length} restaurants with autoSync enabled, ${skippedCount} skipped (autoSync disabled)`);
+
+  let totalSynced = 0;
+  let totalReplies = 0;
+  let totalPosted = 0;
+  let totalErrors = 0;
+
+  for (const restaurant of autoSyncRestaurants) {
     try {
-      await syncReviewsForRestaurant(restaurant);
+      const result = await syncReviewsForRestaurant(restaurant, { isAutoSync: true });
+      totalSynced += result.synced;
+      totalReplies += result.repliesGenerated;
+      totalPosted += result.repliesPosted;
+      totalErrors += result.errors;
     } catch (error) {
-      console.error(`[Google Business] Error syncing restaurant ${restaurant.id}:`, error);
+      console.error(`[AutoSync] Error syncing restaurant ${restaurant.id} (${restaurant.name}):`, error);
+      totalErrors++;
     }
   }
 
-  console.log("[Google Business] Sync complete for all restaurants");
+  console.log(`[AutoSync] Complete: ${totalSynced} reviews synced, ${totalReplies} replies generated, ${totalPosted} posted, ${totalErrors} errors across ${autoSyncRestaurants.length} restaurants`);
 }

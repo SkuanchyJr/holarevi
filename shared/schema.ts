@@ -61,7 +61,7 @@ export const restaurants = pgTable("restaurants", {
   googleTokenExpiresAt: timestamp("google_token_expires_at"),
   isConnected: boolean("is_connected").default(false),
   autoPostEnabled: boolean("auto_post_enabled").default(false),
-  autoSyncReviews: boolean("auto_sync_reviews").default(false),
+  autoSyncReviews: boolean("auto_sync_reviews").default(true),
   toneOfVoice: varchar("tone_of_voice").default("friendly"), // friendly, formal, casual, mediterranean
   tonePresetId: varchar("tone_preset_id"), // Link to user's custom tone preset
   // Auto-publish rules

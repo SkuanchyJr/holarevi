@@ -3,7 +3,7 @@ import { syncReviewsForRestaurant } from "./googleBusiness";
 import { log } from "./index";
 
 let isRunning = false;
-const SYNC_INTERVAL = 5 * 60 * 1000; // 5 minutes for near real-time sync
+const SYNC_INTERVAL = 5 * 60 * 1000;
 
 export async function runDailySync() {
   if (isRunning) {
@@ -15,20 +15,33 @@ export async function runDailySync() {
   log("Starting auto-sync for restaurants", "scheduler");
   
   try {
+    const allConnected = await storage.getConnectedRestaurants();
     const restaurantsToSync = await storage.getRestaurantsWithAutoSync();
-    log(`Found ${restaurantsToSync.length} restaurants with auto-sync enabled`, "scheduler");
+    const skippedCount = allConnected.length - restaurantsToSync.length;
+
+    log(`${restaurantsToSync.length} restaurants with autoSync enabled, ${skippedCount} skipped (autoSync disabled)`, "scheduler");
+
+    let totalSynced = 0;
+    let totalReplies = 0;
+    let totalPosted = 0;
+    let totalErrors = 0;
     
     for (const restaurant of restaurantsToSync) {
       try {
         log(`Syncing reviews for restaurant: ${restaurant.name} (${restaurant.id})`, "scheduler");
-        await syncReviewsForRestaurant(restaurant);
-        log(`Successfully synced reviews for: ${restaurant.name}`, "scheduler");
+        const result = await syncReviewsForRestaurant(restaurant, { isAutoSync: true });
+        totalSynced += result.synced;
+        totalReplies += result.repliesGenerated;
+        totalPosted += result.repliesPosted;
+        totalErrors += result.errors;
+        log(`Synced ${restaurant.name}: ${result.synced} reviews, ${result.repliesGenerated} replies, ${result.repliesPosted} posted`, "scheduler");
       } catch (error) {
         log(`Failed to sync reviews for restaurant ${restaurant.name}: ${error}`, "scheduler");
+        totalErrors++;
       }
     }
     
-    log("Auto-sync completed", "scheduler");
+    log(`Auto-sync completed: ${totalSynced} reviews, ${totalReplies} replies generated, ${totalPosted} posted, ${totalErrors} errors`, "scheduler");
   } catch (error) {
     log(`Sync failed: ${error}`, "scheduler");
   } finally {
@@ -39,11 +52,9 @@ export async function runDailySync() {
 export function startScheduler() {
   log("Starting sync scheduler (5-minute interval)", "scheduler");
   
-  // Run initial sync after a short delay to let the server fully start
   setTimeout(() => {
     runDailySync();
   }, 5000);
   
-  // Schedule recurring syncs every 5 minutes
   setInterval(runDailySync, SYNC_INTERVAL);
 }

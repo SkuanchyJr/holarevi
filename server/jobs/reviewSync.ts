@@ -2,22 +2,24 @@ import cron from "node-cron";
 import { storage } from "../storage";
 import { syncReviewsForRestaurant } from "../googleBusiness";
 
-/**
- * Background job to periodically sync reviews for all connected restaurants.
- * Processes restaurants in batches to avoid Google API rate limits.
- */
 export function initReviewSyncJob() {
-    // Run every 30 minutes (0, 30 * * * *)
     cron.schedule("*/30 * * * *", async () => {
         console.log("[Cron Job] Starting periodic review sync...");
 
         try {
-            const connectedRestaurants = await storage.getConnectedRestaurants();
-            console.log(`[Cron Job] Found ${connectedRestaurants.length} connected restaurants to sync`);
+            const allConnected = await storage.getConnectedRestaurants();
+            const connectedRestaurants = await storage.getRestaurantsWithAutoSync();
+            const skippedCount = allConnected.length - connectedRestaurants.length;
 
-            // Process in batches of 5 to avoid overloading/rate limits
+            console.log(`[Cron Job] ${connectedRestaurants.length} restaurants with autoSync enabled, ${skippedCount} skipped (autoSync disabled)`);
+
             const BATCH_SIZE = 5;
-            const BATCH_DELAY_MS = 10000; // 10 seconds between batches
+            const BATCH_DELAY_MS = 10000;
+
+            let totalSynced = 0;
+            let totalReplies = 0;
+            let totalPosted = 0;
+            let totalErrors = 0;
 
             for (let i = 0; i < connectedRestaurants.length; i += BATCH_SIZE) {
                 const batch = connectedRestaurants.slice(i, i + BATCH_SIZE);
@@ -26,10 +28,15 @@ export function initReviewSyncJob() {
                 await Promise.all(
                     batch.map(async (restaurant) => {
                         try {
-                            const result = await syncReviewsForRestaurant(restaurant);
-                            console.log(`[Cron Job] Synced ${restaurant.name}: ${result.synced} reviews, ${result.errors} errors`);
+                            const result = await syncReviewsForRestaurant(restaurant, { isAutoSync: true });
+                            totalSynced += result.synced;
+                            totalReplies += result.repliesGenerated;
+                            totalPosted += result.repliesPosted;
+                            totalErrors += result.errors;
+                            console.log(`[Cron Job] Synced ${restaurant.name}: ${result.synced} reviews, ${result.repliesGenerated} replies generated, ${result.repliesPosted} posted, ${result.errors} errors`);
                         } catch (err) {
-                            console.error(`[Cron Job] Error syncing restaurant ${restaurant.id}:`, err);
+                            console.error(`[Cron Job] Error syncing restaurant ${restaurant.id} (${restaurant.name}):`, err);
+                            totalErrors++;
                         }
                     })
                 );
@@ -40,7 +47,7 @@ export function initReviewSyncJob() {
                 }
             }
 
-            console.log("[Cron Job] Periodic sync completed successfully");
+            console.log(`[Cron Job] Periodic sync completed: ${totalSynced} reviews, ${totalReplies} replies generated, ${totalPosted} posted, ${totalErrors} errors`);
         } catch (error) {
             console.error("[Cron Job] Critical error in review sync job:", error);
         }
