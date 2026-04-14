@@ -881,6 +881,7 @@
     "steps": {
       "addLocation": "Add Location",
       "connectGoogle": "Connect Google",
+      "selectLocation": "Select Location",
       "success": "All Set!"
     },
     "addLocation": {
@@ -917,13 +918,28 @@
       "connectedDescription": "Your Google Business Profile is now linked. HolaRevi will start syncing your reviews.",
       "continueButton": "Continue"
     },
+    "selectLocation": {
+      "title": "Select your business location",
+      "description": "Choose the location from your Google Business Profile to link with HolaRevi.",
+      "loadingAccounts": "Loading your Google accounts...",
+      "loadingLocations": "Loading your business locations...",
+      "saving": "Saving location...",
+      "noLocations": "No locations were found in your Google Business account. You can set this up later from the Locations page.",
+      "savedTitle": "Location selected!",
+      "savedDescription": "Your business location has been linked successfully.",
+      "errorAccounts": "Failed to load Google accounts. Please try again.",
+      "errorLocations": "Failed to load business locations. Please try again.",
+      "errorSave": "Failed to save the location. Please try again."
+    },
     "success": {
       "title": "You're all set!",
       "description": "Your business is configured and ready. HolaRevi will automatically detect and respond to your Google reviews.",
       "summary": {
         "location": "Location created",
         "google": "Google connected",
-        "googleSkipped": "Google not connected yet"
+        "googleSkipped": "Google not connected yet",
+        "locationSelected": "Business location linked",
+        "locationSkipped": "Business location not selected yet"
       },
       "goToDashboard": "Go to Dashboard"
     }

@@ -29,9 +29,9 @@ import { useLanguage } from "@/lib/i18n";
 import type { Restaurant } from "@shared/schema";
 import { cn } from "@/lib/utils";
 
-type OnboardingStep = "add_location" | "connect_google" | "success";
+type OnboardingStep = "add_location" | "connect_google" | "select_location" | "success";
 
-const STEP_IDS: OnboardingStep[] = ["add_location", "connect_google", "success"];
+const STEP_IDS: OnboardingStep[] = ["add_location", "connect_google", "select_location", "success"];
 
 export function OnboardingWizard({ initialStep, googleConnected }: { initialStep: string; googleConnected?: boolean }) {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>(
@@ -50,12 +50,22 @@ export function OnboardingWizard({ initialStep, googleConnected }: { initialStep
   const [toneOfVoice, setToneOfVoice] = useState("friendly");
   const [nameError, setNameError] = useState("");
 
+  // Location selection state (Step 3)
+  const [googleAccounts, setGoogleAccounts] = useState<any[]>([]);
+  const [googleLocations, setGoogleLocations] = useState<any[]>([]);
+  const [selectedAccountId, setSelectedAccountId] = useState<string>("");
+  const [loadingAccounts, setLoadingAccounts] = useState(false);
+  const [loadingLocations, setLoadingLocations] = useState(false);
+  const [savingLocation, setSavingLocation] = useState(false);
+  const [locationSaved, setLocationSaved] = useState(false);
+
   const stepIndex = STEP_IDS.indexOf(currentStep);
   const stepProgress = Math.round(((stepIndex + 1) / STEP_IDS.length) * 100);
 
   const stepLabels: Record<OnboardingStep, string> = {
     add_location: t("onboarding.steps.addLocation"),
     connect_google: t("onboarding.steps.connectGoogle"),
+    select_location: t("onboarding.steps.selectLocation"),
     success: t("onboarding.steps.success"),
   };
 
@@ -108,20 +118,38 @@ export function OnboardingWizard({ initialStep, googleConnected }: { initialStep
     if (!createdRestaurant && existingRestaurants && existingRestaurants.length > 0) {
       const r = existingRestaurants[0];
       setCreatedRestaurant(r);
-      setIsGoogleConnected(!!r.isConnected && !!r.googleAccountId);
+      const connected = !!r.isConnected && !!r.googleAccountId;
+      setIsGoogleConnected(connected);
+      if (connected && r.googleLocationId) {
+        setLocationSaved(true);
+      }
       // If the user already has a restaurant, skip step 1
       if (currentStep === "add_location") {
-        setCurrentStep("connect_google");
+        if (connected && !r.googleLocationId) {
+          setCurrentStep("select_location");
+        } else if (connected && r.googleLocationId) {
+          setCurrentStep("success");
+        } else {
+          setCurrentStep("connect_google");
+        }
       }
     }
   }, [existingRestaurants, createdRestaurant, currentStep]);
 
-  // If googleConnected prop changes (from URL param after callback), advance
+  // If googleConnected prop changes (from URL param after callback), advance to select_location
   useEffect(() => {
     if (googleConnected && currentStep === "connect_google") {
       setIsGoogleConnected(true);
+      goToStep("select_location");
     }
   }, [googleConnected, currentStep]);
+
+  // Auto-fetch accounts when entering select_location step
+  useEffect(() => {
+    if (currentStep === "select_location" && createdRestaurant && !locationSaved && googleLocations.length === 0 && !loadingAccounts) {
+      fetchGoogleAccountsForOnboarding();
+    }
+  }, [currentStep, createdRestaurant?.id]);
 
   // ── Navigation helpers ──
   const goToStep = (next: OnboardingStep) => {
@@ -172,7 +200,6 @@ export function OnboardingWizard({ initialStep, googleConnected }: { initialStep
         return;
       }
       const { authUrl } = await response.json();
-      // Store onboarding state before redirect
       window.sessionStorage.setItem("onboarding_restaurant_id", createdRestaurant.id);
       window.location.href = authUrl;
     } catch {
@@ -181,6 +208,68 @@ export function OnboardingWizard({ initialStep, googleConnected }: { initialStep
         description: "Failed to initiate Google connection.",
         variant: "destructive",
       });
+    }
+  };
+
+  // ── Step 3: Location selection helpers ──
+  const fetchGoogleAccountsForOnboarding = async () => {
+    if (!createdRestaurant) return;
+    setLoadingAccounts(true);
+    try {
+      const res = await fetch(`/api/restaurants/${createdRestaurant.id}/google/accounts`, { credentials: "include" });
+      if (!res.ok) throw new Error();
+      const accounts = await res.json();
+      setGoogleAccounts(accounts);
+      if (accounts.length >= 1) {
+        const accountId = accounts[0].name?.replace("accounts/", "") || accounts[0].name;
+        setSelectedAccountId(accountId);
+        await fetchGoogleLocationsForOnboarding(accountId);
+      }
+    } catch {
+      toast({ title: t("common.error"), description: t("onboarding.selectLocation.errorAccounts"), variant: "destructive" });
+    } finally {
+      setLoadingAccounts(false);
+    }
+  };
+
+  const fetchGoogleLocationsForOnboarding = async (accountId: string) => {
+    if (!createdRestaurant) return;
+    setLoadingLocations(true);
+    try {
+      const res = await fetch(`/api/restaurants/${createdRestaurant.id}/google/locations/${accountId}`, { credentials: "include" });
+      if (!res.ok) throw new Error();
+      const locations = await res.json();
+      setGoogleLocations(locations);
+      // Auto-select if only one location
+      if (locations.length === 1) {
+        const locationId = locations[0].name?.replace(/^locations\//, "") || locations[0].name;
+        await selectLocationForOnboarding(accountId, locationId);
+      }
+    } catch {
+      toast({ title: t("common.error"), description: t("onboarding.selectLocation.errorLocations"), variant: "destructive" });
+    } finally {
+      setLoadingLocations(false);
+    }
+  };
+
+  const selectLocationForOnboarding = async (accountId: string, locationId: string) => {
+    if (!createdRestaurant) return;
+    setSavingLocation(true);
+    try {
+      const res = await fetch(`/api/restaurants/${createdRestaurant.id}/google/select-location`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ accountId, locationId }),
+      });
+      if (!res.ok) throw new Error();
+      queryClient.invalidateQueries({ queryKey: ["/api/restaurants"] });
+      setLocationSaved(true);
+      goToStep("success");
+    } catch {
+      toast({ title: t("common.error"), description: t("onboarding.selectLocation.errorSave"), variant: "destructive" });
+    } finally {
+      setSavingLocation(false);
     }
   };
 
@@ -352,7 +441,7 @@ export function OnboardingWizard({ initialStep, googleConnected }: { initialStep
                 <Button
                   size="lg"
                   className="w-full sm:w-auto"
-                  onClick={() => goToStep("success")}
+                  onClick={() => goToStep("select_location")}
                   data-testid="onboarding-google-continue"
                 >
                   {t("onboarding.connectGoogle.continueButton")}
@@ -444,7 +533,129 @@ export function OnboardingWizard({ initialStep, googleConnected }: { initialStep
           </div>
         )}
 
-        {/* ─────── STEP 3: Success ─────── */}
+        {/* ─────── STEP 3: Select Location ─────── */}
+        {currentStep === "select_location" && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-lg">
+            {locationSaved ? (
+              // ── Location already saved, auto-advancing ──
+              <>
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400 mb-4">
+                  <CheckCircle2 className="h-8 w-8" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold tracking-tight">{t("onboarding.selectLocation.savedTitle")}</h2>
+                  <p className="text-muted-foreground mt-2 leading-relaxed">{t("onboarding.selectLocation.savedDescription")}</p>
+                </div>
+                <Button size="lg" className="w-full sm:w-auto" onClick={() => goToStep("success")} data-testid="onboarding-location-continue">
+                  {t("onboarding.connectGoogle.continueButton")}
+                  <ChevronRight className="ml-2 w-4 h-4" />
+                </Button>
+              </>
+            ) : loadingAccounts || (loadingLocations && googleLocations.length === 0) || savingLocation ? (
+              // ── Loading state ──
+              <>
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 mb-4">
+                  <MapPin className="h-8 w-8" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold tracking-tight">{t("onboarding.selectLocation.title")}</h2>
+                  <p className="text-muted-foreground mt-2 leading-relaxed">{t("onboarding.selectLocation.description")}</p>
+                </div>
+                <div className="flex items-center gap-3 py-4">
+                  <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                  <span className="text-sm text-muted-foreground">
+                    {savingLocation
+                      ? t("onboarding.selectLocation.saving")
+                      : loadingLocations
+                      ? t("onboarding.selectLocation.loadingLocations")
+                      : t("onboarding.selectLocation.loadingAccounts")}
+                  </span>
+                </div>
+              </>
+            ) : googleLocations.length === 0 && !loadingLocations ? (
+              // ── No locations found ──
+              <>
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 mb-4">
+                  <AlertCircle className="h-8 w-8" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold tracking-tight">{t("onboarding.selectLocation.title")}</h2>
+                  <p className="text-muted-foreground mt-2 leading-relaxed">{t("onboarding.selectLocation.noLocations")}</p>
+                </div>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                  onClick={() => goToStep("success")}
+                  data-testid="onboarding-skip-location"
+                >
+                  <SkipForward className="mr-2 w-4 h-4" />
+                  {t("onboarding.connectGoogle.skipButton")}
+                </Button>
+              </>
+            ) : (
+              // ── Show location list ──
+              <>
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 mb-4">
+                  <MapPin className="h-8 w-8" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold tracking-tight">{t("onboarding.selectLocation.title")}</h2>
+                  <p className="text-muted-foreground mt-2 leading-relaxed">{t("onboarding.selectLocation.description")}</p>
+                </div>
+
+                <div className="space-y-2">
+                  {googleLocations.map((location) => {
+                    const locationId = location.name?.replace(/^locations\//, "") || location.name;
+                    const displayName = location.title || location.locationName || locationId;
+                    const address = location.storefrontAddress
+                      ? [
+                          location.storefrontAddress.addressLines?.join(", "),
+                          location.storefrontAddress.locality,
+                          location.storefrontAddress.postalCode,
+                        ]
+                          .filter(Boolean)
+                          .join(", ")
+                      : null;
+                    return (
+                      <button
+                        key={location.name}
+                        className="w-full flex items-center gap-3 p-4 rounded-xl border border-border hover-elevate transition-colors text-left"
+                        onClick={() => selectLocationForOnboarding(selectedAccountId, locationId)}
+                        data-testid={`onboarding-location-${locationId}`}
+                        disabled={savingLocation}
+                      >
+                        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                          <MapPin className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">{displayName}</p>
+                          {address && (
+                            <p className="text-xs text-muted-foreground mt-0.5">{address}</p>
+                          )}
+                        </div>
+                        <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground shrink-0" />
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                  onClick={() => goToStep("success")}
+                  data-testid="onboarding-skip-location"
+                >
+                  <SkipForward className="mr-2 w-4 h-4" />
+                  {t("onboarding.connectGoogle.skipButton")}
+                </Button>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* ─────── STEP 4: Success ─────── */}
         {currentStep === "success" && (
           <div className="space-y-6 py-4 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-950/30 text-green-600 dark:text-green-400 mx-auto mb-4">
@@ -496,6 +707,34 @@ export function OnboardingWizard({ initialStep, googleConnected }: { initialStep
                     : t("onboarding.success.summary.googleSkipped")}
                 </p>
               </div>
+              {isGoogleConnected && (
+                <div
+                  className={cn(
+                    "flex items-center gap-3 p-3 rounded-lg border",
+                    locationSaved
+                      ? "bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800"
+                      : "bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800"
+                  )}
+                >
+                  {locationSaved ? (
+                    <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400 shrink-0" />
+                  ) : (
+                    <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0" />
+                  )}
+                  <p
+                    className={cn(
+                      "text-sm font-medium",
+                      locationSaved
+                        ? "text-green-800 dark:text-green-300"
+                        : "text-amber-800 dark:text-amber-300"
+                    )}
+                  >
+                    {locationSaved
+                      ? t("onboarding.success.summary.locationSelected")
+                      : t("onboarding.success.summary.locationSkipped")}
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="pt-4">

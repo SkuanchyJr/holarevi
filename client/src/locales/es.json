@@ -881,6 +881,7 @@
     "steps": {
       "addLocation": "Añadir local",
       "connectGoogle": "Conectar Google",
+      "selectLocation": "Seleccionar local",
       "success": "¡Listo!"
     },
     "addLocation": {
@@ -917,13 +918,28 @@
       "connectedDescription": "Tu Google Business Profile está vinculado. HolaRevi empezará a sincronizar tus reseñas.",
       "continueButton": "Continuar"
     },
+    "selectLocation": {
+      "title": "Selecciona tu local de Google",
+      "description": "Elige la ubicación de tu Google Business Profile que quieres vincular con HolaRevi.",
+      "loadingAccounts": "Cargando tus cuentas de Google...",
+      "loadingLocations": "Cargando tus locales...",
+      "saving": "Guardando local...",
+      "noLocations": "No se encontraron locales en tu cuenta de Google Business. Puedes configurarlo más tarde desde la página de Locales.",
+      "savedTitle": "¡Local seleccionado!",
+      "savedDescription": "Tu local ha sido vinculado correctamente.",
+      "errorAccounts": "Error al cargar las cuentas de Google. Inténtalo de nuevo.",
+      "errorLocations": "Error al cargar los locales. Inténtalo de nuevo.",
+      "errorSave": "Error al guardar el local. Inténtalo de nuevo."
+    },
     "success": {
       "title": "¡Todo listo!",
       "description": "Tu negocio está configurado y listo. HolaRevi detectará y responderá automáticamente a tus reseñas de Google.",
       "summary": {
         "location": "Local creado",
         "google": "Google conectado",
-        "googleSkipped": "Google no conectado aún"
+        "googleSkipped": "Google no conectado aún",
+        "locationSelected": "Local de Google vinculado",
+        "locationSkipped": "Local de Google no seleccionado aún"
       },
       "goToDashboard": "Ir al panel"
     }
