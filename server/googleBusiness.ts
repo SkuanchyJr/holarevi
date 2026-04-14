@@ -2,6 +2,7 @@ import { storage } from "./storage";
 import type { Restaurant, InsertReview } from "@shared/schema";
 import { generateReviewReply } from "./openai";
 import { canSendReply, getMonthlyReplyUsage, PLAN_ERROR_CODES } from "./planHelpers";
+import { sendReplyNotification } from "./jobs/replyNotificationEmail";
 
 const GOOGLE_API_BASE = "https://mybusinessbusinessinformation.googleapis.com/v1";
 
@@ -578,6 +579,15 @@ export async function postReplyToGoogle(restaurant: Restaurant, reviewId: string
     });
 
     console.log(`[Google Business] Reply posted for review: ${reviewId}`);
+
+    sendReplyNotification({
+      restaurantId: restaurant.id,
+      reviewerName: review.reviewerName || "Cliente",
+      rating: review.rating,
+      reviewComment: review.comment || "",
+      postedReply: reply,
+    }).catch((err) => console.error("[Google Business] Reply notification error:", err));
+
     return true;
   } catch (error) {
     console.error("[Google Business] Error posting reply:", error);

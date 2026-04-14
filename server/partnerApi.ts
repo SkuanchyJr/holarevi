@@ -2,6 +2,7 @@ import { storage } from "./storage";
 import type { Restaurant, InsertReview } from "@shared/schema";
 import { generateReviewReply } from "./openai";
 import { canSendReply, getMonthlyReplyUsage } from "./planHelpers";
+import { sendReplyNotification } from "./jobs/replyNotificationEmail";
 
 const EMBEDSOCIAL_API_BASE = "https://api.embedsocial.com";
 
@@ -516,6 +517,13 @@ export async function syncReviewsViaPartnerApi(restaurant: Restaurant, options?:
                 replyStatus: "posted",
                 repliedAt: new Date(),
               });
+              sendReplyNotification({
+                restaurantId: restaurant.id,
+                reviewerName: partnerReview.reviewerName || "Cliente",
+                rating,
+                reviewComment: comment || "",
+                postedReply: aiReply.reply,
+              }).catch((err) => console.error("[Partner API] Reply notification error:", err));
             }
           } else if (restaurant.autoPostEnabled) {
             console.log(`[Partner API] Review ${savedReview.id} didn't match auto-publish rules, saving as draft`);

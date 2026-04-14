@@ -18,6 +18,7 @@ import {
   syncAllConnectedRestaurants,
   postReplyToGoogle,
 } from "./googleBusiness";
+import { sendReplyNotification } from "./jobs/replyNotificationEmail";
 import { PLANS, TRIAL_CONFIG, getStripePriceId, getPlanFromPriceId, type PlanId, type BillingCycle } from "@shared/plans";
 import {
   canAddLocation,
@@ -1664,6 +1665,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Increment monthly reply usage
       const currentUsed = needsReset ? 0 : (user.monthlyRepliesUsed || 0);
       await storage.updateUserReplyUsage(userId, currentUsed + 1);
+
+      if (!restaurant.googleAccessToken || !review.googleReviewId) {
+        sendReplyNotification({
+          restaurantId: restaurant.id,
+          reviewerName: review.reviewerName || "Cliente",
+          rating: review.rating,
+          reviewComment: review.comment || "",
+          postedReply: reply,
+        }).catch((err) => console.error("[Reply] Notification error:", err));
+      }
 
       res.json({
         ...updated,

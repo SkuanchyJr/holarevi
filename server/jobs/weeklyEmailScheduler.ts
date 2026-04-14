@@ -21,7 +21,7 @@ import cron from "node-cron";
 import type { Express, Request, Response } from "express";
 import { db } from "../db";
 import { users, restaurants, weeklyEmailLogs } from "@shared/schema";
-import { eq, and, inArray, isNotNull } from "drizzle-orm";
+import { eq, and, inArray, isNotNull, or } from "drizzle-orm";
 import {
   computeWeeklyMetrics,
   getLastCompletedWeekRange,
@@ -94,14 +94,18 @@ async function getActiveUsers(specificUserId?: string): Promise<ActiveUser[]> {
     return user ? [user] : [];
   }
 
-  // Get users who have at least one restaurant and an active subscription
+  // Get users who have at least one restaurant and an active/trial subscription
   const activeUsers = await db
     .select({ id: users.id, email: users.email })
     .from(users)
     .where(
       and(
         isNotNull(users.email),
-        eq(users.subscriptionStatus, "active")
+        or(
+          eq(users.subscriptionStatus, "active"),
+          eq(users.subscriptionStatus, "trialing"),
+          eq(users.subscriptionStatus, "trial")
+        )
       )
     );
 
@@ -210,6 +214,13 @@ async function processWeeklyEmails(
           console.log(`[WeeklyEmail] OpenAI failed for ${userEmail}, using fallback template`);
           email = generateFallbackEmail(metrics);
         }
+
+        // Replace dashboard placeholder with actual URL
+        const dashboardUrl = process.env.APP_URL || "https://holarevi.com";
+        email.html = email.html.replace(
+          /\[ENLACE AL DASHBOARD\]/g,
+          `${dashboardUrl}/es/dashboard`
+        );
 
         // Send email
         const sendResult = await sendWeeklyEmail(
