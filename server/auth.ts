@@ -158,6 +158,10 @@ export async function setupAuth(app: Express) {
         const safeUser = { ...user };
         delete (safeUser as any).passwordHash;
 
+        if (safeUser.subscriptionStatus) {
+            safeUser.subscriptionStatus = safeUser.subscriptionStatus.trim() as any;
+        }
+
         return res.json(safeUser);
     });
 }

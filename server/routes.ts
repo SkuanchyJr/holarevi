@@ -2133,8 +2133,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         payment_method_collection: "always", // Always require card, especially for trials
         line_items: [{ price: finalPriceId, quantity: 1 }],
         mode: "subscription",
-        success_url: `${req.protocol}://${req.get("host")}/billing?success=true`,
-        cancel_url: `${req.protocol}://${req.get("host")}/billing?canceled=true`,
+        success_url: `${req.protocol}://${req.get("host")}/${user.onboardingCompleted ? 'billing?success=true' : 'onboarding'}`,
+        cancel_url: `${req.protocol}://${req.get("host")}/${user.onboardingCompleted ? 'billing?canceled=true' : 'select-plan'}`,
         metadata: {
           userId,
           planId: finalPlanId || null,

@@ -41,7 +41,7 @@ export const users = pgTable("users", {
   monthlyRepliesPeriodStart: timestamp("monthly_replies_period_start"), // When the current billing period started
   trialEndsAt: timestamp("trial_ends_at"),
   hasUsedProTrial: boolean("has_used_pro_trial").default(false), // Prevent multiple Pro trials
-  onboardingStep: varchar("onboarding_step").default('connect_google'),
+  onboardingStep: varchar("onboarding_step").default('add_location'),
   onboardingCompleted: boolean("onboarding_completed").default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -545,6 +545,21 @@ export const insertWeeklyEmailLogSchema = createInsertSchema(weeklyEmailLogs).om
   id: true,
   sentAt: true,
 });
+
+export const alertsRelations = relations(alerts, ({ one }) => ({
+  user: one(users, {
+    fields: [alerts.userId],
+    references: [users.id],
+  }),
+  restaurant: one(restaurants, {
+    fields: [alerts.restaurantId],
+    references: [restaurants.id],
+  }),
+  review: one(reviews, {
+    fields: [alerts.reviewId],
+    references: [reviews.id],
+  }),
+}));
 
 export const insertAlertSchema = createInsertSchema(alerts);
 export type InsertAlert = z.infer<typeof insertAlertSchema>;
