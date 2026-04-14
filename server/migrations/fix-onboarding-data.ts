@@ -23,5 +23,6 @@ export async function fixOnboardingData() {
     console.log("[Migration] Onboarding data fix complete");
   } catch (error) {
     console.error("[Migration] Onboarding data fix failed:", error);
+    throw error;
   }
 }
