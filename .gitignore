@@ -5,3 +5,8 @@ server/public
 vite.config.ts.*
 *.tar.gz
 /generated/prisma
+.env
+.env.*
+.agents/
+videos/
+tmp/

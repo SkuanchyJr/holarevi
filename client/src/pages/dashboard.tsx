@@ -23,6 +23,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { StatCard } from "@/components/stat-card";
 import { EmptyState } from "@/components/empty-state";
 import { PageHeader } from "@/components/page-header";
+import { AlertsWidget } from "@/components/dashboard/alerts-widget";
 import { cn } from "@/lib/utils";
 
 function MiniReviewCard({ review }: { review: ReviewWithRestaurant }) {
@@ -159,6 +160,9 @@ export default function Dashboard() {
         title={t("dashboard.title")}
         subtitle={t("dashboard.subtitle")}
       />
+
+      {/* Alerts Section */}
+      <AlertsWidget />
 
       {/* Stats Grid */}
       <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">

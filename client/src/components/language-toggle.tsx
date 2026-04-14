@@ -1,33 +1,38 @@
 import { Button } from "@/components/ui/button";
-import { useLanguage, type Language } from "@/lib/i18n";
-import { Globe } from "lucide-react";
+import { useLanguage } from "@/lib/i18n";
+import { useLocation } from "wouter";
 
-const languageOrder: Language[] = ["es", "ca", "en"];
-const languageLabels: Record<Language, string> = {
-  es: "ES",
-  ca: "CA",
-  en: "EN",
-};
+const languages = [
+  { code: "es", label: "ES" },
+  { code: "en", label: "EN" },
+] as const;
 
 export function LanguageToggle() {
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
+  const [location, setLocation] = useLocation();
 
-  const cycleLanguage = () => {
-    const currentIndex = languageOrder.indexOf(language);
-    const nextIndex = (currentIndex + 1) % languageOrder.length;
-    setLanguage(languageOrder[nextIndex]);
+  const toggleLanguage = () => {
+    const nextLang = language === "es" ? "en" : "es";
+    
+    // Calculate new path
+    const currentPath = location.replace(/^\/(en|es)/, "") || "/";
+    const nextPath = `/${nextLang}${currentPath === "/" ? "" : currentPath}`;
+    
+    setLocation(nextPath);
   };
+
+  const label = language === "es" ? "ES" : "EN";
 
   return (
     <Button
       variant="ghost"
-      size="icon"
-      onClick={cycleLanguage}
+      size="sm"
+      onClick={toggleLanguage}
+      className="flex items-center gap-2 px-2 hover:bg-accent transition-colors"
       data-testid="button-language-toggle"
-      title={`Language: ${languageLabels[language]}`}
+      title={`Switch to ${language === "es" ? "English" : "Spanish"}`}
     >
-      <span className="text-sm font-medium">{languageLabels[language]}</span>
-      <span className="sr-only">Toggle language</span>
+      <span className="text-xs font-bold">{label}</span>
     </Button>
   );
 }

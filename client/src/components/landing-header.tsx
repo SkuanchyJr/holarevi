@@ -9,7 +9,7 @@ interface LandingHeaderProps {
 }
 
 export function LandingHeader({ showLoginButton = true }: LandingHeaderProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -30,14 +30,19 @@ export function LandingHeader({ showLoginButton = true }: LandingHeaderProps) {
             </div>
           </Link>
           <nav className="hidden sm:flex items-center gap-4">
-            <Link href="/blog">
+            <Link href={`/${language}/blog`}>
               <span className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer" data-testid="link-blog">
-                {t("header.blog")}
+                {t("nav.blog")}
               </span>
             </Link>
-            <Link href="/contact">
+            <Link href={`/${language}/pricing`}>
+              <span className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer" data-testid="link-pricing">
+                {t("nav.pricing")}
+              </span>
+            </Link>
+            <Link href={`/${language}/contact`}>
               <span className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer" data-testid="link-contact">
-                {t("common.contact")}
+                {t("nav.contact") || t("common.contact")}
               </span>
             </Link>
           </nav>
@@ -48,7 +53,7 @@ export function LandingHeader({ showLoginButton = true }: LandingHeaderProps) {
           <ThemeToggle />
           {showLoginButton && (
             <Button asChild data-testid="button-login">
-              <a href="/api/login">{t("header.login")}</a>
+              <a href={`/${language}/auth`}>{t("nav.login")}</a>
             </Button>
           )}
         </div>

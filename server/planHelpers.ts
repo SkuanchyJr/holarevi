@@ -1,4 +1,4 @@
-import { PLANS, getPlanLimits, isUnlimited, type PlanId, type BillingCycle } from "@shared/plans";
+import { PLANS, TRIAL_CONFIG, getPlanLimits, isUnlimited, type PlanId, type BillingCycle } from "@shared/plans";
 import type { User } from "@shared/schema";
 
 export const PLAN_ERROR_CODES = {
@@ -18,7 +18,7 @@ export interface PlanCheckResult {
 }
 
 export function isTrialUser(user: User): boolean {
-  return false;
+  return user.subscriptionStatus === "trial" || user.subscriptionStatus === "trialing";
 }
 
 export function getEffectivePlanId(user: User): PlanId {
@@ -115,6 +115,19 @@ export function canSendReply(user: User): PlanCheckResult {
   
   const planId = getEffectivePlanId(user);
   const limits = getPlanLimits(planId);
+  const isTrial = isTrialUser(user);
+  
+  if (isTrial) {
+    const trialMax = TRIAL_CONFIG.maxTrialReplies;
+    const allowed = currentUsed < trialMax;
+    return {
+      allowed,
+      reason: allowed ? undefined : `You've reached your trial limit of ${trialMax} AI replies. Please subscribe to a plan for more replies.`,
+      errorCode: allowed ? undefined : PLAN_ERROR_CODES.REPLY_LIMIT_REACHED,
+      limit: trialMax,
+      current: currentUsed,
+    };
+  }
   
   if (isUnlimited(limits.maxRepliesPerMonth)) {
     return { allowed: true, limit: "unlimited", current: currentUsed };
@@ -157,12 +170,12 @@ const FEATURE_ACCESS_MAP: Record<string, PlanId[]> = {
   "gdpr_compliance": ["business", "enterprise"],
   "multi_location_dashboard": ["business", "enterprise"],
   "permission_controls": ["business", "enterprise"],
-  "analytics_export": ["business", "enterprise"],
+  "analytics_export": ["local", "pro", "business", "enterprise"],
   "instagram_replies": ["business", "enterprise"],
   "whatsapp_replies": ["business", "enterprise"],
   "tripadvisor_replies": ["business", "enterprise"],
   "priority_support": ["pro", "business", "enterprise"],
-  "advanced_analytics": ["pro", "business", "enterprise"],
+  "advanced_analytics": ["local", "pro", "business", "enterprise"],
   "faster_ai": ["pro", "business", "enterprise"],
   "tone_personalization": ["pro", "business", "enterprise"],
   "auto_reply": ["local", "pro", "business", "enterprise"],
@@ -227,7 +240,7 @@ export function getUserPlanInfo(user: User) {
     effectiveMaxLocations = limits.maxLocations + (user.extraLocations || 0);
   }
   
-  const replyLimit = limits.maxRepliesPerMonth;
+  const replyLimit = isTrial ? TRIAL_CONFIG.maxTrialReplies : limits.maxRepliesPerMonth;
   
   return {
     planId,

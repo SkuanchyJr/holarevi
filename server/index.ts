@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
@@ -12,6 +13,8 @@ import {
   isPartnerApiConfigured,
 } from "./partnerApi";
 import path from "path";
+import { initReviewSyncJob } from "./jobs/reviewSync";
+import { initWeeklyEmailScheduler } from "./jobs/weeklyEmailScheduler";
 
 const app = express();
 const httpServer = createServer(app);
@@ -30,7 +33,7 @@ export function log(message: string, source = "express") {
     hour12: true,
   });
 
-  console.log(`${formattedTime} [${source}] ${message}`);
+  console.log(`${formattedTime} [${source}] ${message} `);
 }
 
 // Initialize Stripe schema and sync data on startup
@@ -42,11 +45,15 @@ async function initStripe() {
     return;
   }
 
+  if (!process.env.STRIPE_SECRET_KEY) {
+    log("STRIPE_SECRET_KEY not set, skipping Stripe initialization", "stripe");
+    return;
+  }
+
   try {
     log("Initializing Stripe schema...", "stripe");
     await runMigrations({
       databaseUrl,
-      schema: "stripe",
     });
     log("Stripe schema ready", "stripe");
 
@@ -181,11 +188,15 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || "5000", 10);
+
+  // Initialize background jobs
+  initReviewSyncJob();
+  initWeeklyEmailScheduler(app);
+
   server.listen(
     {
       port,
       host: "0.0.0.0",
-      reusePort: true,
     },
     () => {
       log(`serving on port ${port}`);
