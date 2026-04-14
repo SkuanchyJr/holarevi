@@ -19,7 +19,13 @@ export async function runDailySync() {
     const restaurantsToSync = await storage.getRestaurantsWithAutoSync();
     const skippedCount = allConnected.length - restaurantsToSync.length;
 
-    log(`${restaurantsToSync.length} restaurants with autoSync enabled, ${skippedCount} skipped (autoSync disabled)`, "scheduler");
+    if (skippedCount > 0) {
+      const skippedNames = allConnected
+        .filter(r => !restaurantsToSync.find(a => a.id === r.id))
+        .map(r => `${r.name} (${r.id})`);
+      log(`Skipping ${skippedCount} restaurants with autoSync disabled: ${skippedNames.join(", ")}`, "scheduler");
+    }
+    log(`${restaurantsToSync.length} restaurants with autoSync enabled`, "scheduler");
 
     let totalSynced = 0;
     let totalReplies = 0;

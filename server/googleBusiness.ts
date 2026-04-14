@@ -588,13 +588,37 @@ export async function postReplyToGoogle(restaurant: Restaurant, reviewId: string
 }
 
 export async function syncAllConnectedRestaurants(): Promise<void> {
-  console.log("[AutoSync] Starting sync for all restaurants with autoSync enabled...");
+  console.log("[ManualSync] Starting sync for ALL connected restaurants...");
+
+  const allConnected = await storage.getConnectedRestaurants();
+  console.log(`[ManualSync] Found ${allConnected.length} connected restaurants`);
+
+  for (const restaurant of allConnected) {
+    try {
+      await syncReviewsForRestaurant(restaurant);
+    } catch (error) {
+      console.error(`[ManualSync] Error syncing restaurant ${restaurant.id} (${restaurant.name}):`, error);
+    }
+  }
+
+  console.log("[ManualSync] Sync complete for all connected restaurants");
+}
+
+export async function autoSyncAllRestaurants(): Promise<void> {
+  console.log("[AutoSync] Starting sync for restaurants with autoSync enabled...");
 
   const allConnected = await storage.getConnectedRestaurants();
   const autoSyncRestaurants = await storage.getRestaurantsWithAutoSync();
   const skippedCount = allConnected.length - autoSyncRestaurants.length;
 
-  console.log(`[AutoSync] ${autoSyncRestaurants.length} restaurants with autoSync enabled, ${skippedCount} skipped (autoSync disabled)`);
+  if (skippedCount > 0) {
+    const skippedNames = allConnected
+      .filter(r => !autoSyncRestaurants.find(a => a.id === r.id))
+      .map(r => `${r.name} (${r.id})`);
+    console.log(`[AutoSync] Skipping ${skippedCount} restaurants with autoSync disabled: ${skippedNames.join(", ")}`);
+  }
+
+  console.log(`[AutoSync] ${autoSyncRestaurants.length} restaurants with autoSync enabled`);
 
   let totalSynced = 0;
   let totalReplies = 0;

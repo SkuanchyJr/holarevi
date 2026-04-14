@@ -11,7 +11,13 @@ export function initReviewSyncJob() {
             const connectedRestaurants = await storage.getRestaurantsWithAutoSync();
             const skippedCount = allConnected.length - connectedRestaurants.length;
 
-            console.log(`[Cron Job] ${connectedRestaurants.length} restaurants with autoSync enabled, ${skippedCount} skipped (autoSync disabled)`);
+            if (skippedCount > 0) {
+                const skippedNames = allConnected
+                    .filter(r => !connectedRestaurants.find(a => a.id === r.id))
+                    .map(r => `${r.name} (${r.id})`);
+                console.log(`[Cron Job] Skipping ${skippedCount} restaurants with autoSync disabled: ${skippedNames.join(", ")}`);
+            }
+            console.log(`[Cron Job] ${connectedRestaurants.length} restaurants with autoSync enabled`);
 
             const BATCH_SIZE = 5;
             const BATCH_DELAY_MS = 10000;

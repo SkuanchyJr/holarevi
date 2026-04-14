@@ -8,7 +8,7 @@ import { createServer } from "http";
 import { runMigrations } from "stripe-replit-sync";
 import { getStripeSync } from "./stripeClient";
 import { WebhookHandlers } from "./webhookHandlers";
-import { syncAllConnectedRestaurants } from "./googleBusiness";
+import { autoSyncAllRestaurants } from "./googleBusiness";
 import {
   syncAllRestaurantsViaPartnerApi,
   isPartnerApiConfigured,
@@ -236,7 +236,7 @@ app.use((req, res, next) => {
           if (isPartnerApiConfigured()) {
             await syncAllRestaurantsViaPartnerApi();
           } else {
-            await syncAllConnectedRestaurants();
+            await autoSyncAllRestaurants();
           }
           log(`Scheduled review sync completed via ${syncSource}`, "sync");
         } catch (error: any) {
@@ -251,7 +251,7 @@ app.use((req, res, next) => {
           if (isPartnerApiConfigured()) {
             await syncAllRestaurantsViaPartnerApi();
           } else {
-            await syncAllConnectedRestaurants();
+            await autoSyncAllRestaurants();
           }
           log(`Initial review sync completed via ${syncSource}`, "sync");
         } catch (error: any) {

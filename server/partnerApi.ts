@@ -563,13 +563,20 @@ export async function postReplyViaPartnerApi(
 }
 
 export async function syncAllRestaurantsViaPartnerApi(): Promise<void> {
-  console.log("[Partner API AutoSync] Starting sync for all restaurants with autoSync enabled...");
+  console.log("[Partner API AutoSync] Starting sync for restaurants with autoSync enabled...");
   
   const allConnected = await storage.getConnectedRestaurants();
   const autoSyncRestaurants = await storage.getRestaurantsWithAutoSync();
   const skippedCount = allConnected.length - autoSyncRestaurants.length;
 
-  console.log(`[Partner API AutoSync] ${autoSyncRestaurants.length} restaurants with autoSync enabled, ${skippedCount} skipped (autoSync disabled)`);
+  if (skippedCount > 0) {
+    const skippedNames = allConnected
+      .filter(r => !autoSyncRestaurants.find(a => a.id === r.id))
+      .map(r => `${r.name} (${r.id})`);
+    console.log(`[Partner API AutoSync] Skipping ${skippedCount} restaurants with autoSync disabled: ${skippedNames.join(", ")}`);
+  }
+
+  console.log(`[Partner API AutoSync] ${autoSyncRestaurants.length} restaurants with autoSync enabled`);
   
   for (const restaurant of autoSyncRestaurants) {
     try {
