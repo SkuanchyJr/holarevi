@@ -429,6 +429,26 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant, options?:
 
       console.log(`${logPrefix} Saved review: ${savedReview.id}`);
 
+      if (rating <= 2) {
+        try {
+          const existingAlert = await storage.getAlertByReviewId(savedReview.id);
+          if (!existingAlert) {
+            await storage.createAlert({
+              userId: restaurant.userId,
+              restaurantId: restaurant.id,
+              reviewId: savedReview.id,
+              type: "NEGATIVE_REVIEW",
+              resolved: false,
+            });
+            console.log(`${logPrefix} Negative review alert created for review: ${savedReview.id}`);
+          } else {
+            console.log(`${logPrefix} Alert for review ${savedReview.id} already exists, skipping alert creation`);
+          }
+        } catch (alertErr) {
+          console.error(`${logPrefix} Failed to create alert for negative review:`, alertErr);
+        }
+      }
+
       if (isAutoSync && !restaurant.autoPostEnabled) {
         console.log(`${logPrefix} autoPostEnabled is OFF for ${restaurant.name}, skipping AI reply generation (review saved as pending)`);
         synced++;
@@ -499,29 +519,7 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant, options?:
           console.log(`${logPrefix} Review ${savedReview.id} didn't match auto-publish rules, saving as draft`);
         }
       } catch (aiError) {
-        console.error(`[Google Business] AI reply generation failed:`, aiError);
-      }
-
-      // Check if this is a negative review (rating <= 2) and trigger an alert
-      if (rating <= 2) {
-        try {
-          // Prevent duplicates by checking if an alert already exists for this reviewId
-          const existingAlert = await storage.getAlertByReviewId(savedReview.id);
-          if (!existingAlert) {
-            await storage.createAlert({
-              userId: restaurant.userId,
-              restaurantId: restaurant.id,
-              reviewId: savedReview.id,
-              type: "NEGATIVE_REVIEW",
-              resolved: false,
-            });
-            console.log(`[Google Business] Negative review alert created for review: ${savedReview.id}`);
-          } else {
-            console.log(`[Google Business] Alert for review ${savedReview.id} already exists, skipping alert creation`);
-          }
-        } catch (alertErr) {
-          console.error(`[Google Business] Failed to create alert for negative review:`, alertErr);
-        }
+        console.error(`${logPrefix} AI reply generation failed:`, aiError);
       }
 
       synced++;
