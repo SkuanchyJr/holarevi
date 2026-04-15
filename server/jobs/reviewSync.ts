@@ -1,10 +1,23 @@
 import cron from "node-cron";
 import { storage } from "../storage";
 import { syncReviewsForRestaurant } from "../googleBusiness";
+import {
+  syncReviewsViaPartnerApi,
+  isPartnerApiConfigured,
+} from "../partnerApi";
+
+let isRunning = false;
 
 export function initReviewSyncJob() {
-    cron.schedule("*/30 * * * *", async () => {
-        console.log("[Cron Job] Starting periodic review sync...");
+    cron.schedule("*/5 * * * *", async () => {
+        if (isRunning) {
+            console.log("[ReviewSync] Sync already running, skipping this cycle");
+            return;
+        }
+
+        isRunning = true;
+        const syncSource = isPartnerApiConfigured() ? "partner" : "google";
+        console.log(`[ReviewSync] Starting periodic review sync via ${syncSource}...`);
 
         try {
             const allConnected = await storage.getConnectedRestaurants();
@@ -15,9 +28,9 @@ export function initReviewSyncJob() {
                 const skippedNames = allConnected
                     .filter(r => !connectedRestaurants.find(a => a.id === r.id))
                     .map(r => `${r.name} (${r.id})`);
-                console.log(`[Cron Job] Skipping ${skippedCount} restaurants with autoSync disabled: ${skippedNames.join(", ")}`);
+                console.log(`[ReviewSync] Skipping ${skippedCount} restaurants with autoSync disabled: ${skippedNames.join(", ")}`);
             }
-            console.log(`[Cron Job] ${connectedRestaurants.length} restaurants with autoSync enabled`);
+            console.log(`[ReviewSync] ${connectedRestaurants.length} restaurants with autoSync enabled`);
 
             const BATCH_SIZE = 5;
             const BATCH_DELAY_MS = 10000;
@@ -29,35 +42,44 @@ export function initReviewSyncJob() {
 
             for (let i = 0; i < connectedRestaurants.length; i += BATCH_SIZE) {
                 const batch = connectedRestaurants.slice(i, i + BATCH_SIZE);
-                console.log(`[Cron Job] Processing batch ${Math.floor(i / BATCH_SIZE) + 1} (${batch.length} restaurants)`);
+                console.log(`[ReviewSync] Processing batch ${Math.floor(i / BATCH_SIZE) + 1} (${batch.length} restaurants)`);
 
                 await Promise.all(
                     batch.map(async (restaurant) => {
                         try {
-                            const result = await syncReviewsForRestaurant(restaurant, { isAutoSync: true });
-                            totalSynced += result.synced;
-                            totalReplies += result.repliesGenerated;
-                            totalPosted += result.repliesPosted;
-                            totalErrors += result.errors;
-                            console.log(`[Cron Job] Synced ${restaurant.name}: ${result.synced} reviews, ${result.repliesGenerated} replies generated, ${result.repliesPosted} posted, ${result.errors} errors`);
+                            if (isPartnerApiConfigured()) {
+                                const result = await syncReviewsViaPartnerApi(restaurant, { isAutoSync: true });
+                                totalSynced += result.synced;
+                                totalErrors += result.errors;
+                                console.log(`[ReviewSync] Synced ${restaurant.name}: ${result.synced} reviews, ${result.errors} errors (via partner)`);
+                            } else {
+                                const result = await syncReviewsForRestaurant(restaurant, { isAutoSync: true });
+                                totalSynced += result.synced;
+                                totalReplies += result.repliesGenerated;
+                                totalPosted += result.repliesPosted;
+                                totalErrors += result.errors;
+                                console.log(`[ReviewSync] Synced ${restaurant.name}: ${result.synced} reviews, ${result.repliesGenerated} replies generated, ${result.repliesPosted} posted, ${result.errors} errors (via google)`);
+                            }
                         } catch (err) {
-                            console.error(`[Cron Job] Error syncing restaurant ${restaurant.id} (${restaurant.name}):`, err);
+                            console.error(`[ReviewSync] Error syncing restaurant ${restaurant.id} (${restaurant.name}):`, err);
                             totalErrors++;
                         }
                     })
                 );
 
                 if (i + BATCH_SIZE < connectedRestaurants.length) {
-                    console.log(`[Cron Job] Waiting ${BATCH_DELAY_MS / 1000}s before next batch...`);
+                    console.log(`[ReviewSync] Waiting ${BATCH_DELAY_MS / 1000}s before next batch...`);
                     await new Promise((resolve) => setTimeout(resolve, BATCH_DELAY_MS));
                 }
             }
 
-            console.log(`[Cron Job] Periodic sync completed: ${totalSynced} reviews, ${totalReplies} replies generated, ${totalPosted} posted, ${totalErrors} errors`);
+            console.log(`[ReviewSync] Periodic sync completed: ${totalSynced} reviews, ${totalReplies} replies generated, ${totalPosted} posted, ${totalErrors} errors`);
         } catch (error) {
-            console.error("[Cron Job] Critical error in review sync job:", error);
+            console.error("[ReviewSync] Critical error in review sync job:", error);
+        } finally {
+            isRunning = false;
         }
     });
 
-    console.log("[Cron Job] Review sync job initialized (scheduled for every 30 minutes)");
+    console.log("[ReviewSync] Review sync job initialized (scheduled every 5 minutes, only for locations with autoSync enabled)");
 }

@@ -8,11 +8,6 @@ import { createServer } from "http";
 import { runMigrations } from "stripe-replit-sync";
 import { getStripeSync } from "./stripeClient";
 import { WebhookHandlers } from "./webhookHandlers";
-import { autoSyncAllRestaurants } from "./googleBusiness";
-import {
-  syncAllRestaurantsViaPartnerApi,
-  isPartnerApiConfigured,
-} from "./partnerApi";
 import path from "path";
 import { initReviewSyncJob } from "./jobs/reviewSync";
 import { initWeeklyEmailScheduler } from "./jobs/weeklyEmailScheduler";
@@ -225,39 +220,6 @@ app.use((req, res, next) => {
     },
     () => {
       log(`serving on port ${port}`);
-
-      // Start scheduled review sync (every 5 minutes for near real-time sync)
-      const SYNC_INTERVAL = 5 * 60 * 1000; // 5 minutes
-      const syncSource = isPartnerApiConfigured() ? "partner" : "google";
-
-      setInterval(async () => {
-        log(`Starting scheduled review sync via ${syncSource}...`, "sync");
-        try {
-          if (isPartnerApiConfigured()) {
-            await syncAllRestaurantsViaPartnerApi();
-          } else {
-            await autoSyncAllRestaurants();
-          }
-          log(`Scheduled review sync completed via ${syncSource}`, "sync");
-        } catch (error: any) {
-          log(`Scheduled sync error: ${error.message}`, "sync");
-        }
-      }, SYNC_INTERVAL);
-
-      // Also run initial sync after 30 seconds
-      setTimeout(async () => {
-        log(`Running initial review sync via ${syncSource}...`, "sync");
-        try {
-          if (isPartnerApiConfigured()) {
-            await syncAllRestaurantsViaPartnerApi();
-          } else {
-            await autoSyncAllRestaurants();
-          }
-          log(`Initial review sync completed via ${syncSource}`, "sync");
-        } catch (error: any) {
-          log(`Initial sync error: ${error.message}`, "sync");
-        }
-      }, 30000);
     },
   );
 })();
