@@ -83,7 +83,6 @@ export function LocationConfigSheet({
   const [minStars, setMinStars] = useState(4);
   const [withComment, setWithComment] = useState(true);
   const [withoutComment, setWithoutComment] = useState(true);
-  const [negativeReviews, setNegativeReviews] = useState(false);
   const [language, setLanguage] = useState("auto");
   const [toneOfVoice, setToneOfVoice] = useState("friendly");
   const [tonePresetId, setTonePresetId] = useState<string | null>(null);
@@ -108,7 +107,6 @@ export function LocationConfigSheet({
       setMinStars(restaurant.autoPublishMinStars ?? 4);
       setWithComment(restaurant.autoPublishWithComment ?? true);
       setWithoutComment(restaurant.autoPublishWithoutComment ?? true);
-      setNegativeReviews(restaurant.autoPublishNegative ?? false);
       setLanguage(restaurant.autoPublishLanguage ?? "auto");
       setToneOfVoice(restaurant.toneOfVoice ?? "friendly");
       setTonePresetId(restaurant.tonePresetId ?? null);
@@ -125,7 +123,6 @@ export function LocationConfigSheet({
       autoPublishMinStars: minStars,
       autoPublishWithComment: withComment,
       autoPublishWithoutComment: withoutComment,
-      autoPublishNegative: negativeReviews,
       autoPublishLanguage: language,
       toneOfVoice,
       tonePresetId,
@@ -150,11 +147,7 @@ export function LocationConfigSheet({
 
     parts.push(reviewTypes.join(" + "));
 
-    if (negativeReviews) {
-      parts.push(t("locationConfig.rulesNegativeAllowed"));
-    } else {
-      parts.push(t("locationConfig.rulesMinStars").replace("{stars}", String(minStars)));
-    }
+    parts.push(t("locationConfig.rulesMinStars").replace("{stars}", String(minStars)));
 
     const langOptions = getLanguageOptions();
     const langLabel = langOptions.find((l) => l.value === language)?.label || t("locationConfig.rulesAllLanguages");
@@ -362,61 +355,45 @@ export function LocationConfigSheet({
                           {t("locationConfig.withoutComments")}
                         </Label>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="negative-reviews"
-                          checked={negativeReviews}
-                          onCheckedChange={(checked) => {
-                            setNegativeReviews(checked === true);
-                            markChanged();
-                          }}
-                          data-testid="checkbox-negative-reviews"
-                        />
-                        <Label htmlFor="negative-reviews" className="text-sm font-normal cursor-pointer">
-                          {t("locationConfig.negativeReviews")}
-                        </Label>
-                      </div>
                     </div>
                   </div>
 
                   {/* Star Rating Filter */}
-                  {!negativeReviews && (
-                    <div className="space-y-3">
-                      <Label className="text-sm text-muted-foreground">
-                        {t("locationConfig.minStars")}
-                      </Label>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              className={`h-5 w-5 transition-colors ${
-                                star <= minStars
-                                  ? "fill-yellow-400 text-yellow-400"
-                                  : "fill-gray-200 text-gray-200 dark:fill-gray-600 dark:text-gray-600"
-                              }`}
-                            />
-                          ))}
-                          <span className="ml-2 text-sm font-medium">{minStars}+ {t("locationConfig.stars")}</span>
-                        </div>
-                        <Slider
-                          value={[minStars]}
-                          onValueChange={([value]) => {
-                            setMinStars(value);
-                            markChanged();
-                          }}
-                          min={1}
-                          max={5}
-                          step={1}
-                          className="w-full"
-                          data-testid="slider-min-stars"
-                        />
-                        <p className="text-xs text-muted-foreground">
-                          {t("locationConfig.minStarsDesc")}
-                        </p>
+                  <div className="space-y-3">
+                    <Label className="text-sm text-muted-foreground">
+                      {t("locationConfig.minStars")}
+                    </Label>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`h-5 w-5 transition-colors ${
+                              star <= minStars
+                                ? "fill-yellow-400 text-yellow-400"
+                                : "fill-gray-200 text-gray-200 dark:fill-gray-600 dark:text-gray-600"
+                            }`}
+                          />
+                        ))}
+                        <span className="ml-2 text-sm font-medium">{minStars}+ {t("locationConfig.stars")}</span>
                       </div>
+                      <Slider
+                        value={[minStars]}
+                        onValueChange={([value]) => {
+                          setMinStars(value);
+                          markChanged();
+                        }}
+                        min={1}
+                        max={5}
+                        step={1}
+                        className="w-full"
+                        data-testid="slider-min-stars"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        {t("locationConfig.minStarsDesc")}
+                      </p>
                     </div>
-                  )}
+                  </div>
 
                   {/* Language Handling */}
                   <div className="space-y-3">
