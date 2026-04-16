@@ -1215,7 +1215,7 @@
       "qrReviews": "Reseñas QR",
       "qrReviewsDesc": "Crear y rastrear códigos QR de reseñas de Google"
     },
-    "goTo": "Ir a {{section}}"
+      "goTo": "Ir a {{section}}"
   },
   "affiliate": {
     "login": {
@@ -1299,5 +1299,10 @@
         "submitSale": "No se pudo enviar la venta"
       }
     }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Ideas prácticas para mejorar tu reputación online y automatizar respuestas",
+    "noPosts": "Aún no hay artículos publicados"
   }
 }

@@ -1104,5 +1104,18 @@
         "submitSale": "Could not submit sale"
       }
     }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Practical ideas to improve your online reputation and automate replies",
+    "noPosts": "No posts published yet"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Practical ideas to improve your online reputation and automate replies",
+    "noPosts": "No posts published yet",
+    "notFound": "Post not found",
+    "notFoundDesc": "The article you're looking for doesn't exist or has been removed.",
+    "backToList": "Back to blog"
   }
 }
