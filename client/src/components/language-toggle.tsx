@@ -32,7 +32,6 @@ export function LanguageToggle() {
       variant="ghost"
       size="sm"
       onClick={toggleLanguage}
-      className="flex items-center gap-2 px-2 hover:bg-accent transition-colors"
       data-testid="button-language-toggle"
       title={`Switch to ${language === "es" ? "English" : "Spanish"}`}
     >

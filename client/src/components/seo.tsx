@@ -24,10 +24,20 @@ export function Seo({
   
   const currentLang = lang || i18n.language || "es";
   const siteName = "HolaRevi";
-  
-  const defaultTitle = t("seo.home.title", "Responder reseñas de Google con IA de forma automática | HolaRevi");
-  const defaultDescription = t("seo.home.description", "Optimiza la reputación online de tu negocio. HolaRevi responde tus reseñas de Google automáticamente.");
-  const defaultKeywords = t("seo.home.keywords", "responder reseñas Google IA, gestión reputación online");
+  const defaults = currentLang.startsWith("en")
+    ? {
+        title: "AI Google Review Responder & Management | HolaRevi",
+        description: "Boost your local SEO and reputation. HolaRevi's AI automatically responds to your Google reviews in your brand's tone, 24/7.",
+        keywords: "ai google review responder, reputation management software, automate google reviews, local seo tool, hospitality saas",
+      }
+    : {
+        title: "Responder reseñas de Google con IA de forma automática | HolaRevi",
+        description: "Optimiza la reputación online de tu negocio. HolaRevi responde tus reseñas de Google automáticamente con inteligencia artificial, manteniendo tu tono de marca 24/7.",
+        keywords: "responder reseñas Google IA, gestión reputación online SaaS, automatización reseñas Google, software para negocios locales, inteligencia artificial reseñas",
+      };
+  const defaultTitle = t("seo.home.title", defaults.title);
+  const defaultDescription = t("seo.home.description", defaults.description);
+  const defaultKeywords = t("seo.home.keywords", defaults.keywords);
 
   const metaTitle = title ? `${title} | ${siteName}` : defaultTitle;
   const metaDescription = description || defaultDescription;
