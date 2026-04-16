@@ -228,8 +228,12 @@ export class DatabaseStorage implements IStorage {
         updated_at AS "updatedAt"
       FROM users
       WHERE id = ${id}
-    `) as unknown as [User];
-    return user;
+    `) as unknown as Array<Partial<User> & { emailLanguage?: string }>;
+    if (!user) return undefined;
+    return {
+      ...user,
+      emailLanguage: user.emailLanguage ?? "es",
+    } as User;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
