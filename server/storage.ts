@@ -203,37 +203,8 @@ export interface IStorage {
 export class DatabaseStorage implements IStorage {
   // User operations
   async getUser(id: string): Promise<User | undefined> {
-    const [user] = await db.execute(sql`
-      SELECT
-        id,
-        email,
-        password_hash AS "passwordHash",
-        first_name AS "firstName",
-        last_name AS "lastName",
-        profile_image_url AS "profileImageUrl",
-        stripe_customer_id AS "stripeCustomerId",
-        stripe_subscription_id AS "stripeSubscriptionId",
-        subscription_status AS "subscriptionStatus",
-        subscription_plan AS "subscriptionPlan",
-        billing_cycle AS "billingCycle",
-        extra_locations AS "extraLocations",
-        monthly_replies_used AS "monthlyRepliesUsed",
-        monthly_replies_period_start AS "monthlyRepliesPeriodStart",
-        trial_ends_at AS "trialEndsAt",
-        has_used_pro_trial AS "hasUsedProTrial",
-        onboarding_step AS "onboardingStep",
-        onboarding_completed AS "onboardingCompleted",
-        COALESCE("email_language", 'es') AS "emailLanguage",
-        created_at AS "createdAt",
-        updated_at AS "updatedAt"
-      FROM users
-      WHERE id = ${id}
-    `) as unknown as Array<Partial<User> & { emailLanguage?: string }>;
-    if (!user) return undefined;
-    return {
-      ...user,
-      emailLanguage: user.emailLanguage ?? "es",
-    } as User;
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {

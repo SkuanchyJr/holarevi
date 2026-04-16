@@ -20,6 +20,18 @@ export async function fixOnboardingData() {
     );
     console.log("[Migration] Updated column default to add_location");
 
+    await db.execute(
+      sql`DO $$ BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'users' AND column_name = 'email_language'
+        ) THEN
+          ALTER TABLE users ADD COLUMN email_language VARCHAR DEFAULT 'es';
+        END IF;
+      END $$`
+    );
+    console.log("[Migration] Ensured email_language column exists");
+
     console.log("[Migration] Onboarding data fix complete");
   } catch (error) {
     console.error("[Migration] Onboarding data fix failed:", error);

@@ -127,7 +127,7 @@ interface PlanInfo {
 export function AppSidebar() {
   const [location] = useLocation();
   const { user, logoutMutation } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
