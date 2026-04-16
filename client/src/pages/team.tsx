@@ -17,7 +17,7 @@ export default function Team() {
           <h2 className="text-base font-semibold text-foreground">{t("team.comingSoon.title")}</h2>
           <span className="inline-flex items-center gap-1 text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 px-2 py-0.5 rounded-full">
             <Sparkles className="h-2.5 w-2.5" />
-            Soon
+            {t("team.comingSoon.badge")}
           </span>
         </div>
         <p className="text-sm text-muted-foreground max-w-xs">{t("team.comingSoon.message")}</p>

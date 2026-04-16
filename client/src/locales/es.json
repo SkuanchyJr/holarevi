@@ -1287,6 +1287,15 @@
     "accept": "Aceptar",
     "decline": "Rechazar"
   },
+  "team": {
+    "title": "Equipo",
+    "subtitle": "Gestiona los miembros y roles de tu equipo",
+    "comingSoon": {
+      "title": "Gestión de equipo",
+      "badge": "Pronto",
+      "message": "Invita a miembros del equipo, asigna roles y colabora en las respuestas a reseñas juntos."
+    }
+  },
   "paywall": {
     "title": "Suscripción requerida",
     "subtitle": "Suscríbete a un plan para seguir usando HolaRevi y gestionar tus reseñas de Google con IA.",

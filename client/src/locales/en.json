@@ -1287,6 +1287,15 @@
     "accept": "Accept",
     "decline": "Decline"
   },
+  "team": {
+    "title": "Team",
+    "subtitle": "Manage your team members and roles",
+    "comingSoon": {
+      "title": "Team management",
+      "badge": "Soon",
+      "message": "Invite team members, assign roles, and collaborate on review responses together."
+    }
+  },
   "paywall": {
     "title": "Subscription Required",
     "subtitle": "Subscribe to a plan to continue using HolaRevi and manage your Google reviews with AI.",
