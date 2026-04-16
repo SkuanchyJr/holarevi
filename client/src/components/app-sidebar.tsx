@@ -156,7 +156,7 @@ export function AppSidebar() {
     <Sidebar>
       {/* Logo */}
       <SidebarHeader className="px-4 py-4 border-b border-sidebar-border">
-        <Link href="/">
+        <Link href={`/${language}/`}>
           <div className="flex items-center gap-2.5 cursor-pointer group">
             <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center shrink-0 shadow-sm">
               <img
@@ -202,7 +202,7 @@ export function AppSidebar() {
             )}
             data-testid="button-tutorial"
           >
-            <Link href="/onboarding">
+            <Link href={`/${language}/onboarding`}>
               <GraduationCap className="h-4 w-4 shrink-0" />
               {!isCollapsed && <span>{t("sidebar.tutorial")}</span>}
             </Link>
@@ -217,12 +217,13 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="gap-0.5">
               {filteredNavItems.map((item) => {
-                const isActive = location === item.url;
+                const prefixedUrl = `/${language}${item.url === "/" ? "" : item.url}`;
+                const isActive = location === prefixedUrl;
                 return (
                   <SidebarMenuItem key={item.titleKey}>
                     <SidebarMenuButton asChild isActive={isActive}>
                       <Link
-                        href={item.url}
+                        href={prefixedUrl}
                         data-testid={`nav-link-${item.url.replace("/", "") || "dashboard"}`}
                         className={cn(
                           "flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm transition-colors",
@@ -258,12 +259,13 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="gap-0.5">
               {managementItems.map((item) => {
-                const isActive = location === item.url;
+                const prefixedUrl = `/${language}${item.url === "/" ? "" : item.url}`;
+                const isActive = location === prefixedUrl;
                 return (
                   <SidebarMenuItem key={item.titleKey}>
                     <SidebarMenuButton asChild isActive={isActive}>
                       <Link
-                        href={item.url}
+                        href={prefixedUrl}
                         data-testid={`nav-link-${item.url.replace("/", "")}`}
                         className={cn(
                           "flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm transition-colors",
@@ -322,7 +324,7 @@ export function AppSidebar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" side="top" className="w-[200px] mb-1">
             <DropdownMenuItem asChild>
-              <Link href="/settings" data-testid="menu-item-settings">
+              <Link href={`/${language}/settings`} data-testid="menu-item-settings">
                 <Settings className="mr-2 h-4 w-4" />
                 {t("sidebar.nav.settings")}
               </Link>

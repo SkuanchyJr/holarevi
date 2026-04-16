@@ -43,6 +43,7 @@ export const users = pgTable("users", {
   hasUsedProTrial: boolean("has_used_pro_trial").default(false), // Prevent multiple Pro trials
   onboardingStep: varchar("onboarding_step").default('add_location'),
   onboardingCompleted: boolean("onboarding_completed").default(false),
+  emailLanguage: varchar("email_language").default('es'), // es, en
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

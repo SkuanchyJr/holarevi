@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Lock, User, AlertCircle, Loader2 } from "lucide-react";
+import { useLanguage } from "@/lib/i18n";
 
 export default function AdminLogin() {
+  const { t } = useLanguage();
   const [, setLocation] = useLocation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -33,10 +35,10 @@ export default function AdminLogin() {
       if (response.ok && data.success) {
         setLocation("/admin");
       } else {
-        setError(data.message || "Invalid credentials");
+        setError(data.message || t("admin.login.error"));
       }
     } catch (err) {
-      setError("An error occurred. Please try again.");
+      setError(t("admin.login.generalError"));
     } finally {
       setIsLoading(false);
     }
@@ -49,9 +51,9 @@ export default function AdminLogin() {
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Lock className="h-6 w-6 text-primary" />
           </div>
-          <CardTitle className="text-2xl" data-testid="text-title">Admin Login</CardTitle>
+          <CardTitle className="text-2xl" data-testid="text-title">{t("admin.login.title")}</CardTitle>
           <CardDescription>
-            Enter your credentials to access the admin panel
+            {t("admin.login.subtitle")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -67,13 +69,13 @@ export default function AdminLogin() {
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username">{t("admin.login.username")}</Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="username"
                   type="text"
-                  placeholder="Enter username"
+                  placeholder={t("admin.login.usernamePlaceholder")}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="pl-10"
@@ -85,13 +87,13 @@ export default function AdminLogin() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("admin.login.password")}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Enter password"
+                  placeholder={t("admin.login.passwordPlaceholder")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10"
@@ -111,10 +113,10 @@ export default function AdminLogin() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Logging in...
+                  {t("admin.login.loading")}
                 </>
               ) : (
-                "Login"
+                t("admin.login.button")
               )}
             </Button>
           </form>

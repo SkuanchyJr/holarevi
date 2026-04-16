@@ -19,6 +19,10 @@ export function LanguageToggle() {
     const nextPath = `/${nextLang}${currentPath === "/" ? "" : currentPath}`;
     
     setLocation(nextPath);
+    // Force i18n to sync since wouter setLocation doesn't trigger popstate
+    setTimeout(() => {
+      window.dispatchEvent(new Event("popstate"));
+    }, 0);
   };
 
   const label = language === "es" ? "ES" : "EN";

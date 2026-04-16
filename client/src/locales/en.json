@@ -449,6 +449,17 @@
     }
   },
   "landing": {
+    "hero": {
+      "browser_url": "holarevi.com · Review Panel",
+      "live_badge": "Live",
+      "generating": "Generating...",
+      "review1_author": "Maria G.",
+      "review1_text": "Incredible experience. The staff was very friendly and the food was delicious. We will definitely come back.",
+      "review1_response": "Thank you so much, Maria! We're glad you enjoyed the experience. Our team works every day to make every visit special. See you soon!",
+      "review2_author": "Carlos M.",
+      "review2_text": "Very good service, although the wait was a bit long. Overall a very pleasant visit.",
+      "review2_response": "Thanks, Carlos, for your rating and your words. We take note of the wait times to keep improving. Hope to see you again soon!"
+    },
     "stats": {
       "reviews": "Reviews responded",
       "responseTime": "Average response time",
@@ -942,6 +953,156 @@
         "locationSkipped": "Business location not selected yet"
       },
       "goToDashboard": "Go to Dashboard"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Enter your email to sign in to your account"
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "Enter your information to create an account"
+    },
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "noAccount": "Don't have an account? ",
+    "hasAccount": "Already have an account? ",
+    "error": {
+      "fillFields": "Please fill in all fields",
+      "passwordLength": "Password must be at least 8 characters",
+      "loginFailed": "Login Failed",
+      "registerFailed": "Registration Failed"
+    }
+  },
+  "notFound": {
+    "title": "404 Page Not Found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "backHome": "Back to Home"
+  },
+  "admin": {
+    "login": {
+      "title": "Admin Login",
+      "subtitle": "Enter your credentials to access the admin panel",
+      "username": "Username",
+      "password": "Password",
+      "usernamePlaceholder": "Enter username",
+      "passwordPlaceholder": "Enter password",
+      "button": "Login",
+      "loading": "Logging in...",
+      "error": "Invalid credentials",
+      "generalError": "An error occurred. Please try again."
+    },
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "subtitle": "HolaRevi Administration",
+      "logout": "Logout"
+    },
+    "sections": {
+      "crm": "Sales CRM",
+      "crmDesc": "Kanban pipeline for sales leads",
+      "contacts": "Contacts",
+      "contactsDesc": "View and manage contact form submissions",
+      "reviews": "Reviews",
+      "reviewsDesc": "View all reviews across the platform",
+      "analytics": "Analytics",
+      "analyticsDesc": "Traffic, billing, locations, and usage statistics",
+      "affiliates": "Affiliates",
+      "affiliatesDesc": "Manage affiliate partners and their performance",
+      "promoCodes": "Promo Codes",
+      "promoCodesDesc": "Create and manage discount codes",
+      "blogs": "Blogs",
+      "blogsDesc": "Create and manage blog posts for SEO",
+      "qrReviews": "QR Reviews",
+      "qrReviewsDesc": "Create and track Google Reviews QR codes"
+    },
+    "goTo": "Go to {{section}}"
+  },
+  "affiliate": {
+    "login": {
+      "title": "Affiliate Login",
+      "subtitle": "Enter your credentials to access your affiliate dashboard",
+      "username": "Username",
+      "password": "Password",
+      "usernamePlaceholder": "Enter username",
+      "passwordPlaceholder": "Enter password",
+      "button": "Login",
+      "loading": "Logging in...",
+      "error": "Invalid credentials",
+      "generalError": "An error occurred. Please try again."
+    },
+    "dashboard": {
+      "title": "Affiliate Dashboard",
+      "loginAs": "Logged in as {{username}}",
+      "zone": "Zone: {{zone}}",
+      "logout": "Logout",
+      "stats": {
+        "assigned": "Leads assigned",
+        "assignedDesc": "Total leads in your list",
+        "contacted": "Leads contacted",
+        "contactedDesc": "Any status != Pending",
+        "sales": "Sales closed",
+        "salesDesc": "Submitted sales",
+        "conversion": "Conversion",
+        "conversionDesc": "Sales / Assigned"
+      },
+      "leads": {
+        "title": "My Leads",
+        "subtitle": "Update status, add notes, and report sales.",
+        "empty": "No leads assigned yet.",
+        "reviews": "reviews",
+        "unanswered": "unanswered",
+        "perDay": "/day",
+        "replied": "replied",
+        "website": "Website",
+        "maps": "Maps",
+        "notesLabel": "Notes:"
+      },
+      "status": {
+        "pending": "Pending",
+        "called": "Called",
+        "not_interested": "Not interested",
+        "call_later": "Call later",
+        "sale_closed": "Sale closed"
+      },
+      "actions": {
+        "notes": "Notes",
+        "reportSale": "Report sale"
+      },
+      "dialogs": {
+        "notes": {
+          "title": "Lead notes",
+          "description": "Save private notes about your call/follow-up.",
+          "placeholder": "Spoke with the manager, call back Thursday morning...",
+          "save": "Save",
+          "saving": "Saving...",
+          "cancel": "Cancel",
+          "success": "Notes updated."
+        },
+        "sale": {
+          "title": "Report sale",
+          "description": "Submit a sale for admin validation.",
+          "email": "Business email",
+          "emailPlaceholder": "owner@business.com",
+          "plan": "Plan sold (€)",
+          "comments": "Comments (optional)",
+          "commentsPlaceholder": "Any extra context for validation...",
+          "submit": "Submit",
+          "submitting": "Submitting...",
+          "cancel": "Cancel",
+          "successTitle": "Sale submitted",
+          "successDesc": "Your sale was submitted for admin validation."
+        }
+      },
+      "errors": {
+        "updateStatus": "Could not update status",
+        "saveNotes": "Could not save notes",
+        "submitSale": "Could not submit sale"
+      }
     }
   }
 }

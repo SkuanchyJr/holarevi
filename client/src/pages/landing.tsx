@@ -432,27 +432,27 @@ export default function Landing() {
                     <div className="h-3 w-3 rounded-full bg-muted-foreground/20" />
                   </div>
                   <div className="flex-1 h-6 rounded-md bg-muted/50 flex items-center px-3">
-                    <span className="text-xs text-muted-foreground">holarevi.com · Panel de reseñas</span>
+                    <span className="text-xs text-muted-foreground">{t("landing.hero.browser_url")}</span>
                   </div>
                   <Badge variant="secondary" className="gap-1 text-xs">
                     <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                    En vivo
+                    {t("landing.hero.live_badge")}
                   </Badge>
                 </div>
 
                 {/* Reviews */}
                 <div className="space-y-3">
                   <ReviewCard
-                    author="María G."
+                    author={t("landing.hero.review1_author")}
                     rating={5}
-                    text="Increíble experiencia. El personal fue muy amable y la comida estaba deliciosa. Volveremos sin duda."
-                    response="¡Muchas gracias, María! Nos alegra mucho que hayas disfrutado la experiencia. Nuestro equipo trabaja cada día para que cada visita sea especial. ¡Te esperamos pronto!"
+                    text={t("landing.hero.review1_text")}
+                    response={t("landing.hero.review1_response")}
                   />
                   <ReviewCard
-                    author="Carlos M."
+                    author={t("landing.hero.review2_author")}
                     rating={4}
-                    text="Muy buen servicio, aunque la espera fue un poco larga. En general una visita muy agradable."
-                    response="Gracias, Carlos, por tu valoración y tus palabras. Tomamos nota sobre los tiempos de espera para seguir mejorando. ¡Esperamos verte pronto de nuevo!"
+                    text={t("landing.hero.review2_text")}
+                    response={t("landing.hero.review2_response")}
                   />
                   <div className="rounded-2xl border bg-background p-4 flex items-center gap-3">
                     <div className="h-8 w-8 rounded-full bg-muted/50 flex items-center justify-center text-xs font-medium text-muted-foreground">
@@ -464,7 +464,7 @@ export default function Landing() {
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-primary font-medium">
                       <Sparkles className="h-3.5 w-3.5" />
-                      Generando...
+                      {t("landing.hero.generating")}
                     </div>
                   </div>
                 </div>

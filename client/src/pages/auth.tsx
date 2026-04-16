@@ -13,7 +13,7 @@ export default function AuthPage() {
     const [isLogin, setIsLogin] = useState(true);
     const { loginMutation, registerMutation, isAuthenticated } = useAuth();
     const [, setLocation] = useLocation();
-    const { language } = useLanguage();
+    const { language, t } = useLanguage();
     const { toast } = useToast();
 
     const [formData, setFormData] = useState({
@@ -39,21 +39,21 @@ export default function AuthPage() {
 
         if (isLogin) {
             if (!formData.email || !formData.password) {
-                toast({ title: "Error", description: "Please fill in all fields", variant: "destructive" });
+                toast({ title: t("common.error"), description: t("auth.error.fillFields"), variant: "destructive" });
                 return;
             }
             loginMutation.mutate({ email: formData.email, password: formData.password }, {
                 onError: (err: any) => {
-                    toast({ title: "Login Failed", description: err.message, variant: "destructive" });
+                    toast({ title: t("auth.error.loginFailed"), description: err.message, variant: "destructive" });
                 }
             });
         } else {
             if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
-                toast({ title: "Error", description: "Please fill in all fields", variant: "destructive" });
+                toast({ title: t("common.error"), description: t("auth.error.fillFields"), variant: "destructive" });
                 return;
             }
             if (formData.password.length < 8) {
-                toast({ title: "Error", description: "Password must be at least 8 characters", variant: "destructive" });
+                toast({ title: t("common.error"), description: t("auth.error.passwordLength"), variant: "destructive" });
                 return;
             }
             registerMutation.mutate({
@@ -63,7 +63,7 @@ export default function AuthPage() {
                 lastName: formData.lastName
             }, {
                 onError: (err: any) => {
-                    toast({ title: "Registration Failed", description: err.message, variant: "destructive" });
+                    toast({ title: t("auth.error.registerFailed"), description: err.message, variant: "destructive" });
                 }
             });
         }
@@ -78,10 +78,10 @@ export default function AuthPage() {
             <Card className="w-full max-w-md">
                 <CardHeader className="space-y-1">
                     <CardTitle className="text-2xl font-bold tracking-tight">
-                        {isLogin ? "Welcome back" : "Create an account"}
+                        {isLogin ? t("auth.login.title") : t("auth.register.title")}
                     </CardTitle>
                     <CardDescription>
-                        {isLogin ? "Enter your email to sign in to your account" : "Enter your information to create an account"}
+                        {isLogin ? t("auth.login.subtitle") : t("auth.register.subtitle")}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -89,38 +89,38 @@ export default function AuthPage() {
                         {!isLogin && (
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="firstName">First Name</Label>
+                                    <Label htmlFor="firstName">{t("auth.firstName")}</Label>
                                     <Input id="firstName" name="firstName" placeholder="John" value={formData.firstName} onChange={handleChange} disabled={isPending} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="lastName">Last Name</Label>
+                                    <Label htmlFor="lastName">{t("auth.lastName")}</Label>
                                     <Input id="lastName" name="lastName" placeholder="Doe" value={formData.lastName} onChange={handleChange} disabled={isPending} />
                                 </div>
                             </div>
                         )}
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email">{t("auth.email")}</Label>
                             <Input id="email" name="email" type="email" placeholder="m@example.com" value={formData.email} onChange={handleChange} disabled={isPending} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">{t("auth.password")}</Label>
                             <Input id="password" name="password" type="password" value={formData.password} onChange={handleChange} disabled={isPending} />
                         </div>
 
                         <Button className="w-full" type="submit" disabled={isPending}>
                             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {isLogin ? "Sign In" : "Sign Up"}
+                            {isLogin ? t("auth.signIn") : t("auth.signUp")}
                         </Button>
 
                         <div className="text-center text-sm text-muted-foreground mt-4">
-                            {isLogin ? "Don't have an account? " : "Already have an account? "}
+                            {isLogin ? t("auth.noAccount") : t("auth.hasAccount")}
                             <button
                                 type="button"
                                 onClick={() => setIsLogin(!isLogin)}
                                 className="underline underline-offset-4 hover:text-primary"
                                 disabled={isPending}
                             >
-                                {isLogin ? "Sign up" : "Sign in"}
+                                {isLogin ? t("auth.signUp") : t("auth.signIn")}
                             </button>
                         </div>
                     </form>

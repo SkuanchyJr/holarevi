@@ -13,13 +13,12 @@ import enJson from "../locales/en.json";
 const languageDetector = new LanguageDetector();
 languageDetector.addDetector({
   name: "path-detector",
-  lookup(options) {
+  lookup() {
     if (typeof window === "undefined") return undefined;
     const path = window.location.pathname;
-    if (path.startsWith("/en/")) return "en";
-    if (path.startsWith("/es/")) return "es";
-    if (path === "/en") return "en";
-    if (path === "/es") return "es";
+    const firstPart = path.split("/").filter(Boolean)[0];
+    if (firstPart === "en") return "en";
+    if (firstPart === "es") return "es";
     return undefined;
   }
 });
@@ -60,16 +59,26 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const setLanguage = useCallback((lang: Language) => {
     i18nInstance.changeLanguage(lang);
     
-    // Redirect logic if manual toggle is used
     const currentPath = window.location.pathname;
     const pathParts = currentPath.split("/").filter(Boolean);
     
+    let newPath;
     if (pathParts[0] === "en" || pathParts[0] === "es") {
       pathParts[0] = lang;
-      window.history.pushState({}, "", "/" + pathParts.join("/"));
+      newPath = "/" + pathParts.join("/");
     } else {
-      window.history.pushState({}, "", `/${lang}${currentPath}`);
+      newPath = `/${lang}${currentPath}`;
     }
+
+    // Include search params if any
+    if (window.location.search) {
+      newPath += window.location.search;
+    }
+    
+    // Use window.history to avoid full page reload but trigger sync
+    window.history.pushState({}, "", newPath);
+    // Manually trigger popstate so other components (like wouter) notice
+    window.dispatchEvent(new Event("popstate"));
   }, [i18nInstance]);
 
   // Sync state if URL changes (external to this component)

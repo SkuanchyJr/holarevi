@@ -15,7 +15,7 @@ export function LandingHeader({ showLoginButton = true }: LandingHeaderProps) {
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-6">
-          <Link href="/">
+          <Link href={`/${language}/`}>
             <div className="flex items-center py-4 cursor-pointer">
               <img
                 src="/holarevi-dark.png"

@@ -46,6 +46,7 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
+import { useLanguage } from "@/lib/i18n";
 
 type LeadStatus =
   | "pending"
@@ -86,13 +87,7 @@ interface Lead {
   updatedAt?: string;
 }
 
-const statusLabel: Record<LeadStatus, string> = {
-  pending: "Pending",
-  called: "Called",
-  not_interested: "Not interested",
-  call_later: "Call later",
-  sale_closed: "Sale closed",
-};
+// statusLabel moved inside component to use t()
 
 const statusBadgeVariant = (s: LeadStatus) => {
   if (s === "sale_closed") return "default";
@@ -103,8 +98,17 @@ const statusBadgeVariant = (s: LeadStatus) => {
 };
 
 export default function AffiliateDashboard() {
+  const { t, language } = useLanguage();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+
+  const statusLabels: Record<LeadStatus, string> = {
+    pending: t("affiliate.status.pending"),
+    called: t("affiliate.status.called"),
+    not_interested: t("affiliate.status.not_interested"),
+    call_later: t("affiliate.status.call_later"),
+    sale_closed: t("affiliate.status.sale_closed"),
+  };
 
   // Sale dialog
   const [saleLead, setSaleLead] = useState<Lead | null>(null);
@@ -143,7 +147,7 @@ export default function AffiliateDashboard() {
     try {
       await fetch("/api/affiliate/logout", { method: "POST", credentials: "include" });
     } catch {}
-    setLocation("/affiliate/login");
+    setLocation(`/${language}/affiliate/login`);
   };
 
   const updateStatus = useMutation({
@@ -160,8 +164,8 @@ export default function AffiliateDashboard() {
     },
     onError: (err: any) => {
       toast({
-        title: "Error",
-        description: err?.message || "Could not update status",
+        title: t("common.error"),
+        description: err?.message || t("affiliate.dashboard.errors.updateStatus"),
         variant: "destructive",
       });
     },
@@ -180,12 +184,12 @@ export default function AffiliateDashboard() {
       queryClient.invalidateQueries({ queryKey: ["/api/affiliate/leads"] });
       setNotesLead(null);
       setNotesText("");
-      toast({ title: "Saved", description: "Notes updated." });
+      toast({ title: t("common.success"), description: t("affiliate.dashboard.dialogs.notes.success") });
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Could not save notes",
+        title: t("common.error"),
+        description: t("affiliate.dashboard.errors.saveNotes"),
         variant: "destructive",
       });
     },
@@ -208,14 +212,14 @@ export default function AffiliateDashboard() {
       setSalePlan("49");
       setSaleComment("");
       toast({
-        title: "Sale submitted",
-        description: "Your sale was submitted for admin validation.",
+        title: t("affiliate.dashboard.dialogs.sale.successTitle"),
+        description: t("affiliate.dashboard.dialogs.sale.successDesc"),
       });
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Could not submit sale",
+        title: t("common.error"),
+        description: t("affiliate.dashboard.errors.submitSale"),
         variant: "destructive",
       });
     },
@@ -248,18 +252,18 @@ export default function AffiliateDashboard() {
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2">
               <Building2 className="h-5 w-5 text-muted-foreground" />
-              Affiliate Dashboard
+              {t("affiliate.dashboard.title")}
             </h1>
             <p className="text-muted-foreground text-sm">
-              {me?.username ? `Logged in as ${me.username}` : " "}
-              {me?.zone ? ` • Zone: ${me.zone}` : ""}
+              {me?.username ? t("affiliate.dashboard.loginAs", { username: me.username }) : " "}
+              {me?.zone ? ` • ${t("affiliate.dashboard.zone", { zone: me.zone })}` : ""}
             </p>
           </div>
 
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={logout}>
               <LogOut className="h-4 w-4 mr-2" />
-              Logout
+              {t("affiliate.dashboard.logout")}
             </Button>
           </div>
         </div>
@@ -270,44 +274,44 @@ export default function AffiliateDashboard() {
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="pb-2">
-              <CardDescription>Leads assigned</CardDescription>
+              <CardDescription>{t("affiliate.dashboard.stats.assigned")}</CardDescription>
               <CardTitle className="text-3xl">{stats.assigned}</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground flex items-center gap-2">
               <Users className="h-4 w-4" />
-              Total leads in your list
+              {t("affiliate.dashboard.stats.assignedDesc")}
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-2">
-              <CardDescription>Leads contacted</CardDescription>
+              <CardDescription>{t("affiliate.dashboard.stats.contacted")}</CardDescription>
               <CardTitle className="text-3xl">{stats.contacted}</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
-              Any status != Pending
+              {t("affiliate.dashboard.stats.contactedDesc")}
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-2">
-              <CardDescription>Sales closed</CardDescription>
+              <CardDescription>{t("affiliate.dashboard.stats.sales")}</CardDescription>
               <CardTitle className="text-3xl">{stats.sales}</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4" />
-              Submitted sales
+              {t("affiliate.dashboard.stats.salesDesc")}
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-2">
-              <CardDescription>Conversion</CardDescription>
+              <CardDescription>{t("affiliate.dashboard.stats.conversion")}</CardDescription>
               <CardTitle className="text-3xl">{stats.conversion}%</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
-              Sales / Assigned
+              {t("affiliate.dashboard.stats.conversionDesc")}
             </CardContent>
           </Card>
         </div>
@@ -315,16 +319,16 @@ export default function AffiliateDashboard() {
         {/* Leads list */}
         <Card>
           <CardHeader>
-            <CardTitle>My Leads</CardTitle>
+            <CardTitle>{t("affiliate.dashboard.leads.title")}</CardTitle>
             <CardDescription>
-              Update status, add notes, and report sales.
+              {t("affiliate.dashboard.leads.subtitle")}
             </CardDescription>
           </CardHeader>
 
           <CardContent>
             {!leads || leads.length === 0 ? (
               <div className="py-10 text-center text-muted-foreground">
-                No leads assigned yet.
+                {t("affiliate.dashboard.leads.empty")}
               </div>
             ) : (
               <div className="space-y-3">
@@ -341,7 +345,7 @@ export default function AffiliateDashboard() {
                             {lead.businessName}
                           </p>
                           <Badge variant={statusBadgeVariant(lead.status)}>
-                            {statusLabel[lead.status]}
+                            {statusLabels[lead.status]}
                           </Badge>
                         </div>
 
@@ -352,10 +356,10 @@ export default function AffiliateDashboard() {
                           </span>
                           <span>{lead.category}</span>
                           <span>⭐ {lead.avgRating.toFixed(1)}</span>
-                          <span>{lead.totalReviews} reviews</span>
-                          <span>{lead.unansweredReviews} unanswered</span>
-                          <span>{lead.reviewsPerDay.toFixed(1)}/day</span>
-                          <span>{lead.replyPct.toFixed(0)}% replied</span>
+                          <span>{lead.totalReviews} {t("affiliate.dashboard.leads.reviews")}</span>
+                          <span>{lead.unansweredReviews} {t("affiliate.dashboard.leads.unanswered")}</span>
+                          <span>{lead.reviewsPerDay.toFixed(1)}{t("affiliate.dashboard.leads.perDay")}</span>
+                          <span>{lead.replyPct.toFixed(0)}% {t("affiliate.dashboard.leads.replied")}</span>
                         </div>
 
                         <div className="text-sm text-muted-foreground flex flex-wrap gap-4 mt-2">
@@ -385,7 +389,7 @@ export default function AffiliateDashboard() {
                               className="flex items-center gap-1 hover:underline"
                             >
                               <Globe className="h-3 w-3" />
-                              Website
+                              {t("affiliate.dashboard.leads.website")}
                             </a>
                           )}
                           {lead.googleMapsUrl && (
@@ -396,7 +400,7 @@ export default function AffiliateDashboard() {
                               className="flex items-center gap-1 hover:underline"
                             >
                               <MapPin className="h-3 w-3" />
-                              Maps
+                              {t("affiliate.dashboard.leads.maps")}
                             </a>
                           )}
                         </div>
@@ -416,33 +420,33 @@ export default function AffiliateDashboard() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="called">Called</SelectItem>
+                            <SelectItem value="pending">{t("affiliate.status.pending")}</SelectItem>
+                            <SelectItem value="called">{t("affiliate.status.called")}</SelectItem>
                             <SelectItem value="not_interested">
-                              Not interested
+                              {t("affiliate.status.not_interested")}
                             </SelectItem>
                             <SelectItem value="call_later">
-                              Call later
+                              {t("affiliate.status.call_later")}
                             </SelectItem>
                             <SelectItem value="sale_closed">
-                              Sale closed
+                              {t("affiliate.status.sale_closed")}
                             </SelectItem>
                           </SelectContent>
                         </Select>
 
                         <Button variant="outline" onClick={() => openNotes(lead)}>
-                          Notes
+                          {t("affiliate.dashboard.actions.notes")}
                         </Button>
 
                         <Button onClick={() => openSale(lead)}>
-                          Report sale
+                          {t("affiliate.dashboard.actions.reportSale")}
                         </Button>
                       </div>
                     </div>
 
                     {lead.notes && (
                       <div className="text-sm bg-muted/40 rounded-md p-3">
-                        <span className="font-medium">Notes:</span>{" "}
+                        <span className="font-medium">{t("affiliate.dashboard.leads.notesLabel")}</span>{" "}
                         <span className="text-muted-foreground whitespace-pre-wrap">
                           {lead.notes}
                         </span>
@@ -460,25 +464,25 @@ export default function AffiliateDashboard() {
       <Dialog open={!!notesLead} onOpenChange={(o) => !o && setNotesLead(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Lead notes</DialogTitle>
+            <DialogTitle>{t("affiliate.dashboard.dialogs.notes.title")}</DialogTitle>
             <DialogDescription>
-              Save private notes about your call/follow-up.
+              {t("affiliate.dashboard.dialogs.notes.description")}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-2">
-            <Label>Notes</Label>
+            <Label>{t("affiliate.dashboard.actions.notes")}</Label>
             <Textarea
               value={notesText}
               onChange={(e) => setNotesText(e.target.value)}
-              placeholder="Spoke with the manager, call back Thursday morning..."
+              placeholder={t("affiliate.dashboard.dialogs.notes.placeholder")}
               rows={6}
             />
           </div>
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setNotesLead(null)}>
-              Cancel
+              {t("affiliate.dashboard.dialogs.notes.cancel")}
             </Button>
             <Button
               onClick={() =>
@@ -490,7 +494,7 @@ export default function AffiliateDashboard() {
               {saveNotes.isPending && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Save
+              {saveNotes.isPending ? t("affiliate.dashboard.dialogs.notes.saving") : t("affiliate.dashboard.dialogs.notes.save")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -500,24 +504,24 @@ export default function AffiliateDashboard() {
       <Dialog open={!!saleLead} onOpenChange={(o) => !o && setSaleLead(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Report sale</DialogTitle>
+            <DialogTitle>{t("affiliate.dashboard.dialogs.sale.title")}</DialogTitle>
             <DialogDescription>
-              Submit a sale for admin validation.
+              {t("affiliate.dashboard.dialogs.sale.description")}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Business email</Label>
+              <Label>{t("affiliate.dashboard.dialogs.sale.email")}</Label>
               <Input
                 value={saleEmail}
                 onChange={(e) => setSaleEmail(e.target.value)}
-                placeholder="owner@business.com"
+                placeholder={t("affiliate.dashboard.dialogs.sale.emailPlaceholder")}
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Plan sold (€)</Label>
+              <Label>{t("affiliate.dashboard.dialogs.sale.plan")}</Label>
               <Select value={salePlan} onValueChange={setSalePlan}>
                 <SelectTrigger>
                   <SelectValue />
@@ -531,11 +535,11 @@ export default function AffiliateDashboard() {
             </div>
 
             <div className="space-y-2">
-              <Label>Comments (optional)</Label>
+              <Label>{t("affiliate.dashboard.dialogs.sale.comments")}</Label>
               <Textarea
                 value={saleComment}
                 onChange={(e) => setSaleComment(e.target.value)}
-                placeholder="Any extra context for validation..."
+                placeholder={t("affiliate.dashboard.dialogs.sale.commentsPlaceholder")}
                 rows={4}
               />
             </div>
@@ -543,7 +547,7 @@ export default function AffiliateDashboard() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setSaleLead(null)}>
-              Cancel
+              {t("affiliate.dashboard.dialogs.sale.cancel")}
             </Button>
             <Button
               onClick={() =>
@@ -560,7 +564,7 @@ export default function AffiliateDashboard() {
               {submitSale.isPending && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               )}
-              Submit
+              {submitSale.isPending ? t("affiliate.dashboard.dialogs.sale.submitting") : t("affiliate.dashboard.dialogs.sale.submit")}
             </Button>
           </DialogFooter>
         </DialogContent>

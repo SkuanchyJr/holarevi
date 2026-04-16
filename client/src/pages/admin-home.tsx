@@ -21,59 +21,61 @@ import {
   QrCode,
   HandshakeIcon,
 } from "lucide-react";
+import { useLanguage } from "@/lib/i18n";
 
 const adminSections = [
   {
-    title: "CRM de Ventas",
-    description: "Pipeline Kanban de leads comerciales",
-    href: "/admin/crm",
+    titleKey: "admin.sections.crm",
+    descriptionKey: "admin.sections.crmDesc",
+    url: "/admin/crm",
     icon: HandshakeIcon,
   },
   {
-    title: "Contacts",
-    description: "View and manage contact form submissions",
-    href: "/admin/contacts",
+    titleKey: "admin.sections.contacts",
+    descriptionKey: "admin.sections.contactsDesc",
+    url: "/admin/contacts",
     icon: Mail,
   },
   {
-    title: "Reviews",
-    description: "View all reviews across the platform",
-    href: "/admin/reviews",
+    titleKey: "admin.sections.reviews",
+    descriptionKey: "admin.sections.reviewsDesc",
+    url: "/admin/reviews",
     icon: MessageSquare,
   },
   {
-    title: "Analytics",
-    description: "Traffic, billing, locations, and usage statistics",
-    href: "/admin/analytics",
+    titleKey: "admin.sections.analytics",
+    descriptionKey: "admin.sections.analyticsDesc",
+    url: "/admin/analytics",
     icon: BarChart3,
   },
   {
-    title: "Affiliates",
-    description: "Manage affiliate partners and their performance",
-    href: "/admin/affiliates",
+    titleKey: "admin.sections.affiliates",
+    descriptionKey: "admin.sections.affiliatesDesc",
+    url: "/admin/affiliates",
     icon: Users,
   },
   {
-    title: "Promo Codes",
-    description: "Create and manage discount codes",
-    href: "/admin/promo-codes",
+    titleKey: "admin.sections.promoCodes",
+    descriptionKey: "admin.sections.promoCodesDesc",
+    url: "/admin/promo-codes",
     icon: Ticket,
   },
   {
-    title: "Blogs",
-    description: "Create and manage blog posts for SEO",
-    href: "/admin/blogs",
+    titleKey: "admin.sections.blogs",
+    descriptionKey: "admin.sections.blogsDesc",
+    url: "/admin/blogs",
     icon: FileText,
   },
   {
-    title: "QR Reviews",
-    description: "Create and track Google Reviews QR codes",
-    href: "/admin/qr-reviews",
+    titleKey: "admin.sections.qrReviews",
+    descriptionKey: "admin.sections.qrReviewsDesc",
+    url: "/admin/qr-reviews",
     icon: QrCode,
   },
 ];
 
 export default function AdminHome() {
+  const { t, language } = useLanguage();
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -89,11 +91,11 @@ export default function AdminHome() {
       const data = await response.json();
 
       if (!data.authenticated) {
-        setLocation("/admin/login");
+        setLocation(`/${language}/admin/login`);
         return;
       }
     } catch (err) {
-      setLocation("/admin/login");
+      setLocation(`/${language}/admin/login`);
       return;
     } finally {
       setIsLoading(false);
@@ -106,7 +108,7 @@ export default function AdminHome() {
         method: "POST",
         credentials: "include",
       });
-      setLocation("/admin/login");
+      setLocation(`/${language}/admin/login`);
     } catch (err) {
       console.error("Logout failed:", err);
     }
@@ -130,10 +132,10 @@ export default function AdminHome() {
             </div>
             <div>
               <h1 className="text-2xl font-bold" data-testid="text-title">
-                Admin Dashboard
+                {t("admin.dashboard.title")}
               </h1>
               <p className="text-sm text-muted-foreground">
-                HolaRevi Administration
+                {t("admin.dashboard.subtitle")}
               </p>
             </div>
           </div>
@@ -144,36 +146,39 @@ export default function AdminHome() {
             data-testid="button-logout"
           >
             <LogOut className="h-4 w-4 mr-1" />
-            Logout
+            {t("admin.dashboard.logout")}
           </Button>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
-          {adminSections.map((section) => (
-            <Link key={section.href} href={section.href}>
-              <Card
-                className="h-full cursor-pointer transition-colors hover-elevate"
-                data-testid={`card-${section.title.toLowerCase().replace(/\s+/g, "-")}`}
-              >
-                <CardHeader className="flex flex-row items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                    <section.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl">{section.title}</CardTitle>
-                    <CardDescription>{section.description}</CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="outline" className="w-full">
-                    Go to {section.title}
-                  </Button>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+          {adminSections.map((section) => {
+            const prefixedUrl = `/${language}${section.url}`;
+            return (
+              <Link key={section.url} href={prefixedUrl}>
+                <Card
+                  className="h-full cursor-pointer transition-colors hover-elevate"
+                  data-testid={`card-${section.titleKey.split(".").pop()}`}
+                >
+                  <CardHeader className="flex flex-row items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                      <section.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-xl">{t(section.titleKey)}</CardTitle>
+                      <CardDescription>{t(section.descriptionKey)}</CardDescription>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <Button variant="outline" className="w-full">
+                      {t("admin.goTo", { section: t(section.titleKey) })}
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
       </main>
     </div>

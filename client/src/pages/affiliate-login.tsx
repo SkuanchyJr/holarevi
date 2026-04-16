@@ -11,8 +11,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Lock, User, AlertCircle, Loader2 } from "lucide-react";
+import { useLanguage } from "@/lib/i18n";
 
 export default function AffiliateLogin() {
+  const { t, language } = useLanguage();
   const [, setLocation] = useLocation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -35,12 +37,12 @@ export default function AffiliateLogin() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setLocation("/affiliate/dashboard");
+        setLocation(`/${language}/affiliate/dashboard`);
       } else {
-        setError(data.message || "Invalid credentials");
+        setError(data.message || t("affiliate.login.error"));
       }
     } catch (err) {
-      setError("An error occurred. Please try again.");
+      setError(t("affiliate.login.generalError"));
     } finally {
       setIsLoading(false);
     }
@@ -54,10 +56,10 @@ export default function AffiliateLogin() {
             <Lock className="h-6 w-6 text-primary" />
           </div>
           <CardTitle className="text-2xl" data-testid="text-title">
-            Affiliate Login
+            {t("affiliate.login.title")}
           </CardTitle>
           <CardDescription>
-            Enter your credentials to access your affiliate dashboard
+            {t("affiliate.login.subtitle")}
           </CardDescription>
         </CardHeader>
 
@@ -74,13 +76,13 @@ export default function AffiliateLogin() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username">{t("affiliate.login.username")}</Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="username"
                   type="text"
-                  placeholder="Enter username"
+                  placeholder={t("affiliate.login.usernamePlaceholder")}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="pl-10"
@@ -92,13 +94,13 @@ export default function AffiliateLogin() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("affiliate.login.password")}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Enter password"
+                  placeholder={t("affiliate.login.passwordPlaceholder")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10"
@@ -118,10 +120,10 @@ export default function AffiliateLogin() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Logging in...
+                  {t("affiliate.login.loading")}
                 </>
               ) : (
-                "Login"
+                t("affiliate.login.button")
               )}
             </Button>
           </form>

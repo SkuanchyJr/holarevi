@@ -10,3 +10,4 @@ vite.config.ts.*
 .agents/
 videos/
 tmp/
+scratch/

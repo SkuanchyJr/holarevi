@@ -449,6 +449,17 @@
     }
   },
   "landing": {
+    "hero": {
+      "browser_url": "holarevi.com · Panel de reseñas",
+      "live_badge": "En vivo",
+      "generating": "Generando...",
+      "review1_author": "María G.",
+      "review1_text": "Increíble experiencia. El personal fue muy amable y la comida estaba deliciosa. Volveremos sin duda.",
+      "review1_response": "¡Muchas gracias, María! Nos alegra mucho que hayas disfrutado la experiencia. Nuestro equipo trabaja cada día para que cada visita sea especial. ¡Te esperamos pronto!",
+      "review2_author": "Carlos M.",
+      "review2_text": "Muy buen servicio, aunque la espera fue un poco larga. En general una visita muy agradable.",
+      "review2_response": "Gracias, Carlos, por tu valoración y tus palabras. Tomamos nota sobre los tiempos de espera para seguir mejorando. ¡Esperamos verte pronto de nuevo!"
+    },
     "stats": {
       "reviews": "Reseñas respondidas",
       "responseTime": "Tiempo medio de respuesta",
@@ -941,7 +952,352 @@
         "locationSelected": "Local de Google vinculado",
         "locationSkipped": "Local de Google no seleccionado aún"
       },
-      "goToDashboard": "Ir al panel"
+      "goToDashboard": "Ir al Panel"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Introduce tu correo para iniciar sesión en tu cuenta"
+    },
+    "register": {
+      "title": "Crear una cuenta",
+      "subtitle": "Introduce tu información para crear una cuenta"
+    },
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Email",
+    "password": "Contraseña",
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarse",
+    "noAccount": "¿No tienes cuenta? ",
+    "hasAccount": "¿Ya tienes cuenta? ",
+    "error": {
+      "fillFields": "Por favor, completa todos los campos",
+      "passwordLength": "La contraseña debe tener al menos 8 caracteres",
+      "loginFailed": "Fallo al iniciar sesión",
+      "registerFailed": "Fallo al registrarse"
+    }
+  },
+  "notFound": {
+    "title": "404 Página no encontrada",
+    "description": "La página que buscas no existe o ha sido movida.",
+    "backHome": "Volver al inicio"
+  },
+  "admin": {
+    "login": {
+      "title": "Inicio de Sesión Admin",
+      "subtitle": "Introduce tus credenciales para acceder al panel de administración",
+      "username": "Usuario",
+      "password": "Contraseña",
+      "usernamePlaceholder": "Introduce el usuario",
+      "passwordPlaceholder": "Introduce la contraseña",
+      "button": "Iniciar sesión",
+      "loading": "Iniciando sesión...",
+      "error": "Credenciales inválidas",
+      "generalError": "Ocurrió un error. Por favor, inténtalo de nuevo."
+    },
+    "dashboard": {
+      "title": "Panel de Administración",
+      "subtitle": "Administración de HolaRevi",
+      "logout": "Cerrar sesión"
+    },
+    "sections": {
+      "crm": "CRM de Ventas",
+      "crmDesc": "Pipeline Kanban de leads comerciales",
+      "contacts": "Contactos",
+      "contactsDesc": "Ver y gestionar envíos de formularios de contacto",
+      "reviews": "Reseñas",
+      "reviewsDesc": "Ver todas las reseñas de la plataforma",
+      "analytics": "Analítica",
+      "analyticsDesc": "Tráfico, facturación, ubicaciones y estadísticas de uso",
+      "affiliates": "Afiliados",
+      "affiliatesDesc": "Gestionar socios afiliados y su rendimiento",
+      "promoCodes": "Códigos promocionales",
+      "promoCodesDesc": "Crear y gestionar códigos de descuento",
+        "Gracias por el feedback. Estamos revisando el router para asegurar una conexión estable para quienes venís a trabajar con nosotros."
+      ],
+      "vet": [
+        "Lamentamos que te sintieras así. Nuestros precios reflejan la tecnología y profesionalidad dedicadas a cada mascota. No obstante, revisaremos tu caso.",
+        "Historias como la tuya son las que dan sentido a nuestro trabajo. Nos alegra mucho que tu perro esté bien. ¡Un abrazo fuerte!",
+        "Gracias por confiar en nosotros. Intentamos dedicar el tiempo necesario a cada paciente, lo que a veces causa esperas. ¡Gracias por la comprensión!"
+      ],
+      "other": [
+        "Disculpa las molestias. Hemos tenido un problema técnico con la línea, pero ya está solucionado. Si nos dejas un contacto, te llamamos nosotros.",
+        "¡Muchísimas gracias por tu valoración! Nos esforzamos por dar soluciones rápidas y eficaces. Un placer ayudarte.",
+        "Gracias por tu reseña. Nos alegra haber cumplido con tus expectativas. ¡Un cordial saludo!"
+      ]
+    }
+  },
+  "selectPlan": {
+    "title": "Elige el plan ideal para tu negocio",
+    "subtitle": "Impulsa tu reputación online con el poder de la IA. Todos los planes incluyen prueba gratuita.",
+    "monthly": "Mensual",
+    "yearly": "Anual",
+    "save20": "Ahorra 20%",
+    "mostPopular": "Más popular",
+    "perMonth": "/mes",
+    "tryFree": "Probar gratis",
+    "subscribe": "Suscribirse",
+    "trialNote": "Prueba de 3 días gratuita. No se te cobrará nada hasta que finalice la prueba.",
+    "plans": {
+      "local": {
+        "name": "Local",
+        "description": "Para negocios con una ubicación única.",
+        "features": {
+          "location": "1 ubicación de Google",
+          "newReplies": "100 respuestas IA al mes",
+          "pastReplies": "Responder reseñas antiguas",
+          "mode": "Modo automático o revisión",
+          "analytics": "Analítica y sentimiento",
+          "users": "1 usuario"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Para grupos de restaurantes en crecimiento.",
+        "features": {
+          "locations": "Hasta 5 ubicaciones",
+          "newReplies": "300 respuestas IA al mes",
+          "pastReplies": "Analítica y sentimiento",
+          "analytics": "Motor de respuesta prioritario",
+          "priority": "Soporte prioritario",
+          "users": "3 usuarios"
+        }
+      },
+      "business": {
+        "name": "Business",
+        "description": "Para cadenas con múltiples locales.",
+        "features": {
+          "locationsIncluded": "5 ubicaciones incluidas",
+          "extraLocation": "+39€/mes por local extra",
+          "dashboard": "Panel multi-ubicación",
+          "team": "Usuarios ilimitados",
+          "permissions": "Control de permisos",
+          "sla": "SLA y soporte avanzado"
+        }
+      }
+    }
+  },
+  "onboarding": {
+    "pageTitle": "Bienvenido a HolaRevi",
+    "pageSubtitle": "Vamos a configurar tu negocio para que empieces a gestionar tus reseñas.",
+    "progress": "{percent}% Completado",
+    "tip": "Consejo: Siempre puedes cambiar estos ajustes desde tu panel de control.",
+    "steps": {
+      "addLocation": "Añadir local",
+      "connectGoogle": "Conectar Google",
+      "selectLocation": "Seleccionar local",
+      "success": "¡Listo!"
+    },
+    "addLocation": {
+      "title": "Añade tu primer negocio",
+      "description": "Introduce el nombre de tu negocio y tus preferencias. Esta será la ubicación principal donde HolaRevi gestionará tus reseñas de Google.",
+      "nameLabel": "Nombre del negocio",
+      "namePlaceholder": "Ej: Pizzería Roma",
+      "addressLabel": "Dirección (opcional)",
+      "addressPlaceholder": "Ej: Calle Mayor 12, Madrid",
+      "toneLabel": "Tono de voz para las respuestas de IA",
+      "tones": {
+        "friendly": "Amigable y cercano",
+        "formal": "Profesional y formal",
+        "casual": "Informal y divertido",
+        "mediterranean": "Mediterráneo y cálido"
+      },
+      "toneHint": "Puedes personalizar esto más adelante con presets de tono avanzados.",
+      "submit": "Crear local y continuar",
+      "creating": "Creando...",
+      "errorRequired": "El nombre del negocio es obligatorio."
+    },
+    "connectGoogle": {
+      "title": "Conecta tu Google Business Profile",
+      "description": "Vincula tu cuenta de Google para que HolaRevi pueda leer tus reseñas y publicar respuestas generadas por IA. Siempre puedes conectar Google más tarde desde la página de Locales.",
+      "connectButton": "Conectar Google Business",
+      "connecting": "Conectando...",
+      "skipButton": "Omitir por ahora",
+      "skipHint": "Puedes conectar Google en cualquier momento desde tu página de Locales.",
+      "notConfigured": "La conexión con Google no está disponible en este entorno.",
+      "notConfiguredHint": "No te preocupes — puedes configurarlo desde la página de Locales más tarde.",
+      "waitingTitle": "Esperando a Google...",
+      "waitingDescription": "Completa la autorización en la ventana de Google que se acaba de abrir. Esta página se actualizará automáticamente.",
+      "connectedTitle": "¡Google conectado!",
+      "connectedDescription": "Tu Google Business Profile está vinculado. HolaRevi empezará a sincronizar tus reseñas.",
+      "continueButton": "Continuar"
+    },
+    "selectLocation": {
+      "title": "Selecciona tu local de Google",
+      "description": "Elige la ubicación de tu Google Business Profile que quieres vincular con HolaRevi.",
+      "loadingAccounts": "Cargando tus cuentas de Google...",
+      "loadingLocations": "Cargando tus locales...",
+      "saving": "Guardando local...",
+      "noLocations": "No se encontraron locales en tu cuenta de Google Business. Puedes configurarlo más tarde desde la página de Locales.",
+      "savedTitle": "¡Local seleccionado!",
+      "savedDescription": "Tu local ha sido vinculado correctamente.",
+      "errorAccounts": "Error al cargar las cuentas de Google. Inténtalo de nuevo.",
+      "errorLocations": "Error al cargar los locales. Inténtalo de nuevo.",
+      "errorSave": "Error al guardar el local. Inténtalo de nuevo."
+    },
+    "success": {
+      "title": "¡Todo listo!",
+      "description": "Tu negocio está configurado y listo. HolaRevi detectará y responderá automáticamente a tus reseñas de Google.",
+      "summary": {
+        "location": "Local creado",
+        "google": "Google conectado",
+        "googleSkipped": "Google no conectado aún",
+        "locationSelected": "Local de Google vinculado",
+        "locationSkipped": "Local de Google no seleccionado aún"
+      },
+      "goToDashboard": "Ir al Panel"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Introduce tu correo para iniciar sesión en tu cuenta"
+    },
+    "register": {
+      "title": "Crear una cuenta",
+      "subtitle": "Introduce tu información para crear una cuenta"
+    },
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Email",
+    "password": "Contraseña",
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarse",
+    "noAccount": "¿No tienes cuenta? ",
+    "hasAccount": "¿Ya tienes cuenta? ",
+    "error": {
+      "fillFields": "Por favor, completa todos los campos",
+      "passwordLength": "La contraseña debe tener al menos 8 caracteres",
+      "loginFailed": "Fallo al iniciar sesión",
+      "registerFailed": "Fallo al registrarse"
+    }
+  },
+  "notFound": {
+    "title": "404 Página no encontrada",
+    "description": "La página que buscas no existe o ha sido movida.",
+    "backHome": "Volver al inicio"
+  },
+  "admin": {
+    "login": {
+      "title": "Inicio de Sesión Admin",
+      "subtitle": "Introduce tus credenciales para acceder al panel de administración",
+      "username": "Usuario",
+      "password": "Contraseña",
+      "usernamePlaceholder": "Introduce el usuario",
+      "passwordPlaceholder": "Introduce la contraseña",
+      "button": "Iniciar sesión",
+      "loading": "Iniciando sesión...",
+      "error": "Credenciales inválidas",
+      "generalError": "Ocurrió un error. Por favor, inténtalo de nuevo."
+    },
+    "dashboard": {
+      "title": "Panel de Administración",
+      "subtitle": "Administración de HolaRevi",
+      "logout": "Cerrar sesión"
+    },
+    "sections": {
+      "crm": "CRM de Ventas",
+      "crmDesc": "Pipeline Kanban de leads comerciales",
+      "contacts": "Contactos",
+      "contactsDesc": "Ver y gestionar envíos de formularios de contacto",
+      "reviews": "Reseñas",
+      "reviewsDesc": "Ver todas las reseñas de la plataforma",
+      "analytics": "Analítica",
+      "analyticsDesc": "Tráfico, facturación, ubicaciones y estadísticas de uso",
+      "affiliates": "Afiliados",
+      "affiliatesDesc": "Gestionar socios afiliados y su rendimiento",
+      "promoCodes": "Códigos promocionales",
+      "promoCodesDesc": "Crear y gestionar códigos de descuento",
+      "blogs": "Blogs",
+      "blogsDesc": "Crear y gestionar artículos de blog para SEO",
+      "qrReviews": "Reseñas QR",
+      "qrReviewsDesc": "Crear y rastrear códigos QR de reseñas de Google"
+    },
+    "goTo": "Ir a {{section}}"
+  },
+  "affiliate": {
+    "login": {
+      "title": "Inicio de Sesión Afiliado",
+      "subtitle": "Introduce tus credenciales para acceder a tu panel de afiliado",
+      "username": "Usuario",
+      "password": "Contraseña",
+      "usernamePlaceholder": "Introduce el usuario",
+      "passwordPlaceholder": "Introduce la contraseña",
+      "button": "Iniciar sesión",
+      "loading": "Iniciando sesión...",
+      "error": "Credenciales inválidas",
+      "generalError": "Ocurrió un error. Por favor, inténtalo de nuevo."
+    },
+    "dashboard": {
+      "title": "Panel de Afiliado",
+      "loginAs": "Sesión iniciada como {{username}}",
+      "zone": "Zona: {{zone}}",
+      "logout": "Cerrar sesión",
+      "stats": {
+        "assigned": "Leads asignados",
+        "assignedDesc": "Total de leads en tu lista",
+        "contacted": "Leads contactados",
+        "contactedDesc": "Cualquier estado distinto a Pendiente",
+        "sales": "Ventas cerradas",
+        "salesDesc": "Ventas enviadas",
+        "conversion": "Conversión",
+        "conversionDesc": "Ventas / Asignados"
+      },
+      "leads": {
+        "title": "Mis Leads",
+        "subtitle": "Actualiza el estado, añade notas e informa de ventas.",
+        "empty": "Aún no tienes leads asignados.",
+        "reviews": "reseñas",
+        "unanswered": "sin responder",
+        "perDay": "/día",
+        "replied": "respondidas",
+        "website": "Web",
+        "maps": "Mapps",
+        "notesLabel": "Notas:"
+      },
+      "status": {
+        "pending": "Pendiente",
+        "called": "Llamado",
+        "not_interested": "No interesado",
+        "call_later": "Llamar más tarde",
+        "sale_closed": "Venta cerrada"
+      },
+      "actions": {
+        "notes": "Notas",
+        "reportSale": "Informar venta"
+      },
+      "dialogs": {
+        "notes": {
+          "title": "Notas del Lead",
+          "description": "Guarda notas privadas sobre tu llamada o seguimiento.",
+          "placeholder": "Hablé con el gerente, volver a llamar el jueves por la mañana...",
+          "save": "Guardar",
+          "saving": "Guardando...",
+          "cancel": "Cancelar",
+          "success": "Notas actualizadas."
+        },
+        "sale": {
+          "title": "Informar venta",
+          "description": "Envía una venta para validación del administrador.",
+          "email": "Email del negocio",
+          "emailPlaceholder": "propietario@negocio.com",
+          "plan": "Plan vendido (€)",
+          "comments": "Comentarios (opcional)",
+          "commentsPlaceholder": "Cualquier contexto extra para validación...",
+          "submit": "Enviar",
+          "submitting": "Enviando...",
+          "cancel": "Cancelar",
+          "successTitle": "Venta enviada",
+          "successDesc": "Tu venta ha sido enviada para validación del administrador."
+        }
+      },
+      "errors": {
+        "updateStatus": "No se pudo actualizar el estado",
+        "saveNotes": "No se pudieron guardar las notas",
+        "submitSale": "No se pudo enviar la venta"
+      }
     }
   }
 }

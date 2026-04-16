@@ -127,9 +127,10 @@ function Router() {
 
   useEffect(() => {
     const isPrefixed = location.startsWith("/en") || location.startsWith("/es");
-    if (!isPrefixed && !location.startsWith("/admin") && !location.startsWith("/affiliate") && !location.startsWith("/api")) {
+    if (!isPrefixed && !location.startsWith("/api")) {
       const targetLang = language || "es";
-      setLocation(`/${targetLang}${location === "/" ? "" : location}`);
+      // Use replace: true to avoid polluting history with redirects
+      setLocation(`/${targetLang}${location === "/" ? "" : location}`, { replace: true });
     }
   }, [location, language, setLocation]);
 
@@ -139,26 +140,31 @@ function Router() {
 
   return (
     <Switch>
-      <Route path="/admin/login" component={AdminLogin} />
-      <Route path="/admin" component={AdminHome} />
-      <Route path="/admin/contacts" component={AdminContacts} />
-      <Route path="/admin/affiliates" component={AdminAffiliates} />
-      <Route path="/admin/analytics" component={AdminAnalytics} />
-      <Route path="/admin/analytics/traffic" component={AdminAnalyticsTraffic} />
-      <Route path="/admin/analytics/billing" component={AdminAnalyticsBilling} />
-      <Route path="/admin/analytics/locations" component={AdminAnalyticsLocations} />
-      <Route path="/admin/analytics/usage" component={AdminAnalyticsUsage} />
-      <Route path="/admin/promo-codes" component={AdminPromoCodes} />
-      <Route path="/admin/blogs" component={AdminBlogs} />
-      <Route path="/admin/reviews" component={AdminReviews} />
-      <Route path="/admin/qr-reviews" component={AdminQRReviews} />
-      <Route path="/admin/crm" component={AdminCRM} />
+      <Route path="/:lang(en|es)/admin/login" component={AdminLogin} />
+      <Route path="/:lang(en|es)/admin" component={AdminHome} />
+      <Route path="/:lang(en|es)/admin/contacts" component={AdminContacts} />
+      <Route path="/:lang(en|es)/admin/affiliates" component={AdminAffiliates} />
+      <Route path="/:lang(en|es)/admin/analytics" component={AdminAnalytics} />
+      <Route path="/:lang(en|es)/admin/analytics/traffic" component={AdminAnalyticsTraffic} />
+      <Route path="/:lang(en|es)/admin/analytics/billing" component={AdminAnalyticsBilling} />
+      <Route path="/:lang(en|es)/admin/analytics/locations" component={AdminAnalyticsLocations} />
+      <Route path="/:lang(en|es)/admin/analytics/usage" component={AdminAnalyticsUsage} />
+      <Route path="/:lang(en|es)/admin/promo-codes" component={AdminPromoCodes} />
+      <Route path="/:lang(en|es)/admin/blogs" component={AdminBlogs} />
+      <Route path="/:lang(en|es)/admin/reviews" component={AdminReviews} />
+      <Route path="/:lang(en|es)/admin/qr-reviews" component={AdminQRReviews} />
+      <Route path="/:lang(en|es)/admin/crm" component={AdminCRM} />
       
-      <Route path="/affiliate/login" component={AffiliateLogin} />
-      <Route path="/affiliate/dashboard" component={AffiliateDashboard} />
+      <Route path="/:lang(en|es)/affiliate/login" component={AffiliateLogin} />
+      <Route path="/:lang(en|es)/affiliate/dashboard" component={AffiliateDashboard} />
 
-      <Route path="/:lang(en|es)?/*">
+      <Route path="/:lang(en|es)/*">
         {() => <LocalizedRouter currentPath={currentPath} />}
+      </Route>
+      
+      {/* Fallback for naked routes */}
+      <Route path="*">
+        <Redirect to={`/${language}/`} />
       </Route>
     </Switch>
   );
