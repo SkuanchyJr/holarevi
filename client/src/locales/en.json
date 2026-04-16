@@ -386,7 +386,13 @@
       "planUpdatedDesc": "Your plan has been changed to {plan}.",
       "alreadyOnPlan": "You are already on this plan.",
       "planChangeError": "Could not change plan. Please try again."
-    }
+    },
+    "mostPopular": "Most Popular",
+    "currentPlan": "Current Plan",
+    "processing": "Processing...",
+    "selectPlan": "Select Plan",
+    "needCustom": "Need a custom solution for your enterprise?",
+    "contactEnterprise": "Contact Enterprise Sales"
   },
   "analytics": {
     "title": "Analytics",

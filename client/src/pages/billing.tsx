@@ -252,9 +252,9 @@ export default function Billing() {
           <div className="p-5 space-y-4">
             <div>
               <p className="text-xl font-bold text-foreground" data-testid="text-plan-name">
-                {planDetails?.name || t("billing.noPlan")}
+                {currentPlan ? t(`plans.${currentPlan}.name`) : t("billing.noPlan")}
               </p>
-              {planDetails && <p className="text-xs text-muted-foreground mt-0.5">{planDetails.description}</p>}
+              {currentPlan && <p className="text-xs text-muted-foreground mt-0.5">{t(`plans.${currentPlan}.description`)}</p>}
             </div>
 
             {isActive && (
