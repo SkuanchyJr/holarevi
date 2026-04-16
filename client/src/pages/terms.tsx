@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/i18n";
 
 export default function TermsOfService() {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -12,14 +12,14 @@ export default function TermsOfService() {
           <Link href="/">
             <Button variant="ghost" size="sm" data-testid="link-back-home">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              {language === "es" ? "Volver al inicio" : "Back to Home"}
+              {t("termsPage.backToHome")}
             </Button>
           </Link>
         </div>
 
         <article className="prose prose-gray dark:prose-invert max-w-none">
-          <h1 data-testid="text-page-title">{language === "es" ? "Términos de servicio — HolaRevi" : "Terms of Service — HolaRevi"}</h1>
-          <p className="text-muted-foreground">{language === "es" ? "Última actualización: diciembre de 2025" : "Last updated: December 2025"}</p>
+          <h1 data-testid="text-page-title">{t("termsPage.title")}</h1>
+          <p className="text-muted-foreground">{t("termsPage.lastUpdated")}</p>
 
           <p>
             Welcome to HolaRevi. These Terms of Service ("Terms") govern your use of our website, dashboard, and services (collectively, the "Service"). By accessing or using HolaRevi, you agree to be bound by these Terms.

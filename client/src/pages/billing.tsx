@@ -300,7 +300,7 @@ export default function Billing() {
               <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-muted/50 text-xs">
                 <CreditCard className="h-3.5 w-3.5 text-muted-foreground" />
                 <span className="capitalize text-muted-foreground" data-testid="text-card-brand">{billing.paymentMethod.brand}</span>
-                <span className="text-muted-foreground">ending</span>
+                <span className="text-muted-foreground">{t("billing.cardEnding")}</span>
                 <span className="font-mono font-medium text-foreground" data-testid="text-card-last4">{billing.paymentMethod.last4}</span>
               </div>
             )}

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/i18n";
 
 export default function PrivacyPolicy() {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -12,14 +12,14 @@ export default function PrivacyPolicy() {
           <Link href="/">
             <Button variant="ghost" size="sm" data-testid="link-back-home">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              {language === "es" ? "Volver al inicio" : "Back to Home"}
+              {t("privacyPage.backToHome")}
             </Button>
           </Link>
         </div>
 
         <article className="prose prose-gray dark:prose-invert max-w-none">
-          <h1 data-testid="text-page-title">{language === "es" ? "HOLAREVI — POLÍTICA DE PRIVACIDAD" : "HOLAREVI — PRIVACY POLICY"}</h1>
-          <p className="text-muted-foreground">{language === "es" ? "Última actualización: 4 de diciembre de 2025" : "Last Updated: December 4, 2025"}</p>
+          <h1 data-testid="text-page-title">{t("privacyPage.title")}</h1>
+          <p className="text-muted-foreground">{t("privacyPage.lastUpdated")}</p>
 
           <p>
             Welcome to HolaRevi ("we", "our", "us"). We provide an AI-powered platform that helps restaurants manage and reply to Google Reviews. This Privacy Policy explains how we collect, use, store, share, and protect personal information — including Google user data obtained through Google APIs.

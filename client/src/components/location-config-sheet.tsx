@@ -180,17 +180,17 @@ export function LocationConfigSheet({
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
               <Mic className="h-4 w-4" />
-              {t("locationConfig.aiVoiceSettings") || "AI Voice Settings"}
+              {t("locationConfig.aiVoiceSettings")}
             </h3>
 
             {/* Tone of Voice */}
             <div className="space-y-3 p-4 rounded-lg border bg-card">
               <div className="space-y-1">
                 <Label htmlFor="tone-of-voice" className="font-medium">
-                  {t("locationConfig.toneOfVoice") || "Tone of Voice"}
+                  {t("locationConfig.toneOfVoice")}
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  {t("locationConfig.toneOfVoiceDesc") || "The base tone for AI-generated replies"}
+                  {t("locationConfig.toneOfVoiceDesc")}
                 </p>
               </div>
               <Select
@@ -201,12 +201,12 @@ export function LocationConfigSheet({
                 }}
               >
                 <SelectTrigger data-testid="select-tone-of-voice">
-                  <SelectValue placeholder={t("locationConfig.selectTone") || "Select a tone"} />
+                  <SelectValue placeholder={t("locationConfig.selectTone")} />
                 </SelectTrigger>
                 <SelectContent>
                   {TONE_STYLES.map((style) => (
                     <SelectItem key={style.value} value={style.value}>
-                      {t(style.labelKey) || style.fallback}
+                      {t(style.labelKey)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -219,11 +219,11 @@ export function LocationConfigSheet({
                 <div className="flex items-center gap-2">
                   <Palette className="h-4 w-4 text-primary" />
                   <Label htmlFor="tone-preset" className="font-medium">
-                    {t("locationConfig.tonePreset") || "Tone Preset"}
+                    {t("locationConfig.tonePreset")}
                   </Label>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {t("locationConfig.tonePresetDesc") || "Use a custom preset with specific instructions for this location"}
+                  {t("locationConfig.tonePresetDesc")}
                 </p>
               </div>
               <Select
@@ -234,11 +234,11 @@ export function LocationConfigSheet({
                 }}
               >
                 <SelectTrigger data-testid="select-tone-preset">
-                  <SelectValue placeholder={t("locationConfig.selectPreset") || "Select a preset"} />
+                  <SelectValue placeholder={t("locationConfig.selectPreset")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">
-                    {t("locationConfig.noPreset") || "No preset (use base tone only)"}
+                    {t("locationConfig.noPreset")}
                   </SelectItem>
                   {tonePresets?.map((preset) => (
                     <SelectItem key={preset.id} value={preset.id}>
@@ -249,7 +249,7 @@ export function LocationConfigSheet({
               </Select>
               {tonePresets?.length === 0 && (
                 <p className="text-xs text-muted-foreground">
-                  {t("locationConfig.noPresetsAvailable") || "No presets available. Create one in the Tone Presets page."}
+                  {t("locationConfig.noPresetsAvailable")}
                 </p>
               )}
             </div>

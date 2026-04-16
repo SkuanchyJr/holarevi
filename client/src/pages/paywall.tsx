@@ -8,6 +8,7 @@ import { Check, Loader2, MapPin, Zap, Building2, AlertCircle } from "lucide-reac
 import { useToast } from "@/hooks/use-toast";
 import { PLANS, type PlanId, type BillingCycle } from "@shared/plans";
 import { Link } from "wouter";
+import { useLanguage } from "@/lib/i18n";
 
 const planIcons: Record<string, typeof MapPin> = {
   local: MapPin,
@@ -22,6 +23,7 @@ const planColors: Record<string, string> = {
 };
 
 export default function Paywall() {
+  const { t } = useLanguage();
   const { toast } = useToast();
   const [billingCycle] = useState<BillingCycle>("monthly");
 
@@ -41,7 +43,7 @@ export default function Paywall() {
       if (data.url) window.location.href = data.url;
     },
     onError: (error: Error) => {
-      toast({ title: "Error", description: error.message || "Failed to start checkout", variant: "destructive" });
+      toast({ title: t("common.error"), description: error.message, variant: "destructive" });
     },
   });
 
@@ -75,9 +77,9 @@ export default function Paywall() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10 mb-4">
             <AlertCircle className="h-8 w-8 text-destructive" />
           </div>
-          <h1 className="text-3xl font-bold" data-testid="text-paywall-title">Subscription Required</h1>
+          <h1 className="text-3xl font-bold" data-testid="text-paywall-title">{t("paywall.title")}</h1>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Subscribe to a plan to continue using HolaRevi and manage your Google reviews with AI.
+            {t("paywall.subtitle")}
           </p>
         </div>
 
@@ -87,7 +89,7 @@ export default function Paywall() {
             const Icon = planIcons[planId];
             return (
               <Card key={planId} className={`relative ${plan.isPopular ? "border-primary border-2" : ""}`} data-testid={`card-plan-${planId}`}>
-                {plan.isPopular && <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">Most Popular</Badge>}
+                {plan.isPopular && <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">{t("common.mostPopular")}</Badge>}
                 <CardHeader>
                   <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${planColors[planId]}`}>
                     <Icon className="h-6 w-6" />
@@ -96,7 +98,7 @@ export default function Paywall() {
                   <CardDescription>{plan.description}</CardDescription>
                   <div className="mt-4">
                     <span className="text-3xl font-bold" data-testid={`text-price-${planId}`}>€{getDisplayPrice(planId)}</span>
-                    <span className="text-muted-foreground">/month</span>
+                    <span className="text-muted-foreground">{t("paywall.perMonth")}</span>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -115,7 +117,7 @@ export default function Paywall() {
                     data-testid={`button-upgrade-${planId}`}
                   >
                     {checkoutMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                    Subscribe
+                    {t("paywall.subscribe")}
                   </Button>
                 </CardContent>
               </Card>
@@ -126,7 +128,7 @@ export default function Paywall() {
         <div className="text-center">
           <Link href="/billing">
             <Button variant="ghost" data-testid="link-manage-billing">
-              Manage billing settings
+              {t("paywall.manageBilling")}
             </Button>
           </Link>
         </div>

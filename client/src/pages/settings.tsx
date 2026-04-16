@@ -206,22 +206,22 @@ export default function Settings() {
       {/* Notifications */}
       <SettingsSection
         icon={<Bell className="h-4 w-4" />}
-        title="Notificaciones"
-        description="Así funciona hoy el sistema de avisos por email."
+        title={t("settings.notifications.title")}
+        description={t("settings.notifications.description")}
       >
         <div className="overflow-hidden rounded-lg border border-border bg-background">
           <div className="border-b border-border px-4 py-3">
             <div className="flex items-start gap-3">
               <img
                 src={notificationImage}
-                alt="Notificaciones"
+                alt={t("settings.notifications.title")}
                 className="h-12 w-12 rounded-md object-cover"
                 data-testid="img-notifications-preview"
               />
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-foreground">Recibes estos emails</p>
+                <p className="text-sm font-semibold text-foreground">{t("settings.notifications.receiveEmails")}</p>
                 <p className="text-xs text-muted-foreground">
-                  El panel muestra lo que la app realmente envía hoy.
+                  {t("settings.notifications.receiveEmailsDesc")}
                 </p>
               </div>
             </div>
@@ -229,21 +229,21 @@ export default function Settings() {
 
           <div className="p-4 space-y-4">
             <SettingRow
-              label="Resumen semanal"
-              description="Se envía una vez por semana con métricas y rendimiento."
-              control={<Badge variant="secondary" data-testid="badge-weekly-summary">Activo</Badge>}
+              label={t("settings.notifications.weeklySummaryActive")}
+              description={t("settings.notifications.weeklySummaryActiveDesc")}
+              control={<Badge variant="secondary" data-testid="badge-weekly-summary">{t("settings.notifications.active")}</Badge>}
             />
             <Separator />
             <SettingRow
-              label="Notificación al responder"
-              description="Llega cuando se publica una respuesta a una reseña."
-              control={<Badge variant="secondary" data-testid="badge-reply-notification">Activo</Badge>}
+              label={t("settings.notifications.replyNotification")}
+              description={t("settings.notifications.replyNotificationDesc")}
+              control={<Badge variant="secondary" data-testid="badge-reply-notification">{t("settings.notifications.active")}</Badge>}
             />
             <Separator />
             <div className="flex items-start gap-3 rounded-md bg-muted/30 px-3 py-3">
               <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
               <p className="text-xs text-muted-foreground">
-                No hay alertas inmediatas por reseñas negativas ni switches configurables en esta vista.
+                {t("settings.notifications.noControls")}
               </p>
             </div>
           </div>
@@ -252,18 +252,18 @@ export default function Settings() {
         <div className="grid gap-3 sm:grid-cols-3">
           <div className="rounded-md border border-border bg-muted/20 p-3">
             <Mail className="h-4 w-4 text-muted-foreground" />
-            <p className="mt-2 text-sm font-medium text-foreground">Resumen semanal</p>
-            <p className="text-xs text-muted-foreground">Emails automáticos de rendimiento.</p>
+            <p className="mt-2 text-sm font-medium text-foreground">{t("settings.notifications.weeklySummary")}</p>
+            <p className="text-xs text-muted-foreground">{t("settings.notifications.weeklyDesc")}</p>
           </div>
           <div className="rounded-md border border-border bg-muted/20 p-3">
             <CalendarDays className="h-4 w-4 text-muted-foreground" />
-            <p className="mt-2 text-sm font-medium text-foreground">Cada semana</p>
-            <p className="text-xs text-muted-foreground">Sin controles manuales desde aquí.</p>
+            <p className="mt-2 text-sm font-medium text-foreground">{t("settings.notifications.weekly")}</p>
+            <p className="text-xs text-muted-foreground">{t("settings.notifications.weeklyDesc")}</p>
           </div>
           <div className="rounded-md border border-border bg-muted/20 p-3">
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-            <p className="mt-2 text-sm font-medium text-foreground">Respuestas publicadas</p>
-            <p className="text-xs text-muted-foreground">Aviso cuando se postea una respuesta.</p>
+            <p className="mt-2 text-sm font-medium text-foreground">{t("settings.notifications.repliesPosted")}</p>
+            <p className="text-xs text-muted-foreground">{t("settings.notifications.repliesPostedDesc")}</p>
           </div>
         </div>
       </SettingsSection>

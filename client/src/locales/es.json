@@ -88,6 +88,8 @@
     "custom": "Personalizado",
     "contactUsForPricing": "Contáctanos para precios",
     "saveChanges": "Guardar cambios",
+    "subscribe": "Suscribirse",
+    "customer": "Cliente",
     "days": {
       "dom": "Dom",
       "lun": "Lun",
@@ -333,6 +335,37 @@
     "upgradePlan": "Mejorar plan",
     "cancelSubscription": "Cancelar suscripción",
     "history": "Historial de facturas",
+    "sync": "Sincronizar",
+    "subscription": "Suscripción",
+    "month": "mes",
+    "yearly": "Anual",
+    "save20": "Ahorra 20%",
+    "noPlan": "Sin plan seleccionado",
+    "trialEnds": "La prueba termina el",
+    "accessUntil": "Acceso hasta",
+    "subscriptionEnding": "Suscripción finalizando",
+    "subscriptionEndingDesc": "Tu suscripción se cancelará el {date}. Puedes reactivarla antes de esa fecha.",
+    "cancelConfirmTitle": "¿Cancelar suscripción?",
+    "cancelConfirmDescription": "Tu suscripción permanecerá activa hasta el final del periodo de facturación actual. Después perderás acceso a las funciones premium.",
+    "cancelKeepButton": "Mantener suscripción",
+    "cancelConfirmButton": "Sí, cancelar",
+    "reactivateSubscription": "Reactivar suscripción",
+    "choosePlan": "Elegir un plan",
+    "chooseYourPlan": "Elige tu plan",
+    "chooseYourPlanDesc": "Selecciona el plan que mejor se adapte a tu negocio.",
+    "monthly": "Mensual",
+    "usageAndLimits": "Uso y Límites",
+    "usageDescription": "Uso actual de los recursos de tu plan",
+    "locations": "Ubicaciones",
+    "monthlyReplies": "Respuestas Mensuales",
+    "teamMembers": "Miembros del Equipo",
+    "tonePresets": "Presets de Tono",
+    "recentInvoices": "Facturas Recientes",
+    "recentInvoicesDesc": "Tus últimas transacciones de facturación",
+    "viewAllInvoices": "Ver todas",
+    "noInvoicesYet": "Sin facturas aún",
+    "noInvoicesDesc": "Las facturas aparecerán aquí cuando te suscribas.",
+    "cardEnding": "terminada en",
     "toasts": {
       "error": "Error",
       "errorCheckout": "No se pudo iniciar el checkout. Inténtalo de nuevo.",
@@ -341,8 +374,16 @@
       "errorCancel": "No se pudo cancelar la suscripción. Inténtalo de nuevo.",
       "errorResume": "No se pudo reactivar la suscripción. Inténtalo de nuevo.",
       "cancelSuccess": "Suscripción cancelada",
+      "cancelSuccessDesc": "Tu suscripción ha sido cancelada. Conservarás el acceso hasta el final del periodo de facturación.",
       "resumeSuccess": "Suscripción reactivada",
-      "syncSuccess": "Sincronizado"
+      "resumeSuccessDesc": "Tu suscripción ha sido reactivada correctamente.",
+      "syncSuccess": "Sincronizado",
+      "syncSuccessDesc": "Tu información de facturación ha sido sincronizada.",
+      "errorSync": "No se pudo sincronizar la facturación. Inténtalo de nuevo.",
+      "planUpdated": "Plan actualizado",
+      "planUpdatedDesc": "Tu plan ha sido cambiado a {plan}.",
+      "alreadyOnPlan": "Ya estás en este plan.",
+      "planChangeError": "No se pudo cambiar el plan. Inténtalo de nuevo."
     }
   },
   "analytics": {
@@ -417,7 +458,19 @@
       "negativeAlerts": "Alertas de reseñas negativas",
       "negativeAlertsDesc": "Aviso inmediato para reseñas de 1 o 2 estrellas.",
       "weeklySummary": "Resumen semanal",
-      "weeklySummaryDesc": "Un informe de rendimiento todos los lunes en tu bandeja."
+      "weeklySummaryDesc": "Un informe de rendimiento todos los lunes en tu bandeja.",
+      "receiveEmails": "Recibes estos emails",
+      "receiveEmailsDesc": "El panel muestra lo que la app realmente envía hoy.",
+      "weeklySummaryActive": "Resumen semanal",
+      "weeklySummaryActiveDesc": "Se envía una vez por semana con métricas y rendimiento.",
+      "active": "Activo",
+      "replyNotification": "Notificación al responder",
+      "replyNotificationDesc": "Llega cuando se publica una respuesta a una reseña.",
+      "noControls": "No hay alertas inmediatas por reseñas negativas ni switches configurables en esta vista.",
+      "weekly": "Cada semana",
+      "weeklyDesc": "Sin controles manuales desde aquí.",
+      "repliesPosted": "Respuestas publicadas",
+      "repliesPostedDesc": "Aviso cuando se postea una respuesta."
     },
     "languageRegion": {
       "title": "Idioma y Región",
@@ -1018,9 +1071,9 @@
       "blogs": "Blogs",
       "blogsDesc": "Crear y gestionar artículos de blog para SEO",
       "qrReviews": "Reseñas QR",
-      "qrReviewsDesc": "Crear y rastrear códigos QR de reseñas de Google",
-      "goTo": "Ir a {{section}}"
-    }
+      "qrReviewsDesc": "Crear y rastrear códigos QR de reseñas de Google"
+    },
+    "goTo": "Ir a {{section}}"
   },
   "affiliate": {
     "login": {
@@ -1108,6 +1161,166 @@
   "blog": {
     "title": "Blog",
     "subtitle": "Ideas prácticas para mejorar tu reputación online y automatizar respuestas",
-    "noPosts": "Aún no hay artículos publicados"
+    "noPosts": "Aún no hay artículos publicados",
+    "notFound": "Artículo no encontrado",
+    "notFoundDesc": "El artículo que buscas no existe o ha sido eliminado.",
+    "backToList": "Volver al blog"
+  },
+  "reviewSummary": {
+    "title": "Análisis IA",
+    "subtitle": "Resumen y análisis de tus reseñas con inteligencia artificial",
+    "generating": "Generando...",
+    "regenerate": "Regenerar",
+    "generate": "Generar Resumen",
+    "error": "No se pudo cargar el resumen. Inténtalo de nuevo.",
+    "allLocations": "Todos los locales",
+    "dateRange": {
+      "fromDate": "Desde",
+      "toDate": "Hasta",
+      "showingReviews": "Mostrando reseñas desde {startDate} hasta {endDate}"
+    },
+    "noSummary": {
+      "title": "Sin resumen aún",
+      "description": "Pulsa Generar para crear un análisis de tus reseñas con IA."
+    },
+    "executiveSummary": "Resumen Ejecutivo",
+    "basedOn": "Basado en",
+    "reviews": "reseñas",
+    "totalReviews": "Total de reseñas",
+    "overallSentiment": "Sentimiento General",
+    "sentimentDescription": "Puntuación agregada del sentimiento de las reseñas analizadas",
+    "sentiment": {
+      "positive": "Positivo",
+      "negative": "Negativo",
+      "neutral": "Neutral",
+      "mixed": "Mixto"
+    },
+    "trends": {
+      "title": "Tendencias",
+      "description": "Patrones emergentes en las reseñas recientes",
+      "improving": "Mejorando",
+      "declining": "Empeorando",
+      "consistent": "Consistente",
+      "noData": "No hay suficientes datos para identificar tendencias."
+    },
+    "recommendations": {
+      "title": "Recomendaciones",
+      "description": "Pasos accionables basados en tus reseñas",
+      "noData": "Aún no hay recomendaciones disponibles."
+    },
+    "keyThemes": {
+      "title": "Temas Clave",
+      "description": "Temas más mencionados en tus reseñas",
+      "mentionedIn": "Mencionado en"
+    }
+  },
+  "tonePresets": {
+    "title": "Tonos de Marca",
+    "subtitle": "Crea y gestiona presets de tono personalizados para respuestas IA",
+    "createPreset": "Crear Preset",
+    "presetLimit": "Límite de Presets",
+    "unlimitedPresets": "Presets ilimitados",
+    "presetsUsed": "{current} / {limit} presets usados",
+    "upgradeToCreate": "Mejora tu plan para crear más presets.",
+    "noPresets": "Sin presets aún",
+    "noPresetsDesc": "Crea tu primer preset de tono para personalizar las respuestas IA.",
+    "default": "Por defecto",
+    "styles": {
+      "friendly": "Amigable",
+      "friendlyDesc": "Tono cálido y cercano",
+      "formal": "Formal",
+      "formalDesc": "Tono profesional y pulido",
+      "casual": "Casual",
+      "casualDesc": "Tono relajado e informal",
+      "professional": "Profesional",
+      "professionalDesc": "Tono enfocado en negocios y estructurado",
+      "warm": "Cálido",
+      "warmDesc": "Tono empático y atento",
+      "mediterranean": "Mediterráneo",
+      "mediterraneanDesc": "Tono cálido, expresivo y acogedor"
+    },
+    "dialog": {
+      "editTitle": "Editar Preset",
+      "createTitle": "Crear Preset",
+      "description": "Configura el tono y el comportamiento para las respuestas generadas por IA.",
+      "name": "Nombre",
+      "namePlaceholder": "ej. Restaurante Amigable",
+      "style": "Estilo",
+      "descriptionLabel": "Descripción",
+      "descriptionPlaceholder": "Breve descripción de este tono...",
+      "instructions": "Instrucciones personalizadas",
+      "instructionsPlaceholder": "ej. Siempre mencionar nuestra terraza y aparcamiento gratuito..."
+    },
+    "toasts": {
+      "created": "Preset creado",
+      "createdDesc": "Tu nuevo preset de tono está listo para usar.",
+      "updated": "Preset actualizado",
+      "updatedDesc": "El preset se ha actualizado correctamente.",
+      "deleted": "Preset eliminado",
+      "deletedDesc": "El preset ha sido eliminado.",
+      "error": "Error",
+      "errorCreate": "No se pudo crear el preset. Inténtalo de nuevo.",
+      "errorUpdate": "No se pudo actualizar el preset. Inténtalo de nuevo.",
+      "errorDelete": "No se pudo eliminar el preset. Inténtalo de nuevo."
+    }
+  },
+  "usage": {
+    "replies": {
+      "thisMonth": "Respuestas este mes",
+      "unlimited": "Ilimitadas",
+      "upgrade": "Mejorar",
+      "limitReached": "Límite alcanzado",
+      "remaining": "{count} restantes"
+    }
+  },
+  "invitations": {
+    "title": "Invitación de Equipo",
+    "description": "{name} te ha invitado a unirte a su equipo.",
+    "roleAssigned": "Rol asignado",
+    "accepted": "Invitación aceptada",
+    "acceptedDesc": "Te has unido al equipo correctamente.",
+    "declined": "Invitación rechazada",
+    "declinedDesc": "La invitación ha sido rechazada.",
+    "errorAccept": "No se pudo aceptar la invitación. Inténtalo de nuevo.",
+    "errorDecline": "No se pudo rechazar la invitación. Inténtalo de nuevo.",
+    "accept": "Aceptar",
+    "decline": "Rechazar"
+  },
+  "paywall": {
+    "title": "Suscripción requerida",
+    "subtitle": "Suscríbete a un plan para seguir usando HolaRevi y gestionar tus reseñas de Google con IA.",
+    "subscribe": "Suscribirse",
+    "manageBilling": "Gestionar ajustes de facturación",
+    "perMonth": "/mes"
+  },
+  "termsPage": {
+    "backToHome": "Volver al inicio",
+    "title": "Términos de servicio — HolaRevi",
+    "lastUpdated": "Última actualización: diciembre de 2025"
+  },
+  "privacyPage": {
+    "backToHome": "Volver al inicio",
+    "title": "HOLAREVI — POLÍTICA DE PRIVACIDAD",
+    "lastUpdated": "Última actualización: 4 de diciembre de 2025"
+  },
+  "googlePermissions": {
+    "backToHome": "Volver al inicio",
+    "title": "Cómo usa HolaRevi los datos de tu perfil de empresa de Google",
+    "lastUpdated": "Última actualización: diciembre de 2025",
+    "footerPrivacy": "Política de Privacidad",
+    "footerTerms": "Términos del Servicio",
+    "footerPermissions": "Permisos de Google",
+    "footerRights": "HolaRevi. Todos los derechos reservados."
+  },
+  "locationConfig": {
+    "aiVoiceSettings": "Ajustes de Voz IA",
+    "toneOfVoice": "Tono de Voz",
+    "toneOfVoiceDesc": "El tono base para las respuestas generadas por IA",
+    "selectTone": "Seleccionar un tono",
+    "tonePreset": "Preset de Tono",
+    "tonePresetDesc": "Usa un preset personalizado con instrucciones específicas para este local",
+    "selectPreset": "Seleccionar un preset",
+    "noPreset": "Sin preset (usar solo tono base)",
+    "noPresetsAvailable": "No hay presets disponibles. Crea uno en la página de Tonos de Marca."
   }
 }

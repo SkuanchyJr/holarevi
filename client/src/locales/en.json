@@ -88,6 +88,8 @@
     "custom": "Custom",
     "contactUsForPricing": "Contact us for pricing",
     "saveChanges": "Save changes",
+    "subscribe": "Subscribe",
+    "customer": "Customer",
     "days": {
       "dom": "Sun",
       "lun": "Mon",
@@ -333,6 +335,37 @@
     "upgradePlan": "Upgrade plan",
     "cancelSubscription": "Cancel subscription",
     "history": "Invoice history",
+    "sync": "Sync",
+    "subscription": "Subscription",
+    "month": "month",
+    "yearly": "Yearly",
+    "save20": "Save 20%",
+    "noPlan": "No plan selected",
+    "trialEnds": "Trial ends on",
+    "accessUntil": "Access until",
+    "subscriptionEnding": "Subscription ending",
+    "subscriptionEndingDesc": "Your subscription will be canceled on {date}. You can reactivate before then.",
+    "cancelConfirmTitle": "Cancel subscription?",
+    "cancelConfirmDescription": "Your subscription will remain active until the end of the current billing period. After that, you will lose access to premium features.",
+    "cancelKeepButton": "Keep subscription",
+    "cancelConfirmButton": "Yes, cancel",
+    "reactivateSubscription": "Reactivate subscription",
+    "choosePlan": "Choose a plan",
+    "chooseYourPlan": "Choose your plan",
+    "chooseYourPlanDesc": "Select the plan that best fits your business needs.",
+    "monthly": "Monthly",
+    "usageAndLimits": "Usage & Limits",
+    "usageDescription": "Current usage across your plan resources",
+    "locations": "Locations",
+    "monthlyReplies": "Monthly Replies",
+    "teamMembers": "Team Members",
+    "tonePresets": "Tone Presets",
+    "recentInvoices": "Recent Invoices",
+    "recentInvoicesDesc": "Your latest billing transactions",
+    "viewAllInvoices": "View all",
+    "noInvoicesYet": "No invoices yet",
+    "noInvoicesDesc": "Invoices will appear here once you subscribe.",
+    "cardEnding": "ending",
     "toasts": {
       "error": "Error",
       "errorCheckout": "Failed to start checkout. Please try again.",
@@ -341,8 +374,16 @@
       "errorCancel": "Failed to cancel subscription. Please try again.",
       "errorResume": "Failed to reactivate subscription. Please try again.",
       "cancelSuccess": "Subscription canceled",
+      "cancelSuccessDesc": "Your subscription has been canceled. You will retain access until the end of the billing period.",
       "resumeSuccess": "Subscription reactivated",
-      "syncSuccess": "Synced"
+      "resumeSuccessDesc": "Your subscription has been reactivated successfully.",
+      "syncSuccess": "Synced",
+      "syncSuccessDesc": "Your billing information has been synced.",
+      "errorSync": "Failed to sync billing. Please try again.",
+      "planUpdated": "Plan updated",
+      "planUpdatedDesc": "Your plan has been changed to {plan}.",
+      "alreadyOnPlan": "You are already on this plan.",
+      "planChangeError": "Could not change plan. Please try again."
     }
   },
   "analytics": {
@@ -417,7 +458,19 @@
       "negativeAlerts": "Negative review alerts",
       "negativeAlertsDesc": "Immediate alert for 1 or 2 star reviews.",
       "weeklySummary": "Weekly summary",
-      "weeklySummaryDesc": "A performance report every Monday in your inbox."
+      "weeklySummaryDesc": "A performance report every Monday in your inbox.",
+      "receiveEmails": "You receive these emails",
+      "receiveEmailsDesc": "The panel shows what the app actually sends today.",
+      "weeklySummaryActive": "Weekly summary",
+      "weeklySummaryActiveDesc": "Sent once a week with metrics and performance.",
+      "active": "Active",
+      "replyNotification": "Reply notification",
+      "replyNotificationDesc": "Sent when a reply is posted to a review.",
+      "noControls": "There are no immediate alerts for negative reviews or configurable switches in this view.",
+      "weekly": "Every week",
+      "weeklyDesc": "No manual controls from here.",
+      "repliesPosted": "Replies posted",
+      "repliesPostedDesc": "Alert when a reply is posted."
     },
     "languageRegion": {
       "title": "Language & Region",
@@ -1108,14 +1161,166 @@
   "blog": {
     "title": "Blog",
     "subtitle": "Practical ideas to improve your online reputation and automate replies",
-    "noPosts": "No posts published yet"
-  },
-  "blog": {
-    "title": "Blog",
-    "subtitle": "Practical ideas to improve your online reputation and automate replies",
     "noPosts": "No posts published yet",
     "notFound": "Post not found",
     "notFoundDesc": "The article you're looking for doesn't exist or has been removed.",
     "backToList": "Back to blog"
+  },
+  "reviewSummary": {
+    "title": "AI Insights",
+    "subtitle": "AI-powered summary and analysis of your reviews",
+    "generating": "Generating...",
+    "regenerate": "Regenerate",
+    "generate": "Generate Summary",
+    "error": "Could not load the summary. Please try again.",
+    "allLocations": "All Locations",
+    "dateRange": {
+      "fromDate": "From date",
+      "toDate": "To date",
+      "showingReviews": "Showing reviews from {startDate} to {endDate}"
+    },
+    "noSummary": {
+      "title": "No summary yet",
+      "description": "Click Generate to create an AI-powered analysis of your reviews."
+    },
+    "executiveSummary": "Executive Summary",
+    "basedOn": "Based on",
+    "reviews": "reviews",
+    "totalReviews": "Total reviews",
+    "overallSentiment": "Overall Sentiment",
+    "sentimentDescription": "Aggregate sentiment score from analyzed reviews",
+    "sentiment": {
+      "positive": "Positive",
+      "negative": "Negative",
+      "neutral": "Neutral",
+      "mixed": "Mixed"
+    },
+    "trends": {
+      "title": "Trends",
+      "description": "Emerging patterns across recent reviews",
+      "improving": "Improving",
+      "declining": "Declining",
+      "consistent": "Consistent",
+      "noData": "Not enough data to identify trends."
+    },
+    "recommendations": {
+      "title": "Recommendations",
+      "description": "Actionable steps based on your reviews",
+      "noData": "No recommendations available yet."
+    },
+    "keyThemes": {
+      "title": "Key Themes",
+      "description": "Most frequently mentioned topics in your reviews",
+      "mentionedIn": "Mentioned in"
+    }
+  },
+  "tonePresets": {
+    "title": "Brand Tones",
+    "subtitle": "Create and manage custom tone presets for AI-generated replies",
+    "createPreset": "Create Preset",
+    "presetLimit": "Preset Limit",
+    "unlimitedPresets": "Unlimited presets",
+    "presetsUsed": "{current} / {limit} presets used",
+    "upgradeToCreate": "Upgrade your plan to create more presets.",
+    "noPresets": "No presets yet",
+    "noPresetsDesc": "Create your first tone preset to customize AI replies.",
+    "default": "Default",
+    "styles": {
+      "friendly": "Friendly",
+      "friendlyDesc": "Warm and approachable tone",
+      "formal": "Formal",
+      "formalDesc": "Professional and polished tone",
+      "casual": "Casual",
+      "casualDesc": "Relaxed and informal tone",
+      "professional": "Professional",
+      "professionalDesc": "Business-focused and structured tone",
+      "warm": "Warm",
+      "warmDesc": "Empathetic and caring tone",
+      "mediterranean": "Mediterranean",
+      "mediterraneanDesc": "Warm, expressive and welcoming tone"
+    },
+    "dialog": {
+      "editTitle": "Edit Preset",
+      "createTitle": "Create Preset",
+      "description": "Configure the tone and behavior for AI-generated responses.",
+      "name": "Name",
+      "namePlaceholder": "e.g., Friendly Restaurant",
+      "style": "Style",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Brief description of this tone...",
+      "instructions": "Custom Instructions",
+      "instructionsPlaceholder": "e.g., Always mention our terrace and free parking..."
+    },
+    "toasts": {
+      "created": "Preset created",
+      "createdDesc": "Your new tone preset is ready to use.",
+      "updated": "Preset updated",
+      "updatedDesc": "The preset has been updated successfully.",
+      "deleted": "Preset deleted",
+      "deletedDesc": "The preset has been removed.",
+      "error": "Error",
+      "errorCreate": "Could not create preset. Please try again.",
+      "errorUpdate": "Could not update preset. Please try again.",
+      "errorDelete": "Could not delete preset. Please try again."
+    }
+  },
+  "usage": {
+    "replies": {
+      "thisMonth": "Replies this month",
+      "unlimited": "Unlimited",
+      "upgrade": "Upgrade",
+      "limitReached": "Limit reached",
+      "remaining": "{count} remaining"
+    }
+  },
+  "invitations": {
+    "title": "Team Invitation",
+    "description": "{name} has invited you to join their team.",
+    "roleAssigned": "Role assigned",
+    "accepted": "Invitation accepted",
+    "acceptedDesc": "You have joined the team successfully.",
+    "declined": "Invitation declined",
+    "declinedDesc": "The invitation has been declined.",
+    "errorAccept": "Could not accept the invitation. Please try again.",
+    "errorDecline": "Could not decline the invitation. Please try again.",
+    "accept": "Accept",
+    "decline": "Decline"
+  },
+  "paywall": {
+    "title": "Subscription Required",
+    "subtitle": "Subscribe to a plan to continue using HolaRevi and manage your Google reviews with AI.",
+    "subscribe": "Subscribe",
+    "manageBilling": "Manage billing settings",
+    "perMonth": "/month"
+  },
+  "termsPage": {
+    "backToHome": "Back to Home",
+    "title": "Terms of Service — HolaRevi",
+    "lastUpdated": "Last updated: December 2025"
+  },
+  "privacyPage": {
+    "backToHome": "Back to Home",
+    "title": "HOLAREVI — PRIVACY POLICY",
+    "lastUpdated": "Last Updated: December 4, 2025"
+  },
+  "googlePermissions": {
+    "backToHome": "Back to Home",
+    "title": "How HolaRevi Uses Your Google Business Profile Data",
+    "lastUpdated": "Last updated: December 2025",
+    "footerPrivacy": "Privacy Policy",
+    "footerTerms": "Terms of Service",
+    "footerPermissions": "Google Permissions",
+    "footerRights": "HolaRevi. All rights reserved."
+  },
+  "locationConfig": {
+    "aiVoiceSettings": "AI Voice Settings",
+    "toneOfVoice": "Tone of Voice",
+    "toneOfVoiceDesc": "The base tone for AI-generated replies",
+    "selectTone": "Select a tone",
+    "tonePreset": "Tone Preset",
+    "tonePresetDesc": "Use a custom preset with specific instructions for this location",
+    "selectPreset": "Select a preset",
+    "noPreset": "No preset (use base tone only)",
+    "noPresetsAvailable": "No presets available. Create one in the Brand Tones page."
   }
 }

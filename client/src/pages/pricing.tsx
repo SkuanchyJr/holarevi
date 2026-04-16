@@ -100,10 +100,10 @@ export default function Pricing() {
       {/* Hero Section */}
       <div className="py-20 px-6 text-center">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4" data-testid="text-pricing-title">
-          {t("pricing.hero.title") || "Plans for every business size"}
+          {t("pricing.hero.title")}
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto" data-testid="text-pricing-subtitle">
-          {t("pricing.hero.subtitle") || "Choose the perfect plan to automate your reviews and boost your local reputation."}
+          {t("pricing.hero.subtitle")}
         </p>
       </div>
 
@@ -180,7 +180,7 @@ export default function Pricing() {
                     </Button>
                     {planId === "local" && (
                       <p className="text-xs text-muted-foreground text-center mt-4 italic">
-                        {t("common.startFreeTrial")} · {t("common.trialLimitedReplies") || "No credit card required to start"}
+                        {t("common.startFreeTrial")} · {t("common.trialLimitedReplies")}
                       </p>
                     )}
                   </div>
@@ -191,7 +191,7 @@ export default function Pricing() {
 
           <div className="text-center pt-12">
             <p className="text-muted-foreground">
-                {t("pricing.footer.questions") || "Have questions? Contact our team for custom solutions."}
+                {t("pricing.footer.questions")}
             </p>
             <Button variant="link" asChild className="mt-2">
                 <Link href={`/${language}/contact`}>{t("common.contact")}</Link>

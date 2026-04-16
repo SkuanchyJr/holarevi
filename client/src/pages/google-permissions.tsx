@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/i18n";
 
 export default function GooglePermissions() {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -12,14 +12,14 @@ export default function GooglePermissions() {
           <Link href="/">
             <Button variant="ghost" size="sm" data-testid="link-back-home">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              {language === "es" ? "Volver al inicio" : "Back to Home"}
+              {t("googlePermissions.backToHome")}
             </Button>
           </Link>
         </div>
 
         <article className="prose prose-gray dark:prose-invert max-w-none">
-          <h1 data-testid="text-page-title">{language === "es" ? "Cómo usa HolaRevi los datos de tu perfil de empresa de Google" : "How HolaRevi Uses Your Google Business Profile Data"}</h1>
-          <p className="text-muted-foreground">{language === "es" ? "Última actualización: diciembre de 2025" : "Last updated: December 2025"}</p>
+          <h1 data-testid="text-page-title">{t("googlePermissions.title")}</h1>
+          <p className="text-muted-foreground">{t("googlePermissions.lastUpdated")}</p>
 
           <p>
             HolaRevi connects to your Google Business Profile to help you manage and reply to your reviews quickly and consistently using AI. This page explains what data we access, how we use it, and how you stay in control.
@@ -143,11 +143,11 @@ export default function GooglePermissions() {
 
         <footer className="mt-16 pt-8 border-t text-center text-sm text-muted-foreground">
           <div className="flex justify-center gap-6">
-            <Link href="/privacy" className="hover:underline">Privacy Policy</Link>
-            <Link href="/terms" className="hover:underline">Terms of Service</Link>
-            <Link href="/google-permissions" className="hover:underline">Google Permissions</Link>
+            <Link href="/privacy" className="hover:underline">{t("googlePermissions.footerPrivacy")}</Link>
+            <Link href="/terms" className="hover:underline">{t("googlePermissions.footerTerms")}</Link>
+            <Link href="/google-permissions" className="hover:underline">{t("googlePermissions.footerPermissions")}</Link>
           </div>
-          <p className="mt-4">&copy; {new Date().getFullYear()} HolaRevi. All rights reserved.</p>
+          <p className="mt-4">&copy; {new Date().getFullYear()} {t("googlePermissions.footerRights")}</p>
         </footer>
       </div>
     </div>

@@ -649,7 +649,7 @@ export default function Analytics() {
                   <div className="flex items-center gap-2">
                     <RatingStars rating={review.rating} />
                     <span className="text-sm font-medium text-foreground">
-                      {review.reviewerName || "Cliente"}
+                      {review.reviewerName || t("common.customer")}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
