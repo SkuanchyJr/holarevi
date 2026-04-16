@@ -21,235 +21,233 @@ export default function PrivacyPolicy() {
           <h1 data-testid="text-page-title">{t("privacyPage.title")}</h1>
           <p className="text-muted-foreground">{t("privacyPage.lastUpdated")}</p>
 
-          <p>
-            Welcome to HolaRevi ("we", "our", "us"). We provide an AI-powered platform that helps restaurants manage and reply to Google Reviews. This Privacy Policy explains how we collect, use, store, share, and protect personal information — including Google user data obtained through Google APIs.
-          </p>
-          <p>By using HolaRevi or connecting your Google account, you agree to this Privacy Policy.</p>
-          <p>If you have questions, contact us at <a href="mailto:info@holarevi.com">info@holarevi.com</a>.</p>
+          <p>{t("privacyPage.intro1")}</p>
+          <p>{t("privacyPage.intro2")}</p>
+          <p>{t("privacyPage.intro3")} <a href="mailto:info@holarevi.com">info@holarevi.com</a>.</p>
 
           <hr />
 
-          <h2>1. Who We Are</h2>
-          <p>HolaRevi is a restaurant-focused SaaS platform based in Barcelona, Spain.</p>
-          <p><strong>Data Controller:</strong></p>
+          <h2>{t("privacyPage.s1Title")}</h2>
+          <p>{t("privacyPage.s1p1")}</p>
+          <p><strong>{t("privacyPage.s1p2")}</strong></p>
           <address className="not-italic">
             HolaRevi<br />
-            Carrer de Ramon Llull, 495, 08930 Sant Adrià de Besòs, Barcelona, Spain<br />
+            {t("privacyPage.s1address")}<br />
             Email: <a href="mailto:info@holarevi.com">info@holarevi.com</a>
           </address>
 
           <hr />
 
-          <h2>2. What Data We Collect</h2>
+          <h2>{t("privacyPage.s2Title")}</h2>
 
-          <h3>2.1. Data You Provide to Us</h3>
-          <p>We collect:</p>
+          <h3>{t("privacyPage.s2_1Title")}</h3>
+          <p>{t("privacyPage.s2_1p1")}</p>
           <ul>
-            <li>Your name and email address</li>
-            <li>Restaurant/business information</li>
-            <li>Subscription and billing details (handled securely by Stripe)</li>
-            <li>Any communication you send us (email, chat, support messages)</li>
+            <li>{t("privacyPage.s2_1item1")}</li>
+            <li>{t("privacyPage.s2_1item2")}</li>
+            <li>{t("privacyPage.s2_1item3")}</li>
+            <li>{t("privacyPage.s2_1item4")}</li>
           </ul>
 
           <hr />
 
-          <h3>2.2. Data We Collect Through Google APIs</h3>
-          <p>When you sign in with Google and grant permission, HolaRevi accesses the following Google user data:</p>
+          <h3>{t("privacyPage.s2_2Title")}</h3>
+          <p>{t("privacyPage.s2_2p1")}</p>
 
-          <h4>Google Account Information</h4>
+          <h4>{t("privacyPage.s2_2gaTitle")}</h4>
           <ul>
-            <li>Name</li>
-            <li>Email address</li>
-            <li>Profile ID</li>
+            <li>{t("privacyPage.s2_2ga1")}</li>
+            <li>{t("privacyPage.s2_2ga2")}</li>
+            <li>{t("privacyPage.s2_2ga3")}</li>
           </ul>
 
-          <h4>Google Business Profile Data</h4>
-          <p>For each location you authorize:</p>
+          <h4>{t("privacyPage.s2_2gbpTitle")}</h4>
+          <p>{t("privacyPage.s2_2gbpIntro")}</p>
           <ul>
-            <li>Business name, address, phone number, categories</li>
-            <li>Google Reviews (review text, rating, language, timestamp)</li>
-            <li>Reviewer display names (as provided by Google)</li>
-            <li>Your existing owner replies</li>
-            <li>Location IDs</li>
-            <li>OAuth tokens needed to securely access and manage your reviews</li>
+            <li>{t("privacyPage.s2_2gbp1")}</li>
+            <li>{t("privacyPage.s2_2gbp2")}</li>
+            <li>{t("privacyPage.s2_2gbp3")}</li>
+            <li>{t("privacyPage.s2_2gbp4")}</li>
+            <li>{t("privacyPage.s2_2gbp5")}</li>
+            <li>{t("privacyPage.s2_2gbp6")}</li>
           </ul>
 
-          <h4>What We DO NOT Access</h4>
-          <p>We do not access:</p>
+          <h4>{t("privacyPage.s2_2notTitle")}</h4>
+          <p>{t("privacyPage.s2_2notp1")}</p>
           <ul>
-            <li>Gmail</li>
-            <li>Google Drive</li>
-            <li>Google Calendar</li>
-            <li>Contacts</li>
-            <li>Any Google product or data outside the scopes you explicitly grant</li>
+            <li>{t("privacyPage.s2_2not1")}</li>
+            <li>{t("privacyPage.s2_2not2")}</li>
+            <li>{t("privacyPage.s2_2not3")}</li>
+            <li>{t("privacyPage.s2_2not4")}</li>
+            <li>{t("privacyPage.s2_2not5")}</li>
           </ul>
 
           <hr />
 
-          <h2>3. How We Use Google User Data</h2>
-          <p>We only use Google user data for the core functionality of HolaRevi. Specifically, we use it to:</p>
+          <h2>{t("privacyPage.s3Title")}</h2>
+          <p>{t("privacyPage.s3p1")}</p>
           <ul>
-            <li>Fetch reviews from your Google Business Profile</li>
-            <li>Analyze sentiment and review patterns</li>
-            <li>Generate AI-powered reply suggestions</li>
-            <li>Publish owner replies (only if auto-posting is enabled)</li>
-            <li>Provide analytics in your dashboard</li>
-            <li>Support and troubleshoot your account</li>
+            <li>{t("privacyPage.s3item1")}</li>
+            <li>{t("privacyPage.s3item2")}</li>
+            <li>{t("privacyPage.s3item3")}</li>
+            <li>{t("privacyPage.s3item4")}</li>
+            <li>{t("privacyPage.s3item5")}</li>
+            <li>{t("privacyPage.s3item6")}</li>
           </ul>
 
-          <p>We do not:</p>
+          <p>{t("privacyPage.s3p2")}</p>
           <ul>
-            <li>Use Google user data for advertising</li>
-            <li>Sell or share Google user data</li>
-            <li>Use Google user data for unrelated AI training or profiling</li>
+            <li>{t("privacyPage.s3not1")}</li>
+            <li>{t("privacyPage.s3not2")}</li>
+            <li>{t("privacyPage.s3not3")}</li>
           </ul>
 
           <p>
-            Our use of Google user data adheres to the{" "}
+            {t("privacyPage.s3compliance")}{" "}
             <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer">
-              Google API Services User Data Policy
+              {t("privacyPage.s3complianceLink")}
             </a>
-            , including the Limited Use requirements.
+            {t("privacyPage.s3complianceEnd")}
           </p>
 
           <hr />
 
-          <h2>4. How We Use Other Personal Data</h2>
-          <p>We process your non-Google data to:</p>
+          <h2>{t("privacyPage.s4Title")}</h2>
+          <p>{t("privacyPage.s4p1")}</p>
           <ul>
-            <li>Create and manage your HolaRevi account</li>
-            <li>Authenticate your login</li>
-            <li>Process payments and subscriptions</li>
-            <li>Communicate service information, billing updates, and support</li>
-            <li>Improve our platform's performance and security</li>
+            <li>{t("privacyPage.s4item1")}</li>
+            <li>{t("privacyPage.s4item2")}</li>
+            <li>{t("privacyPage.s4item3")}</li>
+            <li>{t("privacyPage.s4item4")}</li>
+            <li>{t("privacyPage.s4item5")}</li>
           </ul>
-          <p><strong>Legal bases (GDPR):</strong> performance of a contract, legitimate interests, and consent where needed.</p>
+          <p><strong>{t("privacyPage.s4legal")}</strong></p>
 
           <hr />
 
-          <h2>5. How We Share Data</h2>
-          <p>We only share data with service providers who help us operate HolaRevi, including:</p>
+          <h2>{t("privacyPage.s5Title")}</h2>
+          <p>{t("privacyPage.s5p1")}</p>
           <ul>
-            <li>Cloud hosting providers</li>
-            <li>AI service providers (for generating reply drafts)</li>
-            <li>Payment processors like Stripe</li>
-            <li>Email delivery and support tools</li>
-            <li>Analytics and error monitoring tools</li>
+            <li>{t("privacyPage.s5item1")}</li>
+            <li>{t("privacyPage.s5item2")}</li>
+            <li>{t("privacyPage.s5item3")}</li>
+            <li>{t("privacyPage.s5item4")}</li>
+            <li>{t("privacyPage.s5item5")}</li>
           </ul>
 
-          <p>All service providers act as data processors, and they may only process data on our behalf under strict confidentiality agreements.</p>
+          <p>{t("privacyPage.s5p2")}</p>
 
-          <p>We never:</p>
+          <p>{t("privacyPage.s5p3")}</p>
           <ul>
-            <li>Sell personal data</li>
-            <li>Share Google user data for marketing or advertising</li>
-            <li>Allow third parties to use your data to train unrelated AI models</li>
-          </ul>
-
-          <hr />
-
-          <h2>6. Data Storage & Security</h2>
-          <p>We use industry-standard security practices, including:</p>
-          <ul>
-            <li>Encryption in transit (HTTPS)</li>
-            <li>Encrypted storage for sensitive data</li>
-            <li>Restricted, role-based access to production systems</li>
-            <li>Secure cloud infrastructure</li>
-            <li>Monitoring for unauthorized access</li>
-          </ul>
-          <p>While no method is 100% secure, we take reasonable measures to safeguard your information.</p>
-
-          <hr />
-
-          <h2>7. Data Retention & Deletion</h2>
-
-          <h3>7.1. Retention</h3>
-          <p>We retain your data:</p>
-          <ul>
-            <li>While your HolaRevi account is active</li>
-            <li>For a short period after cancellation (typically 30–90 days) for backups and compliance</li>
-          </ul>
-
-          <h3>7.2. Deletion</h3>
-          <p>You can request data deletion at any time by emailing <a href="mailto:info@holarevi.com">info@holarevi.com</a>.</p>
-          <p>Upon deletion request or account closure, we will:</p>
-          <ul>
-            <li>Revoke Google API tokens</li>
-            <li>Remove or anonymize your stored Google review data</li>
-            <li>Delete your personal account information (except legally required records such as invoices)</li>
+            <li>{t("privacyPage.s5never1")}</li>
+            <li>{t("privacyPage.s5never2")}</li>
+            <li>{t("privacyPage.s5never3")}</li>
           </ul>
 
           <hr />
 
-          <h2>8. Your Rights (GDPR)</h2>
-          <p>If you are located in the EU/EEA, you may request:</p>
+          <h2>{t("privacyPage.s6Title")}</h2>
+          <p>{t("privacyPage.s6p1")}</p>
           <ul>
-            <li>Access to your data</li>
-            <li>Correction of inaccurate data</li>
-            <li>Deletion</li>
-            <li>Restriction or objection to processing</li>
-            <li>Data portability</li>
-            <li>Withdrawal of consent</li>
+            <li>{t("privacyPage.s6item1")}</li>
+            <li>{t("privacyPage.s6item2")}</li>
+            <li>{t("privacyPage.s6item3")}</li>
+            <li>{t("privacyPage.s6item4")}</li>
+            <li>{t("privacyPage.s6item5")}</li>
           </ul>
-          <p>Send requests to <a href="mailto:info@holarevi.com">info@holarevi.com</a>.</p>
-          <p>We may request proof of identity for security reasons.</p>
+          <p>{t("privacyPage.s6p2")}</p>
 
           <hr />
 
-          <h2>9. International Data Transfers</h2>
-          <p>Our service providers may process data outside the EU (e.g., the United States).</p>
-          <p>When this happens, we use legal safeguards such as:</p>
+          <h2>{t("privacyPage.s7Title")}</h2>
+
+          <h3>{t("privacyPage.s7_1Title")}</h3>
+          <p>{t("privacyPage.s7_1p1")}</p>
           <ul>
-            <li>Standard Contractual Clauses (SCCs)</li>
-            <li>GDPR-compliant data processing agreements</li>
+            <li>{t("privacyPage.s7_1item1")}</li>
+            <li>{t("privacyPage.s7_1item2")}</li>
+          </ul>
+
+          <h3>{t("privacyPage.s7_2Title")}</h3>
+          <p>{t("privacyPage.s7_2p1")} <a href="mailto:info@holarevi.com">info@holarevi.com</a>.</p>
+          <p>{t("privacyPage.s7_2p2")}</p>
+          <ul>
+            <li>{t("privacyPage.s7_2item1")}</li>
+            <li>{t("privacyPage.s7_2item2")}</li>
+            <li>{t("privacyPage.s7_2item3")}</li>
           </ul>
 
           <hr />
 
-          <h2>10. Children's Privacy</h2>
-          <p>HolaRevi is not intended for children under 16 and does not knowingly collect data from minors.</p>
-          <p>If such data is identified, it will be deleted promptly.</p>
+          <h2>{t("privacyPage.s8Title")}</h2>
+          <p>{t("privacyPage.s8p1")}</p>
+          <ul>
+            <li>{t("privacyPage.s8item1")}</li>
+            <li>{t("privacyPage.s8item2")}</li>
+            <li>{t("privacyPage.s8item3")}</li>
+            <li>{t("privacyPage.s8item4")}</li>
+            <li>{t("privacyPage.s8item5")}</li>
+            <li>{t("privacyPage.s8item6")}</li>
+          </ul>
+          <p>{t("privacyPage.s8p2")} <a href="mailto:info@holarevi.com">info@holarevi.com</a>.</p>
+          <p>{t("privacyPage.s8p3")}</p>
 
           <hr />
 
-          <h2>11. Required Google API Compliance Statement</h2>
+          <h2>{t("privacyPage.s9Title")}</h2>
+          <p>{t("privacyPage.s9p1")}</p>
+          <p>{t("privacyPage.s9p2")}</p>
+          <ul>
+            <li>{t("privacyPage.s9item1")}</li>
+            <li>{t("privacyPage.s9item2")}</li>
+          </ul>
+
+          <hr />
+
+          <h2>{t("privacyPage.s10Title")}</h2>
+          <p>{t("privacyPage.s10p1")}</p>
+          <p>{t("privacyPage.s10p2")}</p>
+
+          <hr />
+
+          <h2>{t("privacyPage.s11Title")}</h2>
           <p>
-            Our use of information received from Google APIs will adhere to the{" "}
+            {t("privacyPage.s11p1")}{" "}
             <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer">
-              Google API Services User Data Policy
+              {t("privacyPage.s11link")}
             </a>
-            , including the Limited Use requirements.
+            {t("privacyPage.s11p2")}
           </p>
-          <p><em>This is required by Google for OAuth verification.</em></p>
+          <p><em>{t("privacyPage.s11note")}</em></p>
 
           <hr />
 
-          <h2>12. Updates to This Privacy Policy</h2>
-          <p>We may modify this Privacy Policy occasionally.</p>
-          <p>Significant changes will be communicated through email or in-app notifications.</p>
+          <h2>{t("privacyPage.s12Title")}</h2>
+          <p>{t("privacyPage.s12p1")}</p>
+          <p>{t("privacyPage.s12p2")}</p>
           <p>
-            The most recent version will always be available at:{" "}
+            {t("privacyPage.s12p3")}{" "}
             <a href="https://holarevi.com/privacy">https://holarevi.com/privacy</a>
           </p>
 
           <hr />
 
-          <h2>13. Contact Us</h2>
-          <p>If you have questions or privacy-related concerns, contact us:</p>
+          <h2>{t("privacyPage.s13Title")}</h2>
+          <p>{t("privacyPage.s13p1")}</p>
           <address className="not-italic">
             <strong>HolaRevi</strong><br />
-            Carrer de Ramon Llull, 495, 08930 Sant Adrià de Besòs, Barcelona, Spain<br />
+            {t("privacyPage.s1address")}<br />
             Email: <a href="mailto:info@holarevi.com">info@holarevi.com</a>
           </address>
         </article>
 
         <footer className="mt-16 pt-8 border-t text-center text-sm text-muted-foreground">
           <div className="flex justify-center gap-6">
-            <Link href="/privacy" className="hover:underline">Privacy Policy</Link>
-            <Link href="/terms" className="hover:underline">Terms of Service</Link>
-            <Link href="/google-permissions" className="hover:underline">Google Permissions</Link>
+            <Link href="/privacy" className="hover:underline">{t("privacyPage.footerPrivacy")}</Link>
+            <Link href="/terms" className="hover:underline">{t("privacyPage.footerTerms")}</Link>
+            <Link href="/google-permissions" className="hover:underline">{t("privacyPage.footerPermissions")}</Link>
           </div>
-          <p className="mt-4">&copy; {new Date().getFullYear()} HolaRevi. All rights reserved.</p>
+          <p className="mt-4">&copy; {new Date().getFullYear()} {t("privacyPage.footerRights")}</p>
         </footer>
       </div>
     </div>

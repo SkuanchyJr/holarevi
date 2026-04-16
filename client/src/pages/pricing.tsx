@@ -41,7 +41,7 @@ export default function Pricing() {
       });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || "Failed to start checkout");
+        throw new Error(data.message || t("common.checkoutError"));
       }
       return data;
     },
@@ -53,7 +53,7 @@ export default function Pricing() {
       }
     },
     onError: (error: Error) => {
-      toast({ title: t("common.error"), description: error.message || "Failed to start checkout", variant: "destructive" });
+      toast({ title: t("common.error"), description: error.message || t("common.checkoutError"), variant: "destructive" });
     },
   });
 

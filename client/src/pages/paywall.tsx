@@ -35,7 +35,7 @@ export default function Paywall() {
       });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || "Failed to start checkout");
+        throw new Error(data.message || t("common.checkoutError"));
       }
       return data;
     },

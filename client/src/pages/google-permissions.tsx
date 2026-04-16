@@ -21,124 +21,122 @@ export default function GooglePermissions() {
           <h1 data-testid="text-page-title">{t("googlePermissions.title")}</h1>
           <p className="text-muted-foreground">{t("googlePermissions.lastUpdated")}</p>
 
-          <p>
-            HolaRevi connects to your Google Business Profile to help you manage and reply to your reviews quickly and consistently using AI. This page explains what data we access, how we use it, and how you stay in control.
-          </p>
+          <p>{t("googlePermissions.intro")}</p>
 
           <hr />
 
-          <h2>1. What Permissions We Request</h2>
-          <p>When you connect your Google account to HolaRevi, we request specific permissions related to your Google Business Profile.</p>
-          <p>We may request permission to:</p>
+          <h2>{t("googlePermissions.s1Title")}</h2>
+          <p>{t("googlePermissions.s1p1")}</p>
+          <p>{t("googlePermissions.s1p2")}</p>
           <ol>
             <li>
-              <strong>View your Google Business Profile information</strong>
+              <strong>{t("googlePermissions.s1item1Title")}</strong>
               <ul>
-                <li>Business name, categories, and public details</li>
-                <li>Locations you manage</li>
+                <li>{t("googlePermissions.s1item1a")}</li>
+                <li>{t("googlePermissions.s1item1b")}</li>
               </ul>
             </li>
             <li>
-              <strong>View your business reviews and existing replies</strong>
+              <strong>{t("googlePermissions.s1item2Title")}</strong>
               <ul>
-                <li>Review text</li>
-                <li>Rating</li>
-                <li>Date of the review</li>
-                <li>Reviewer's display name (as provided by Google)</li>
-                <li>Your past owner responses</li>
+                <li>{t("googlePermissions.s1item2a")}</li>
+                <li>{t("googlePermissions.s1item2b")}</li>
+                <li>{t("googlePermissions.s1item2c")}</li>
+                <li>{t("googlePermissions.s1item2d")}</li>
+                <li>{t("googlePermissions.s1item2e")}</li>
               </ul>
             </li>
             <li>
-              <strong>Create and update replies to reviews on your behalf</strong>
+              <strong>{t("googlePermissions.s1item3Title")}</strong>
               <ul>
-                <li>When you approve a reply inside HolaRevi</li>
-                <li>Or when you enable auto-replies (if you choose to do so)</li>
+                <li>{t("googlePermissions.s1item3a")}</li>
+                <li>{t("googlePermissions.s1item3b")}</li>
               </ul>
             </li>
           </ol>
-          <p><strong>We do not request access to Gmail, Google Drive, Google Calendar, or any other unrelated Google products.</strong></p>
+          <p><strong>{t("googlePermissions.s1note")}</strong></p>
 
           <hr />
 
-          <h2>2. How We Use Your Google Data</h2>
-          <p>HolaRevi uses your Google Business Profile data to:</p>
+          <h2>{t("googlePermissions.s2Title")}</h2>
+          <p>{t("googlePermissions.s2p1")}</p>
           <ul>
-            <li>Display all your reviews in the HolaRevi dashboard</li>
-            <li>Analyze the sentiment and rating of your reviews</li>
-            <li>Generate AI-powered reply suggestions in your chosen tone and language</li>
-            <li>Post replies to reviews when you approve or when auto-replies are enabled</li>
-            <li>Show analytics such as:
+            <li>{t("googlePermissions.s2item1")}</li>
+            <li>{t("googlePermissions.s2item2")}</li>
+            <li>{t("googlePermissions.s2item3")}</li>
+            <li>{t("googlePermissions.s2item4")}</li>
+            <li>{t("googlePermissions.s2item5")}
               <ul>
-                <li>Review volume over time</li>
-                <li>Average rating</li>
-                <li>Response rate and response time</li>
+                <li>{t("googlePermissions.s2item5a")}</li>
+                <li>{t("googlePermissions.s2item5b")}</li>
+                <li>{t("googlePermissions.s2item5c")}</li>
               </ul>
             </li>
           </ul>
-          <p><strong>We only use your Google data to provide the review management features you request. We do not use it for unrelated purposes, and we do not sell your data.</strong></p>
+          <p><strong>{t("googlePermissions.s2note")}</strong></p>
 
           <hr />
 
-          <h2>3. How We Store and Protect Your Data</h2>
-          <p>We may store:</p>
+          <h2>{t("googlePermissions.s3Title")}</h2>
+          <p>{t("googlePermissions.s3p1")}</p>
           <ul>
-            <li>Your connected locations</li>
-            <li>Reviews and replies required to show your history in the dashboard</li>
-            <li>Aggregated analytics about reviews and replies</li>
+            <li>{t("googlePermissions.s3store1")}</li>
+            <li>{t("googlePermissions.s3store2")}</li>
+            <li>{t("googlePermissions.s3store3")}</li>
           </ul>
-          <p>We protect your data by:</p>
+          <p>{t("googlePermissions.s3p2")}</p>
           <ul>
-            <li>Using secure, encrypted HTTPS connections</li>
-            <li>Limiting access to authorized personnel and systems</li>
-            <li>Monitoring access and maintaining logs for security</li>
+            <li>{t("googlePermissions.s3protect1")}</li>
+            <li>{t("googlePermissions.s3protect2")}</li>
+            <li>{t("googlePermissions.s3protect3")}</li>
           </ul>
-          <p>We keep your data only for as long as necessary to provide the Service or as required by law. For more detail, see our <Link href="/privacy">Privacy Policy</Link>.</p>
+          <p>{t("googlePermissions.s3p3")} <Link href="/privacy">{t("googlePermissions.s3privacyLink")}</Link>.</p>
 
           <hr />
 
-          <h2>4. Sharing of Google Data</h2>
-          <p>We may share some data with service providers that help us operate HolaRevi, such as:</p>
+          <h2>{t("googlePermissions.s4Title")}</h2>
+          <p>{t("googlePermissions.s4p1")}</p>
           <ul>
-            <li>Hosting and database providers</li>
-            <li>AI providers for generating reply suggestions</li>
-            <li>Payment processors</li>
-            <li>Analytics and logging tools</li>
+            <li>{t("googlePermissions.s4item1")}</li>
+            <li>{t("googlePermissions.s4item2")}</li>
+            <li>{t("googlePermissions.s4item3")}</li>
+            <li>{t("googlePermissions.s4item4")}</li>
           </ul>
-          <p>These providers are only allowed to use the data to provide their services to us and must protect it appropriately. <strong>We do not sell your Google data or share it with advertisers.</strong></p>
+          <p><strong>{t("googlePermissions.s4note")}</strong></p>
 
           <hr />
 
-          <h2>5. Your Control and How to Disconnect HolaRevi</h2>
-          <p><strong>You remain in full control of your Google account and data.</strong></p>
-          <p>You can:</p>
+          <h2>{t("googlePermissions.s5Title")}</h2>
+          <p><strong>{t("googlePermissions.s5p1")}</strong></p>
+          <p>{t("googlePermissions.s5p2")}</p>
           <ul>
-            <li>Disconnect HolaRevi from your Google account at any time from your Google Account settings under "Security" → "Third-party access", or</li>
-            <li>Contact us at <a href="mailto:info@holarevi.com">info@holarevi.com</a> if you need help disconnecting or deleting stored data</li>
+            <li>{t("googlePermissions.s5can1")}</li>
+            <li>{t("googlePermissions.s5can2")}</li>
           </ul>
-          <p>After you revoke access, HolaRevi will no longer:</p>
+          <p>{t("googlePermissions.s5p3")}</p>
           <ul>
-            <li>Fetch new reviews</li>
-            <li>Post new replies</li>
-            <li>Access your Google Business Profile data going forward</li>
+            <li>{t("googlePermissions.s5revoke1")}</li>
+            <li>{t("googlePermissions.s5revoke2")}</li>
+            <li>{t("googlePermissions.s5revoke3")}</li>
           </ul>
-          <p>You can also request deletion of your account and associated data from our systems, subject to legal and billing requirements.</p>
+          <p>{t("googlePermissions.s5p4")}</p>
 
           <hr />
 
-          <h2>6. Compliance With Google Policies</h2>
-          <p>HolaRevi uses your Google data in line with:</p>
+          <h2>{t("googlePermissions.s6Title")}</h2>
+          <p>{t("googlePermissions.s6p1")}</p>
           <ul>
-            <li>Google API Services User Data Policy</li>
-            <li>Google Business Profile API policies</li>
-            <li>Our own <Link href="/privacy">Privacy Policy</Link></li>
+            <li>{t("googlePermissions.s6item1")}</li>
+            <li>{t("googlePermissions.s6item2")}</li>
+            <li>{t("googlePermissions.s6item3")} <Link href="/privacy">{t("googlePermissions.s3privacyLink")}</Link></li>
           </ul>
-          <p>We only request the minimum permissions needed to provide our core features and manage your reviews.</p>
+          <p>{t("googlePermissions.s6p2")}</p>
 
           <hr />
 
-          <h2>7. Contact</h2>
-          <p>If you have any questions about how HolaRevi uses your Google data or permissions, please contact us:</p>
-          <p><strong>Email:</strong> <a href="mailto:info@holarevi.com">info@holarevi.com</a></p>
+          <h2>{t("googlePermissions.s7Title")}</h2>
+          <p>{t("googlePermissions.s7p1")}</p>
+          <p><strong>{t("googlePermissions.s7email")}</strong> <a href="mailto:info@holarevi.com">info@holarevi.com</a></p>
         </article>
 
         <footer className="mt-16 pt-8 border-t text-center text-sm text-muted-foreground">
