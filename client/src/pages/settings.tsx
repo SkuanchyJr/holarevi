@@ -32,7 +32,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { PageHeader } from "@/components/page-header";
 import { cn } from "@/lib/utils";
-import notificationImage from "@assets/image_1776193840346.png";
+import notificationImage from "@assets/image_1776346833496.png";
 
 function SettingsSection({
   icon,
