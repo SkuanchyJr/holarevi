@@ -479,17 +479,17 @@ export default function Billing() {
                   <div className={cn("h-8 w-8 rounded-lg flex items-center justify-center mb-3", iconBgs[planId])}>
                     {icons[planId]}
                   </div>
-                  <p className="text-sm font-semibold text-foreground mb-0.5">{plan.name}</p>
-                  <p className="text-xs text-muted-foreground mb-3 leading-relaxed">{plan.description}</p>
+                  <p className="text-sm font-semibold text-foreground mb-0.5">{t(`plans.${planId}.name`)}</p>
+                  <p className="text-xs text-muted-foreground mb-3 leading-relaxed">{t(`plans.${planId}.description`)}</p>
                   <div className="mb-3">
                     <span className="text-2xl font-bold text-foreground">€{price}</span>
                     <span className="text-xs text-muted-foreground">/{t("billing.month")}</span>
                   </div>
                   <ul className="space-y-1.5 mb-4 flex-1">
-                    {plan.features.slice(0, 4).map((f, i) => (
+                    {plan.features.slice(0, 4).map((_, i) => (
                       <li key={i} className="flex items-start gap-1.5 text-xs text-muted-foreground">
                         <Check className="h-3 w-3 text-green-500 mt-0.5 shrink-0" />
-                        {f}
+                        {t(`plans.${planId}.features.f${i + 1}`)}
                       </li>
                     ))}
                   </ul>

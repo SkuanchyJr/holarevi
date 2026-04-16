@@ -1604,6 +1604,7 @@
     "footerRights": "HolaRevi. All rights reserved."
   },
   "locationConfig": {
+    "title": "Location Settings",
     "aiVoiceSettings": "AI Voice Settings",
     "toneOfVoice": "Tone of Voice",
     "toneOfVoiceDesc": "The base tone for AI-generated replies",
@@ -1612,6 +1613,100 @@
     "tonePresetDesc": "Use a custom preset with specific instructions for this location",
     "selectPreset": "Select a preset",
     "noPreset": "No preset (use base tone only)",
-    "noPresetsAvailable": "No presets available. Create one in the Brand Tones page."
+    "noPresetsAvailable": "No presets available. Create one in the Brand Tones page.",
+    "automations": "Automations",
+    "autoSync": "Auto-Sync Reviews",
+    "autoSyncDesc": "Automatically sync new reviews from Google",
+    "autoPublish": "Auto-Publish Replies",
+    "autoPublishDesc": "Automatically post AI-generated replies to Google",
+    "publishRules": "Publishing Rules",
+    "reviewTypes": "Review Types",
+    "withComments": "Reviews with comments",
+    "withoutComments": "Reviews without comments",
+    "minStars": "Minimum stars",
+    "minStarsDesc": "Only auto-publish replies for reviews with this rating or higher",
+    "stars": "stars",
+    "language": "Reply Language",
+    "languageDesc": "Language for auto-generated replies",
+    "languageAuto": "Auto-detect",
+    "languageSpanish": "Spanish",
+    "languageEnglish": "English",
+    "languageCatalan": "Catalan",
+    "dangerZone": "Danger Zone",
+    "syncNow": "Sync reviews now",
+    "syncing": "Syncing...",
+    "deleteLocation": "Delete this location",
+    "deleteConfirmTitle": "Delete location?",
+    "deleteConfirmDesc": "This will permanently delete this location and all its reviews and replies. This action cannot be undone.",
+    "deleteConfirmButton": "Delete permanently",
+    "rulesWillPublish": "Will publish",
+    "rulesWithComments": "with comments",
+    "rulesWithoutComments": "without comments",
+    "rulesMinStars": "{stars}+ stars",
+    "rulesAllLanguages": "all languages",
+    "rulesLanguage": "in {language}"
+  },
+  "plans": {
+    "local": {
+      "name": "Local",
+      "description": "Perfect for single-location restaurants.",
+      "features": {
+        "f1": "1 Google location",
+        "f2": "100 AI replies/month",
+        "f3": "Manual or auto-reply",
+        "f4": "Analytics & sentiment",
+        "f5": "1 user",
+        "f6": "1 tone preset",
+        "f7": "Weekly performance report",
+        "f8": "Negative review alerts"
+      }
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "For growing restaurant groups.",
+      "features": {
+        "f1": "Up to 5 locations",
+        "f2": "300 AI replies/month",
+        "f3": "Analytics & sentiment",
+        "f4": "Faster performance",
+        "f5": "Priority reply engine",
+        "f6": "3 users",
+        "f7": "5 tone presets",
+        "f8": "Priority email/WhatsApp support"
+      }
+    },
+    "business": {
+      "name": "Business",
+      "description": "For multi-location chains.",
+      "features": {
+        "f1": "5 locations included",
+        "f2": "+€39/month per extra location",
+        "f3": "1000 AI replies/month",
+        "f4": "Instagram comment & DM auto-replies",
+        "f5": "WhatsApp Business auto-replies",
+        "f6": "TripAdvisor auto-replies",
+        "f7": "Multi-location dashboard",
+        "f8": "Unlimited team members",
+        "f9": "Permission controls",
+        "f10": "SLA & priority support",
+        "f11": "GDPR & compliance tools",
+        "f12": "Custom onboarding",
+        "f13": "Dedicated success manager"
+      }
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "description": "Custom solutions for large organizations.",
+      "features": {
+        "f1": "API access",
+        "f2": "CRM integrations",
+        "f3": "Custom automations",
+        "f4": "Audit logs",
+        "f5": "Advanced reporting",
+        "f6": "SLA",
+        "f7": "Account manager",
+        "f8": "Custom onboarding"
+      }
+    }
   }
 }

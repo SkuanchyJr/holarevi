@@ -94,8 +94,8 @@ export default function Paywall() {
                   <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${planColors[planId]}`}>
                     <Icon className="h-6 w-6" />
                   </div>
-                  <CardTitle className="mt-4">{plan.name}</CardTitle>
-                  <CardDescription>{plan.description}</CardDescription>
+                  <CardTitle className="mt-4">{t(`plans.${planId}.name`)}</CardTitle>
+                  <CardDescription>{t(`plans.${planId}.description`)}</CardDescription>
                   <div className="mt-4">
                     <span className="text-3xl font-bold" data-testid={`text-price-${planId}`}>€{getDisplayPrice(planId)}</span>
                     <span className="text-muted-foreground">{t("paywall.perMonth")}</span>
@@ -103,10 +103,10 @@ export default function Paywall() {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {plan.features.slice(0, 6).map((feature, i) => (
+                    {plan.features.slice(0, 6).map((_, i) => (
                       <li key={i} className="flex items-center gap-2 text-sm">
                         <Check className="h-4 w-4 text-primary" />
-                        {feature}
+                        {t(`plans.${planId}.features.f${i + 1}`)}
                       </li>
                     ))}
                   </ul>

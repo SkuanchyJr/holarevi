@@ -1604,14 +1604,109 @@
     "footerRights": "HolaRevi. Todos los derechos reservados."
   },
   "locationConfig": {
+    "title": "Ajustes de ubicación",
     "aiVoiceSettings": "Ajustes de Voz IA",
     "toneOfVoice": "Tono de Voz",
     "toneOfVoiceDesc": "El tono base para las respuestas generadas por IA",
     "selectTone": "Seleccionar un tono",
     "tonePreset": "Preset de Tono",
-    "tonePresetDesc": "Usa un preset personalizado con instrucciones específicas para este local",
+    "tonePresetDesc": "Usar un preset personalizado con instrucciones específicas para esta ubicación",
     "selectPreset": "Seleccionar un preset",
-    "noPreset": "Sin preset (usar solo tono base)",
-    "noPresetsAvailable": "No hay presets disponibles. Crea uno en la página de Tonos de Marca."
+    "noPreset": "Sin preset (usar solo el tono base)",
+    "noPresetsAvailable": "No hay presets disponibles. Crea uno en la página de Tonos de Marca.",
+    "automations": "Automatizaciones",
+    "autoSync": "Sincronización automática de reseñas",
+    "autoSyncDesc": "Sincronizar automáticamente nuevas reseñas desde Google",
+    "autoPublish": "Publicación automática de respuestas",
+    "autoPublishDesc": "Publicar automáticamente respuestas generadas por IA en Google",
+    "publishRules": "Reglas de publicación",
+    "reviewTypes": "Tipos de reseñas",
+    "withComments": "Reseñas con comentarios",
+    "withoutComments": "Reseñas sin comentarios",
+    "minStars": "Estrellas mínimas",
+    "minStarsDesc": "Solo publicar automáticamente respuestas para reseñas con esta puntuación o superior",
+    "stars": "estrellas",
+    "language": "Idioma de respuesta",
+    "languageDesc": "Idioma para las respuestas generadas automáticamente",
+    "languageAuto": "Detección automática",
+    "languageSpanish": "Español",
+    "languageEnglish": "Inglés",
+    "languageCatalan": "Catalán",
+    "dangerZone": "Zona de peligro",
+    "syncNow": "Sincronizar reseñas ahora",
+    "syncing": "Sincronizando...",
+    "deleteLocation": "Eliminar esta ubicación",
+    "deleteConfirmTitle": "¿Eliminar ubicación?",
+    "deleteConfirmDesc": "Esto eliminará permanentemente esta ubicación y todas sus reseñas y respuestas. Esta acción no se puede deshacer.",
+    "deleteConfirmButton": "Eliminar permanentemente",
+    "rulesWillPublish": "Publicará",
+    "rulesWithComments": "con comentarios",
+    "rulesWithoutComments": "sin comentarios",
+    "rulesMinStars": "{stars}+ estrellas",
+    "rulesAllLanguages": "todos los idiomas",
+    "rulesLanguage": "en {language}"
+  },
+  "plans": {
+    "local": {
+      "name": "Local",
+      "description": "Perfecto para restaurantes con una sola ubicación.",
+      "features": {
+        "f1": "1 ubicación de Google",
+        "f2": "100 respuestas IA/mes",
+        "f3": "Respuesta manual o automática",
+        "f4": "Analíticas y sentimiento",
+        "f5": "1 usuario",
+        "f6": "1 preset de tono",
+        "f7": "Informe de rendimiento semanal",
+        "f8": "Alertas de reseñas negativas"
+      }
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "Para grupos de restaurantes en crecimiento.",
+      "features": {
+        "f1": "Hasta 5 ubicaciones",
+        "f2": "300 respuestas IA/mes",
+        "f3": "Analíticas y sentimiento",
+        "f4": "Rendimiento más rápido",
+        "f5": "Motor de respuestas prioritario",
+        "f6": "3 usuarios",
+        "f7": "5 presets de tono",
+        "f8": "Soporte prioritario email/WhatsApp"
+      }
+    },
+    "business": {
+      "name": "Business",
+      "description": "Para cadenas con múltiples ubicaciones.",
+      "features": {
+        "f1": "5 ubicaciones incluidas",
+        "f2": "+39€/mes por ubicación extra",
+        "f3": "1000 respuestas IA/mes",
+        "f4": "Respuestas auto en comentarios y DMs de Instagram",
+        "f5": "Respuestas auto en WhatsApp Business",
+        "f6": "Respuestas auto en TripAdvisor",
+        "f7": "Panel multi-ubicación",
+        "f8": "Miembros de equipo ilimitados",
+        "f9": "Control de permisos",
+        "f10": "SLA y soporte prioritario",
+        "f11": "Herramientas RGPD y cumplimiento",
+        "f12": "Onboarding personalizado",
+        "f13": "Gestor de éxito dedicado"
+      }
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "description": "Soluciones personalizadas para grandes organizaciones.",
+      "features": {
+        "f1": "Acceso a API",
+        "f2": "Integraciones CRM",
+        "f3": "Automatizaciones personalizadas",
+        "f4": "Registros de auditoría",
+        "f5": "Informes avanzados",
+        "f6": "SLA",
+        "f7": "Gestor de cuenta",
+        "f8": "Onboarding personalizado"
+      }
+    }
   }
 }
