@@ -33,7 +33,7 @@ export default function PrivacyPolicy() {
           <address className="not-italic">
             HolaRevi<br />
             {t("privacyPage.s1address")}<br />
-            Email: <a href="mailto:info@holarevi.com">info@holarevi.com</a>
+            {t("common.email")}: <a href="mailto:info@holarevi.com">info@holarevi.com</a>
           </address>
 
           <hr />
@@ -237,7 +237,7 @@ export default function PrivacyPolicy() {
           <address className="not-italic">
             <strong>HolaRevi</strong><br />
             {t("privacyPage.s1address")}<br />
-            Email: <a href="mailto:info@holarevi.com">info@holarevi.com</a>
+            {t("common.email")}: <a href="mailto:info@holarevi.com">info@holarevi.com</a>
           </address>
         </article>
 

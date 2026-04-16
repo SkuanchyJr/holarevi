@@ -99,7 +99,8 @@
       "jue": "Jue",
       "vie": "Vie",
       "sab": "Sáb"
-    }
+    },
+    "email": "Correo electrónico"
   },
   "sidebar": {
     "totalReviewsLabel": "Reseñas totales",
@@ -1213,7 +1214,11 @@
       "title": "Temas Clave",
       "description": "Temas más mencionados en tus reseñas",
       "mentionedIn": "Mencionado en"
-    }
+    },
+    "langSpanish": "Español",
+    "langCatalan": "Catalán",
+    "langEnglish": "Inglés",
+    "fetchError": "Error al obtener el resumen"
   },
   "tonePresets": {
     "title": "Tonos de Marca",

@@ -99,7 +99,8 @@
       "jue": "Thu",
       "vie": "Fri",
       "sab": "Sat"
-    }
+    },
+    "email": "Email"
   },
   "sidebar": {
     "totalReviewsLabel": "Total Reviews",
@@ -1213,7 +1214,11 @@
       "title": "Key Themes",
       "description": "Most frequently mentioned topics in your reviews",
       "mentionedIn": "Mentioned in"
-    }
+    },
+    "langSpanish": "Spanish",
+    "langCatalan": "Catalan",
+    "langEnglish": "English",
+    "fetchError": "Failed to fetch summary"
   },
   "tonePresets": {
     "title": "Brand Tones",

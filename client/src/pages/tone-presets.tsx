@@ -229,7 +229,7 @@ export default function TonePresets() {
                 <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                   <span className="font-semibold text-sm text-foreground">{preset.name}</span>
                   <span className={cn("text-xs font-medium px-2 py-0.5 rounded-full", STYLE_COLORS[preset.style || "friendly"])}>
-                    {preset.style}
+                    {t(`tonePresets.styles.${preset.style || "friendly"}`)}
                   </span>
                   {preset.isDefault && (
                     <span className="text-xs font-medium bg-muted text-muted-foreground px-2 py-0.5 rounded-full">

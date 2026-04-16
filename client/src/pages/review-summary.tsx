@@ -85,7 +85,7 @@ export default function ReviewSummary() {
       if (selectedRestaurant !== "all") params.set("restaurantId", selectedRestaurant);
       params.set("language", summaryLanguage);
       const response = await fetch(`/api/reviews/summary?${params.toString()}`, { credentials: "include" });
-      if (!response.ok) throw new Error("Failed to fetch summary");
+      if (!response.ok) throw new Error(t("reviewSummary.fetchError"));
       return response.json();
     },
   });
@@ -125,12 +125,12 @@ export default function ReviewSummary() {
   };
 
   const getLanguageLabel = (lang: string) => {
-    switch (lang) {
-      case "es": return "Español";
-      case "ca": return "Català";
-      case "en": return "English";
-      default: return lang.toUpperCase();
-    }
+    const langKeys: Record<string, string> = {
+      es: "reviewSummary.langSpanish",
+      ca: "reviewSummary.langCatalan",
+      en: "reviewSummary.langEnglish",
+    };
+    return langKeys[lang] ? t(langKeys[lang]) : lang.toUpperCase();
   };
 
   if (isLoading) {
