@@ -223,7 +223,7 @@ export class DatabaseStorage implements IStorage {
         has_used_pro_trial AS "hasUsedProTrial",
         onboarding_step AS "onboardingStep",
         onboarding_completed AS "onboardingCompleted",
-        COALESCE(email_language, 'es') AS "emailLanguage",
+        COALESCE("email_language", 'es') AS "emailLanguage",
         created_at AS "createdAt",
         updated_at AS "updatedAt"
       FROM users
