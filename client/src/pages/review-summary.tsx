@@ -219,9 +219,9 @@ export default function ReviewSummary() {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="es">Español</SelectItem>
-            <SelectItem value="ca">Català</SelectItem>
-            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="es">{t("reviewSummary.langSpanish")}</SelectItem>
+            <SelectItem value="ca">{t("reviewSummary.langCatalan")}</SelectItem>
+            <SelectItem value="en">{t("reviewSummary.langEnglish")}</SelectItem>
           </SelectContent>
         </Select>
 
