@@ -473,7 +473,7 @@ export default function Billing() {
                 <div key={planId} className={cn("rounded-xl border p-4 flex flex-col", planId === "pro" ? "border-primary shadow-sm ring-1 ring-primary/20" : "border-border")}>
                   {planId === "pro" && (
                     <div className="text-center mb-3">
-                      <span className="text-xs font-semibold bg-primary text-primary-foreground px-2 py-0.5 rounded-full">{t("billing.mostPopular")}</span>
+                      <span className="text-xs font-semibold bg-primary text-primary-foreground px-2 py-0.5 rounded-full">{t("common.mostPopular")}</span>
                     </div>
                   )}
                   <div className={cn("h-8 w-8 rounded-lg flex items-center justify-center mb-3", iconBgs[planId])}>

@@ -387,7 +387,6 @@
       "alreadyOnPlan": "You are already on this plan.",
       "planChangeError": "Could not change plan. Please try again."
     },
-    "mostPopular": "Most Popular",
     "currentPlan": "Current Plan",
     "processing": "Processing...",
     "selectPlan": "Select Plan",
