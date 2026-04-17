@@ -45,6 +45,7 @@ import {
   CheckCircle2,
   TrendingUp,
   Users,
+  Plus,
 } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 
@@ -66,13 +67,13 @@ interface AffiliateMe {
 interface Lead {
   id: string;
   businessName: string;
-  city: string;
-  category: string;
-  totalReviews: number;
-  unansweredReviews: number;
-  avgRating: number;
-  reviewsPerDay: number;
-  replyPct: number;
+  city?: string | null;
+  category?: string | null;
+  totalReviews?: number | null;
+  unansweredReviews?: number | null;
+  avgRating?: number | string | null;
+  reviewsPerDay?: number | string | null;
+  replyPct?: number | string | null;
   website?: string | null;
 
   address?: string | null;
@@ -119,6 +120,10 @@ export default function AffiliateDashboard() {
   // Notes dialog
   const [notesLead, setNotesLead] = useState<Lead | null>(null);
   const [notesText, setNotesText] = useState("");
+
+  // Add leads dialog
+  const [addOpen, setAddOpen] = useState(false);
+  const [addText, setAddText] = useState("");
 
   // Fetch affiliate session/me
   const { data: me, isLoading: meLoading } = useQuery<AffiliateMe>({
@@ -195,6 +200,29 @@ export default function AffiliateDashboard() {
     },
   });
 
+  const addLeads = useMutation({
+    mutationFn: async (text: string) => {
+      const res = await apiRequest("POST", "/api/affiliate/leads/bulk-text", { text });
+      return res.json();
+    },
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/affiliate/leads"] });
+      setAddOpen(false);
+      setAddText("");
+      toast({
+        title: t("common.success"),
+        description: `${data?.created ?? 0} ${t("affiliate.dashboard.dialogs.add.successDesc")}`,
+      });
+    },
+    onError: (err: any) => {
+      toast({
+        title: t("common.error"),
+        description: err?.message || t("affiliate.dashboard.dialogs.add.error"),
+        variant: "destructive",
+      });
+    },
+  });
+
   const submitSale = useMutation({
     mutationFn: async (payload: {
       leadId: string;
@@ -260,7 +288,11 @@ export default function AffiliateDashboard() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Button onClick={() => setAddOpen(true)} data-testid="button-add-leads">
+              <Plus className="h-4 w-4 mr-2" />
+              {t("affiliate.dashboard.actions.addLeads")}
+            </Button>
             <Button variant="outline" onClick={logout}>
               <LogOut className="h-4 w-4 mr-2" />
               {t("affiliate.dashboard.logout")}
@@ -354,12 +386,12 @@ export default function AffiliateDashboard() {
                             <MapPin className="h-3 w-3" />
                             {lead.city}
                           </span>
-                          <span>{lead.category}</span>
-                          <span>⭐ {lead.avgRating.toFixed(1)}</span>
-                          <span>{lead.totalReviews} {t("affiliate.dashboard.leads.reviews")}</span>
-                          <span>{lead.unansweredReviews} {t("affiliate.dashboard.leads.unanswered")}</span>
-                          <span>{lead.reviewsPerDay.toFixed(1)}{t("affiliate.dashboard.leads.perDay")}</span>
-                          <span>{lead.replyPct.toFixed(0)}% {t("affiliate.dashboard.leads.replied")}</span>
+                          {lead.category && <span>{lead.category}</span>}
+                          {lead.avgRating != null && <span>⭐ {Number(lead.avgRating).toFixed(1)}</span>}
+                          {lead.totalReviews != null && <span>{lead.totalReviews} {t("affiliate.dashboard.leads.reviews")}</span>}
+                          {lead.unansweredReviews != null && <span>{lead.unansweredReviews} {t("affiliate.dashboard.leads.unanswered")}</span>}
+                          {lead.reviewsPerDay != null && <span>{Number(lead.reviewsPerDay).toFixed(1)}{t("affiliate.dashboard.leads.perDay")}</span>}
+                          {lead.replyPct != null && <span>{Number(lead.replyPct).toFixed(0)}% {t("affiliate.dashboard.leads.replied")}</span>}
                         </div>
 
                         <div className="text-sm text-muted-foreground flex flex-wrap gap-4 mt-2">
@@ -459,6 +491,50 @@ export default function AffiliateDashboard() {
           </CardContent>
         </Card>
       </main>
+
+      {/* Add leads dialog */}
+      <Dialog open={addOpen} onOpenChange={(o) => { if (!o) { setAddOpen(false); setAddText(""); } }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("affiliate.dashboard.dialogs.add.title")}</DialogTitle>
+            <DialogDescription>
+              {t("affiliate.dashboard.dialogs.add.description")}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-2">
+            <Label>{t("affiliate.dashboard.dialogs.add.label")}</Label>
+            <Textarea
+              value={addText}
+              onChange={(e) => setAddText(e.target.value)}
+              rows={10}
+              placeholder={
+                "Bar Pepe | Tarragona | 600 111 222 | bar@pepe.com | Cliente recomendado\n" +
+                "Restaurante Luna | Reus | 977 000 000 | hola@luna.es\n" +
+                "Café Central"
+              }
+              data-testid="input-add-leads-text"
+            />
+            <p className="text-xs text-muted-foreground">
+              {t("affiliate.dashboard.dialogs.add.help")}
+            </p>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setAddOpen(false); setAddText(""); }}>
+              {t("affiliate.dashboard.dialogs.add.cancel")}
+            </Button>
+            <Button
+              onClick={() => addLeads.mutate(addText)}
+              disabled={!addText.trim() || addLeads.isPending}
+              data-testid="button-submit-add-leads"
+            >
+              {addLeads.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {t("affiliate.dashboard.dialogs.add.submit")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Notes dialog */}
       <Dialog open={!!notesLead} onOpenChange={(o) => !o && setNotesLead(null)}>

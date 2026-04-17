@@ -1174,7 +1174,8 @@
       },
       "actions": {
         "notes": "Notas",
-        "reportSale": "Informar venta"
+        "reportSale": "Informar venta",
+        "addLeads": "Añadir leads"
       },
       "dialogs": {
         "notes": {
@@ -1185,6 +1186,16 @@
           "saving": "Guardando...",
           "cancel": "Cancelar",
           "success": "Notas actualizadas."
+        },
+        "add": {
+          "title": "Añadir leads",
+          "description": "Pega tus leads en texto plano. Una línea por lead.",
+          "label": "Leads (un lead por línea)",
+          "help": "Formato: Nombre del negocio | Ciudad | Teléfono | Email | Notas. Solo el nombre es obligatorio. Separadores válidos: | tab ;",
+          "submit": "Añadir",
+          "cancel": "Cancelar",
+          "successDesc": "leads añadidos.",
+          "error": "No se pudieron añadir los leads"
         },
         "sale": {
           "title": "Informar venta",

@@ -3979,6 +3979,72 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Affiliate adds leads via plain text (one per line)
+  // Format per line:  Business Name | City | Phone | Email | Notes
+  // Only Business Name is required; other fields are optional.
+  app.post("/api/affiliate/leads/bulk-text", isAffiliateAuthenticated, async (req, res) => {
+    try {
+      const affiliate = await getCurrentAffiliate(req);
+      if (!affiliate || affiliate.status === "paused") {
+        return res.status(403).json({ success: false, message: "Access denied" });
+      }
+
+      const { text } = req.body as { text?: string };
+      if (typeof text !== "string" || !text.trim()) {
+        return res.status(400).json({ success: false, message: "Text is required" });
+      }
+
+      const lines = text
+        .split(/\r?\n/)
+        .map((l) => l.trim())
+        .filter((l) => l.length > 0);
+
+      if (lines.length === 0) {
+        return res.status(400).json({ success: false, message: "No leads found" });
+      }
+
+      const MAX_LEADS = 500;
+      if (lines.length > MAX_LEADS) {
+        return res.status(400).json({
+          success: false,
+          message: `Too many leads. Max ${MAX_LEADS} per request`,
+        });
+      }
+
+      const toInsert = lines
+        .map((line) => {
+          const parts = line.split(/\s*[|\t;]\s*/);
+          const businessName = (parts[0] || "").trim();
+          if (!businessName) return null;
+          const city = (parts[1] || "").trim() || null;
+          const phone = (parts[2] || "").trim() || null;
+          let email: string | null = (parts[3] || "").trim() || null;
+          if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) email = null;
+          const notes = (parts.slice(4).join(" | ") || "").trim() || null;
+          return {
+            affiliateId: affiliate.id,
+            businessName,
+            city,
+            phone,
+            email,
+            notes,
+            status: "pending" as const,
+          };
+        })
+        .filter((l): l is NonNullable<typeof l> => l !== null);
+
+      if (toInsert.length === 0) {
+        return res.status(400).json({ success: false, message: "No valid leads found" });
+      }
+
+      const created = await storage.createAffiliateLeadsBulk(toInsert as any);
+      return res.json({ success: true, created: created.length, leads: created });
+    } catch (error) {
+      console.error("Error creating affiliate leads from text:", error);
+      return res.status(500).json({ success: false, message: "Failed to create leads" });
+    }
+  });
+
   // Create affiliate sale
   app.post("/api/affiliate/sales", isAffiliateAuthenticated, async (req, res) => {
     try {

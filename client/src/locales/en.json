@@ -1174,7 +1174,8 @@
       },
       "actions": {
         "notes": "Notes",
-        "reportSale": "Report sale"
+        "reportSale": "Report sale",
+        "addLeads": "Add leads"
       },
       "dialogs": {
         "notes": {
@@ -1185,6 +1186,16 @@
           "saving": "Saving...",
           "cancel": "Cancel",
           "success": "Notes updated."
+        },
+        "add": {
+          "title": "Add leads",
+          "description": "Paste your leads as plain text. One lead per line.",
+          "label": "Leads (one per line)",
+          "help": "Format: Business Name | City | Phone | Email | Notes. Only the name is required. Valid separators: | tab ;",
+          "submit": "Add",
+          "cancel": "Cancel",
+          "successDesc": "leads added.",
+          "error": "Could not add leads"
         },
         "sale": {
           "title": "Report sale",
