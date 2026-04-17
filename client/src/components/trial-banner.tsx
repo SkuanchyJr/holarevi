@@ -11,16 +11,23 @@ export function TrialBanner() {
   const status = (user as any)?.subscriptionStatus?.trim();
   const trialEndsAt = (user as any)?.trialEndsAt;
   if (status !== "trial" && status !== "trialing") return null;
-  if (!trialEndsAt) return null;
 
-  const diffMs = new Date(trialEndsAt).getTime() - Date.now();
-  if (diffMs <= 0) return null;
-  const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  let daysLeft: number | null = null;
+  if (trialEndsAt) {
+    const diffMs = new Date(trialEndsAt).getTime() - Date.now();
+    if (diffMs <= 0) return null;
+    daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  }
 
-  const message =
-    daysLeft <= 1
-      ? t("billing.trialBannerLastDay")
-      : t("billing.trialBannerActive").replace("{days}", String(daysLeft));
+  let message: string;
+  if (daysLeft !== null && daysLeft <= 1) {
+    message = t("billing.trialBannerLastDay");
+  } else {
+    message = t("billing.trialBannerActive").replace(
+      "{days}",
+      String(daysLeft ?? 3),
+    );
+  }
 
   return (
     <div
