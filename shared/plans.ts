@@ -1,32 +1,50 @@
 export type PlanId = "local" | "pro" | "business" | "enterprise";
-
 export type BillingCycle = "monthly" | "yearly";
 
-export type Plan = {
+export interface PlanLimits {
+  maxLocations: number;
+  maxRepliesPerMonth: number | "unlimited";
+  maxTeamMembers: number | "unlimited";
+  maxTonePresets: number | "unlimited";
+}
+
+export interface PlanFeature {
+  text: string;
+  included: boolean;
+}
+
+export interface PlanPrice {
+  monthly: number;
+  yearly: number;
+  currency: string;
+  stripePriceIds: {
+    monthly: string;
+    yearly: string;
+  };
+}
+
+export interface Plan {
   id: PlanId;
   name: string;
   description: string;
-  price: {
-    monthly: number;
-    yearly: number;
-    currency: string;
-    stripePriceIds: {
-      monthly: string;
-      yearly: string;
-    };
-  };
-  limits: {
-    maxLocations: number | "unlimited";
-    maxRepliesPerMonth: number | "unlimited";
-    maxTeamMembers: number | "unlimited";
-    maxTonePresets: number | "unlimited";
-  };
+  price: PlanPrice;
+  limits: PlanLimits;
   features: string[];
   hasYearly: boolean;
   isCustomPricing: boolean;
   isPopular: boolean;
   trialAllowed: boolean;
   extraLocationPrice?: number;
+}
+
+export const TRIAL_CONFIG = {
+  trialDays: 3, // Local plan trial duration (managed by Stripe)
+  maxTrialReplies: 10, // Limited trial experience
+};
+
+export const PRO_TRIAL_CONFIG = {
+  trialDays: 3, // Pro plan trial duration (2 days)
+  maxTrialReplies: 100, // More generous for Pro trial
 };
 
 export const PLANS: Record<PlanId, Plan> = {
@@ -122,6 +140,8 @@ export const PLANS: Record<PlanId, Plan> = {
       "5 locations included",
       "+€39/month per extra location",
       "1000 AI replies/month",
+      "WhatsApp Business auto-replies",
+      "TripAdvisor auto-replies",
       "Multi-location dashboard",
       "Unlimited team members",
       "Permission controls",
@@ -188,3 +208,72 @@ export function getPlanPrice(
   if (plan.isCustomPricing) return 0;
   return billingCycle === "yearly" ? plan.price.yearly : plan.price.monthly;
 }
+
+export function getPlanMonthlyEquivalent(
+  planId: PlanId,
+  billingCycle: BillingCycle,
+): number {
+  const plan = PLANS[planId];
+  if (plan.isCustomPricing) return 0;
+  if (billingCycle === "yearly") {
+    return Math.round((plan.price.yearly / 12) * 100) / 100;
+  }
+  return plan.price.monthly;
+}
+
+export function getStripePriceId(
+  planId: PlanId,
+  billingCycle: BillingCycle,
+): string {
+  const plan = PLANS[planId];
+
+  if (plan.isCustomPricing) {
+    throw new Error(`Plan ${planId} uses custom pricing - contact sales`);
+  }
+
+  const priceId = plan.price.stripePriceIds[billingCycle];
+
+  if (!priceId || priceId === "") {
+    throw new Error(
+      `No Stripe price ID configured for ${planId} ${billingCycle}`,
+    );
+  }
+
+  if (!priceId.startsWith("price_")) {
+    throw new Error(
+      `Invalid Stripe price ID format for ${planId} ${billingCycle}: ${priceId}`,
+    );
+  }
+
+  return priceId;
+}
+
+export function getPlanLimits(planId: PlanId): PlanLimits {
+  return PLANS[planId].limits;
+}
+
+export function isUnlimited(value: number | "unlimited"): value is "unlimited" {
+  return value === "unlimited";
+}
+
+// Derive planId and billingCycle from a Stripe price ID
+// Returns null if priceId doesn't match any known plan
+export function getPlanFromPriceId(priceId: string): { planId: PlanId; billingCycle: BillingCycle } | null {
+  const planIds: PlanId[] = ["local", "pro", "business", "enterprise"];
+  
+  for (const planId of planIds) {
+    const plan = PLANS[planId];
+    if (plan.isCustomPricing) continue;
+    
+    if (plan.price.stripePriceIds.monthly === priceId) {
+      return { planId, billingCycle: "monthly" };
+    }
+    if (plan.price.stripePriceIds.yearly === priceId) {
+      return { planId, billingCycle: "yearly" };
+    }
+  }
+  
+  return null;
+}
+
+export const YEARLY_DISCOUNT_PERCENT = 20;
