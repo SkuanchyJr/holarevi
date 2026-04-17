@@ -9,7 +9,7 @@ import {
 let isRunning = false;
 
 export function initReviewSyncJob() {
-    cron.schedule("*/5 * * * *", async () => {
+    cron.schedule("*/30 * * * * *", async () => {
         if (isRunning) {
             console.log("[ReviewSync] Sync already running, skipping this cycle");
             return;
@@ -33,7 +33,7 @@ export function initReviewSyncJob() {
             console.log(`[ReviewSync] ${connectedRestaurants.length} restaurants with autoSync enabled`);
 
             const BATCH_SIZE = 5;
-            const BATCH_DELAY_MS = 10000;
+            const BATCH_DELAY_MS = 2000;
 
             let totalSynced = 0;
             let totalReplies = 0;
@@ -81,5 +81,5 @@ export function initReviewSyncJob() {
         }
     });
 
-    console.log("[ReviewSync] Review sync job initialized (scheduled every 5 minutes, only for locations with autoSync enabled)");
+    console.log("[ReviewSync] Review sync job initialized (scheduled every 30 seconds, only for locations with autoSync enabled)");
 }
