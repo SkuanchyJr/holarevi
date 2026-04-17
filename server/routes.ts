@@ -1428,6 +1428,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Resync all connected restaurants for the current user
+  app.post("/api/reviews/resync-all", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const userRestaurants = await storage.getRestaurantsByUserId(userId);
+      const connected = userRestaurants.filter(
+        (r) => r.isConnected && r.googleAccountId && r.googleLocationId,
+      );
+
+      if (connected.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "No connected locations found",
+        });
+      }
+
+      let totalSynced = 0;
+      let totalErrors = 0;
+      let okLocations = 0;
+
+      for (const restaurant of connected) {
+        try {
+          const result = await syncReviewsForRestaurant(restaurant);
+          totalSynced += result.synced || 0;
+          totalErrors += result.errors || 0;
+          okLocations += 1;
+        } catch (err) {
+          console.error(
+            `[ResyncAll] Error syncing restaurant ${restaurant.id}:`,
+            err,
+          );
+          totalErrors += 1;
+        }
+      }
+
+      return res.json({
+        success: true,
+        synced: totalSynced,
+        errors: totalErrors,
+        locations: okLocations,
+        totalLocations: connected.length,
+      });
+    } catch (error) {
+      console.error("Error resyncing all reviews:", error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Failed to resync reviews" });
+    }
+  });
+
   app.post("/api/sync-all-reviews", isAuthenticated, async (req: any, res) => {
     try {
       // Use direct Google API

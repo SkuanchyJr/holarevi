@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -221,6 +221,15 @@ export default function Reviews() {
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
   const [regeneratingReviewId, setRegeneratingReviewId] = useState<string | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [syncCooldown, setSyncCooldown] = useState(0);
+
+  useEffect(() => {
+    if (syncCooldown <= 0) return;
+    const timer = setInterval(() => {
+      setSyncCooldown((s) => (s <= 1 ? 0 : s - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [syncCooldown]);
   const { isLimitReached } = useReplyUsage();
 
   const { data: reviews, isLoading } = useQuery<ReviewWithRestaurant[]>({
@@ -290,20 +299,24 @@ export default function Reviews() {
   });
 
   const handleSyncReviews = async () => {
-    if (!filterRestaurant || filterRestaurant === "all") {
-      toast({ title: t("reviews.toasts.selectRestaurant"), description: t("reviews.toasts.selectRestaurantDesc"), variant: "destructive" });
-      return;
-    }
+    if (isSyncing || syncCooldown > 0) return;
     setIsSyncing(true);
     try {
-      const response = await apiRequest("POST", "/api/reviews/resync", { restaurantId: filterRestaurant });
+      const isAll = !filterRestaurant || filterRestaurant === "all";
+      const response = isAll
+        ? await apiRequest("POST", "/api/reviews/resync-all")
+        : await apiRequest("POST", "/api/reviews/resync", { restaurantId: filterRestaurant });
       const data = await response.json();
       queryClient.invalidateQueries({ queryKey: ["/api/reviews"] });
-      toast({ title: t("reviews.toasts.syncSuccess"), description: t("reviews.toasts.syncSuccessDesc").replace("{count}", String(data.synced || 0)) });
+      toast({
+        title: t("reviews.toasts.syncSuccess"),
+        description: t("reviews.toasts.syncSuccessDesc").replace("{count}", String(data.synced || 0)),
+      });
     } catch {
       toast({ title: t("reviews.toasts.error"), description: t("reviews.toasts.errorSync"), variant: "destructive" });
     } finally {
       setIsSyncing(false);
+      setSyncCooldown(10);
     }
   };
 
@@ -340,11 +353,15 @@ export default function Reviews() {
               variant="outline"
               size="sm"
               onClick={handleSyncReviews}
-              disabled={isSyncing || filterRestaurant === "all"}
+              disabled={isSyncing || syncCooldown > 0}
               data-testid="button-sync-reviews"
             >
               {isSyncing ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="mr-1.5 h-3.5 w-3.5" />}
-              {isSyncing ? t("reviews.syncing") : t("reviews.syncReviews")}
+              {isSyncing
+                ? t("reviews.syncing")
+                : syncCooldown > 0
+                  ? `${t("reviews.syncReviews")} (${syncCooldown}s)`
+                  : t("reviews.syncReviews")}
             </Button>
             {pendingWithoutReplyCount > 0 && (
               <Button
