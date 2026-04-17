@@ -65,20 +65,20 @@ export function ReviewDemo() {
   const reviewTexts = t(`generator.reviews.${businessType}`, { returnObjects: true }) as string[] | string;
   const replyTexts = t(`generator.replies.${businessType}`, { returnObjects: true }) as string[] | string;
   const businessLabels = t("generator.businessTypes", { returnObjects: true }) as Record<BusinessType, string>;
-  const reviewsHeading = t("generator.selectReviewLabel", "Select a review");
-  const generateLabel = t("generator.generateButton", "Generate reply");
-  const typingLabel = t("generator.typingText", "Generating...");
-  const responseTitle = t("generator.responseTitle", "Generated response");
-  const approveLabel = t("generator.approveButton", "Approve");
-  const popupTitle = t("generator.demoPopupTitle", "Ready to post");
-  const popupDescription = t("generator.demoPopupDescription", "This is a demo popup.");
-  const sectionTitle = t("generator.sectionTitle", "Review reply generator");
-  const sectionDescription = t("generator.sectionDescription", "Pick a review and generate a reply.");
-  const businessTypeLabel = t("generator.businessTypeLabel", "Business type");
-  const badgeLabel = t("generator.badge", "AI reply demo");
-  const cardTitle = t("generator.cardTitle", "Reply generator");
-  const timeSavedLabel = t("generator.timeSaved", "Time saved");
-  const timeUnitLabel = t("generator.timeUnit", "min");
+  const reviewsHeading = t("generator.selectReviewLabel");
+  const generateLabel = t("generator.generateButton");
+  const typingLabel = t("generator.typingText");
+  const responseTitle = t("generator.responseTitle");
+  const approveLabel = t("generator.approveButton");
+  const popupTitle = t("generator.demoPopupTitle");
+  const popupDescription = t("generator.demoPopupDescription");
+  const sectionTitle = t("generator.sectionTitle");
+  const sectionDescription = t("generator.sectionDescription");
+  const businessTypeLabel = t("generator.businessTypeLabel");
+  const badgeLabel = t("generator.badge");
+  const cardTitle = t("generator.cardTitle");
+  const timeSavedLabel = t("generator.timeSaved");
+  const timeUnitLabel = t("generator.timeUnit");
   const fallbackReviews = useMemo(
     () => [
       { text: "Great service and fast response.", sentiment: "positive" as const, stars: 5 },
@@ -91,7 +91,8 @@ export function ReviewDemo() {
 
   const reviews: Review[] = useMemo(() => {
     const texts = Array.isArray(reviewTexts) ? reviewTexts : [];
-    return (texts.length ? texts : fallbackReviews.map((review) => review.text)).map((text, index) => ({
+    const source = texts.length ? texts : fallbackReviews.map((review) => review.text);
+    return source.map((text, index) => ({
       text,
       sentiment: index < 2 ? "positive" : "negative",
       stars: index === 0 ? 5 : index === 1 ? 5 : index === 2 ? 2 : 1,
@@ -116,7 +117,7 @@ export function ReviewDemo() {
     setGeneratedReply(null);
 
     setTimeout(() => {
-      const reply = Array.isArray(replyTexts) ? replyTexts[selectedReviewIndex] : "Thanks for your feedback. We appreciate it.";
+      const reply = Array.isArray(replyTexts) ? replyTexts[selectedReviewIndex] : "";
       setGeneratedReply(reply);
       setIsGenerating(false);
       setTimeSaved((prev) => prev + 4);
@@ -144,22 +145,22 @@ export function ReviewDemo() {
         </div>
 
         <div className="mx-auto max-w-2xl">
-              <Card>
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
-                    {cardTitle}
+                {cardTitle}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-                  <div className="overflow-hidden rounded-2xl border">
-                    <img
-                      src={heroScreenshot}
-                      alt="Preview of the application interface"
-                      className="block w-full object-cover"
-                      data-testid="img-reviews-preview"
-                    />
-                  </div>
+              <div className="overflow-hidden rounded-2xl border">
+                <img
+                  src={heroScreenshot}
+                  alt="Preview of the application interface"
+                  className="block w-full object-cover"
+                  data-testid="img-reviews-preview"
+                />
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="business-type">{businessTypeLabel}</Label>
                 <Select
