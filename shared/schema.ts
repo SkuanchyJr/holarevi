@@ -44,6 +44,9 @@ export const users = pgTable("users", {
   onboardingStep: varchar("onboarding_step").default('add_location'),
   onboardingCompleted: boolean("onboarding_completed").default(false),
   emailLanguage: varchar("email_language").default('es'), // es, en
+  emailVerified: boolean("email_verified").default(false),
+  emailVerificationToken: varchar("email_verification_token"),
+  emailVerificationExpiresAt: timestamp("email_verification_expires_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

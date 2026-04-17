@@ -1083,6 +1083,28 @@
       "passwordLength": "La contraseña debe tener al menos 8 caracteres",
       "loginFailed": "Fallo al iniciar sesión",
       "registerFailed": "Fallo al registrarse"
+    },
+    "verify": {
+      "sent": "Te hemos enviado un correo de verificación",
+      "sentDesc": "Revisa la bandeja de entrada de {email} y haz clic en el enlace para activar tu cuenta.",
+      "pendingTitle": "Confirma tu correo para continuar",
+      "pendingDesc": "Hemos enviado un enlace de verificación a {email}. Revisa también la carpeta de spam.",
+      "resendCta": "Reenviar correo de verificación",
+      "resent": "Correo reenviado",
+      "resentDesc": "Si la dirección está registrada y pendiente, recibirás un nuevo enlace en breve.",
+      "needEmail": "Introduce tu correo para reenviar el enlace.",
+      "required": "Verifica tu correo",
+      "requiredDesc": "Para iniciar sesión, primero confirma tu correo con el enlace que te enviamos.",
+      "successTitle": "¡Correo verificado!",
+      "successDesc": "Tu cuenta está activa. Ya puedes iniciar sesión.",
+      "alreadyTitle": "Tu correo ya estaba verificado",
+      "alreadyDesc": "Puedes iniciar sesión con normalidad.",
+      "expiredTitle": "Enlace caducado",
+      "expiredDesc": "El enlace ha expirado. Reenvía un nuevo correo de verificación.",
+      "invalidTitle": "Enlace no válido",
+      "invalidDesc": "El enlace no es válido o ya se utilizó. Solicita un nuevo enlace.",
+      "errorTitle": "No pudimos verificar tu correo",
+      "errorDesc": "Inténtalo de nuevo en unos minutos."
     }
   },
   "notFound": {

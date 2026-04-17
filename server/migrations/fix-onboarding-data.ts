@@ -32,6 +32,34 @@ export async function fixOnboardingData() {
     );
     console.log("[Migration] Ensured email_language column exists");
 
+    await db.execute(
+      sql`DO $$ BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'users' AND column_name = 'email_verified'
+        ) THEN
+          ALTER TABLE users ADD COLUMN email_verified BOOLEAN DEFAULT false;
+        END IF;
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'users' AND column_name = 'email_verification_token'
+        ) THEN
+          ALTER TABLE users ADD COLUMN email_verification_token VARCHAR;
+        END IF;
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'users' AND column_name = 'email_verification_expires_at'
+        ) THEN
+          ALTER TABLE users ADD COLUMN email_verification_expires_at TIMESTAMP;
+        END IF;
+      END $$`
+    );
+    // Pre-existing users are considered verified to avoid locking them out.
+    await db.execute(
+      sql`UPDATE users SET email_verified = true WHERE email_verified IS NULL OR email_verified = false`
+    );
+    console.log("[Migration] Ensured email verification columns exist");
+
     console.log("[Migration] Onboarding data fix complete");
   } catch (error) {
     console.error("[Migration] Onboarding data fix failed:", error);

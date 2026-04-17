@@ -1083,6 +1083,28 @@
       "passwordLength": "Password must be at least 8 characters",
       "loginFailed": "Login Failed",
       "registerFailed": "Registration Failed"
+    },
+    "verify": {
+      "sent": "We've sent you a verification email",
+      "sentDesc": "Check the inbox for {email} and click the link to activate your account.",
+      "pendingTitle": "Confirm your email to continue",
+      "pendingDesc": "We sent a verification link to {email}. Don't forget to check the spam folder.",
+      "resendCta": "Resend verification email",
+      "resent": "Email resent",
+      "resentDesc": "If the address is registered and pending, you'll receive a new link shortly.",
+      "needEmail": "Enter your email to resend the link.",
+      "required": "Verify your email",
+      "requiredDesc": "Please confirm your email with the link we sent you before signing in.",
+      "successTitle": "Email verified!",
+      "successDesc": "Your account is active. You can sign in now.",
+      "alreadyTitle": "Your email was already verified",
+      "alreadyDesc": "You can sign in normally.",
+      "expiredTitle": "Link expired",
+      "expiredDesc": "This link has expired. Please request a new verification email.",
+      "invalidTitle": "Invalid link",
+      "invalidDesc": "This link is invalid or already used. Request a new one.",
+      "errorTitle": "We couldn't verify your email",
+      "errorDesc": "Please try again in a few minutes."
     }
   },
   "notFound": {

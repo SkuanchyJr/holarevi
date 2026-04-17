@@ -39,7 +39,7 @@ export function useAuth() {
   });
 
   const registerMutation = useMutation({
-    mutationFn: async (credentials: { email: string; password: string; firstName: string; lastName: string }) => {
+    mutationFn: async (credentials: { email: string; password: string; firstName: string; lastName: string; language?: string }) => {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -49,10 +49,22 @@ export function useAuth() {
         const err = await res.json();
         throw new Error(err.message || "Failed to register");
       }
-      return res.json();
+      return res.json() as Promise<{ requiresVerification?: boolean; email?: string; message?: string }>;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+  });
+
+  const resendVerificationMutation = useMutation({
+    mutationFn: async (payload: { email: string; language?: string }) => {
+      const res = await fetch("/api/auth/resend-verification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Failed to resend verification");
+      }
+      return res.json();
     },
   });
 
@@ -76,6 +88,7 @@ export function useAuth() {
     isAuthenticated: !!user,
     loginMutation,
     registerMutation,
+    resendVerificationMutation,
     logoutMutation,
   };
 }
