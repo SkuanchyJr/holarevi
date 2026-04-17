@@ -14,6 +14,7 @@ export function generateVerificationToken(): {
 
 function getAppUrl(): string {
   if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
+  if (process.env.NODE_ENV === "production") return "https://holarevi.com";
   const replitDomains = process.env.REPLIT_DOMAINS;
   if (replitDomains) return `https://${replitDomains.split(",")[0]}`;
   return "https://holarevi.com";

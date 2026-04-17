@@ -511,7 +511,7 @@ export default function Billing() {
           <div className="text-center pt-2 border-t border-border">
             <p className="text-xs text-muted-foreground mb-2">{t("billing.needCustom")}</p>
             <Button variant="outline" size="sm" className="h-7 text-xs" asChild>
-              <a href="mailto:hello@holarevi.com?subject=Enterprise%20Plan%20Inquiry">
+              <a href="mailto:info@holarevi.com?subject=Enterprise%20Plan%20Inquiry">
                 <Globe className="mr-1.5 h-3 w-3" />
                 {t("billing.contactEnterprise")}
               </a>

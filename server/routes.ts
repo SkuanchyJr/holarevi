@@ -1,5 +1,11 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
+
+function getPublicBaseUrl(req: Request): string {
+  if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
+  if (process.env.NODE_ENV === "production") return "https://holarevi.com";
+  return `${req.protocol}://${req.get("host")}`;
+}
 import { storage } from "./storage";
 import { db } from "./db";
 import { eq, desc, asc, and, sql, gte, lte, or, isNull } from "drizzle-orm";
@@ -2194,8 +2200,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         payment_method_collection: "always", // Always require card, especially for trials
         line_items: [{ price: finalPriceId, quantity: 1 }],
         mode: "subscription",
-        success_url: `${req.protocol}://${req.get("host")}/${user.onboardingCompleted ? 'billing?success=true' : 'onboarding'}`,
-        cancel_url: `${req.protocol}://${req.get("host")}/${user.onboardingCompleted ? 'billing?canceled=true' : 'select-plan'}`,
+        success_url: `${getPublicBaseUrl(req)}/${user.onboardingCompleted ? 'billing?success=true' : 'onboarding'}`,
+        cancel_url: `${getPublicBaseUrl(req)}/${user.onboardingCompleted ? 'billing?canceled=true' : 'select-plan'}`,
         metadata: {
           userId,
           planId: finalPlanId || null,
@@ -2256,7 +2262,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const stripe = await getUncachableStripeClient();
       const session = await stripe.billingPortal.sessions.create({
         customer: user.stripeCustomerId,
-        return_url: `${req.protocol}://${req.get("host")}/billing`,
+        return_url: `${getPublicBaseUrl(req)}/billing`,
       });
 
       res.json({ url: session.url });
@@ -3667,8 +3673,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           quantity: 1,
         }],
         mode: "subscription",
-        success_url: `${req.protocol}://${req.get("host")}/billing?extra_location=success`,
-        cancel_url: `${req.protocol}://${req.get("host")}/billing?extra_location=canceled`,
+        success_url: `${getPublicBaseUrl(req)}/billing?extra_location=success`,
+        cancel_url: `${getPublicBaseUrl(req)}/billing?extra_location=canceled`,
         metadata: {
           userId,
           type: "extra_location",
