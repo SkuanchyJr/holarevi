@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import heroScreenshot from "@assets/image_1776428145024.png";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -65,39 +64,15 @@ export function ReviewDemo() {
   const reviewTexts = t(`generator.reviews.${businessType}`, { returnObjects: true }) as string[] | string;
   const replyTexts = t(`generator.replies.${businessType}`, { returnObjects: true }) as string[] | string;
   const businessLabels = t("generator.businessTypes", { returnObjects: true }) as Record<BusinessType, string>;
-  const reviewsHeading = t("generator.selectReviewLabel");
-  const generateLabel = t("generator.generateButton");
-  const typingLabel = t("generator.typingText");
-  const responseTitle = t("generator.responseTitle");
-  const approveLabel = t("generator.approveButton");
-  const popupTitle = t("generator.demoPopupTitle");
-  const popupDescription = t("generator.demoPopupDescription");
-  const sectionTitle = t("generator.sectionTitle");
-  const sectionDescription = t("generator.sectionDescription");
-  const businessTypeLabel = t("generator.businessTypeLabel");
-  const badgeLabel = t("generator.badge");
-  const cardTitle = t("generator.cardTitle");
-  const timeSavedLabel = t("generator.timeSaved");
-  const timeUnitLabel = t("generator.timeUnit");
-  const fallbackReviews = useMemo(
-    () => [
-      { text: "Great service and fast response.", sentiment: "positive" as const, stars: 5 },
-      { text: "Really happy with the experience.", sentiment: "positive" as const, stars: 5 },
-      { text: "Okay, but the waiting time was long.", sentiment: "negative" as const, stars: 2 },
-      { text: "Not what I expected.", sentiment: "negative" as const, stars: 1 },
-    ],
-    [t],
-  );
 
   const reviews: Review[] = useMemo(() => {
     const texts = Array.isArray(reviewTexts) ? reviewTexts : [];
-    const source = texts.length ? texts : fallbackReviews.map((review) => review.text);
-    return source.map((text, index) => ({
+    return texts.map((text, index) => ({
       text,
       sentiment: index < 2 ? "positive" : "negative",
       stars: index === 0 ? 5 : index === 1 ? 5 : index === 2 ? 2 : 1,
     }));
-  }, [fallbackReviews, reviewTexts]);
+  }, [reviewTexts]);
 
   const handleBusinessTypeChange = (value: BusinessType) => {
     setBusinessType(value);
@@ -134,13 +109,13 @@ export function ReviewDemo() {
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center mb-12">
           <Badge variant="secondary" className="mb-4">
-            {badgeLabel}
+            {t("generator.badge")}
           </Badge>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            {sectionTitle}
+            {t("generator.sectionTitle")}
           </h2>
           <p className="mt-4 text-muted-foreground">
-            {sectionDescription}
+            {t("generator.sectionDescription")}
           </p>
         </div>
 
@@ -149,20 +124,12 @@ export function ReviewDemo() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
-                {cardTitle}
+                {t("generator.cardTitle")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="overflow-hidden rounded-2xl border">
-                <img
-                  src={heroScreenshot}
-                  alt="Preview of the application interface"
-                  className="block w-full object-cover"
-                  data-testid="img-reviews-preview"
-                />
-              </div>
               <div className="space-y-2">
-                <Label htmlFor="business-type">{businessTypeLabel}</Label>
+                <Label htmlFor="business-type">{t("generator.businessTypeLabel")}</Label>
                 <Select
                   value={businessType}
                   onValueChange={(val) =>
@@ -191,7 +158,7 @@ export function ReviewDemo() {
               </div>
 
               <div className="space-y-3">
-                <Label>{reviewsHeading}</Label>
+                <Label>{t("generator.selectReviewLabel")}</Label>
                 <div className="grid gap-3">
                   {reviews.map((review, index) => (
                     <Card
@@ -224,11 +191,11 @@ export function ReviewDemo() {
                 data-testid="button-generate"
               >
                 {isGenerating ? (
-                  <span className="animate-pulse">{typingLabel}</span>
+                  <span className="animate-pulse">{t("generator.typingText")}</span>
                 ) : (
                   <>
                     <Sparkles className="mr-2 h-4 w-4" />
-                    {generateLabel}
+                    {t("generator.generateButton")}
                   </>
                 )}
               </Button>
@@ -236,7 +203,7 @@ export function ReviewDemo() {
               {generatedReply && (
                 <div className="space-y-4 pt-4 border-t">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-lg">{responseTitle}</h3>
+                    <h3 className="font-semibold text-lg">{t("generator.responseTitle")}</h3>
                     <Badge variant="secondary">
                       {businessLabels[businessType]}
                     </Badge>
@@ -258,13 +225,13 @@ export function ReviewDemo() {
                       data-testid="button-approve"
                     >
                       <Check className="mr-2 h-4 w-4" />
-                      {approveLabel}
+                      {t("generator.approveButton")}
                     </Button>
                     <span
                       className="text-sm text-muted-foreground"
                       data-testid="text-time-saved"
                     >
-                      {timeSavedLabel} <strong>{timeSaved}</strong> {timeUnitLabel}
+                      {t("generator.timeSaved")} <strong>{timeSaved}</strong> {t("generator.timeUnit")}
                     </span>
                   </div>
                 </div>
@@ -278,9 +245,9 @@ export function ReviewDemo() {
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
           <Card className="max-w-sm mx-4 animate-in fade-in zoom-in duration-200">
             <CardContent className="pt-6 text-center">
-              <p className="text-lg font-medium">{popupTitle}</p>
+              <p className="text-lg font-medium">{t("generator.demoPopupTitle")}</p>
               <p className="text-muted-foreground mt-2">
-                {popupDescription}
+                {t("generator.demoPopupDescription")}
               </p>
             </CardContent>
           </Card>
