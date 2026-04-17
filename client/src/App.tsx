@@ -56,6 +56,7 @@ import BlogPostPage from "@/pages/blog-post";
 import Pricing from "@/pages/pricing";
 import NotFound from "@/pages/not-found";
 import { InvitationPopup } from "@/components/invitation-popup";
+import { TrialBanner } from "@/components/trial-banner";
 
 function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const style = {
@@ -78,6 +79,7 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
               <ThemeToggle />
             </div>
           </header>
+          <TrialBanner />
           <main className="flex-1 overflow-auto">{children}</main>
         </div>
       </div>

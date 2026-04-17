@@ -10,7 +10,6 @@ import {
   TrendingUp,
   Star,
   ArrowRight,
-  AlertTriangle,
   Zap,
   Store,
 } from "lucide-react";
@@ -19,7 +18,6 @@ import type { DashboardStats, ReviewWithRestaurant } from "@shared/schema";
 import { useLanguage } from "@/lib/i18n";
 import { cleanGoogleTranslationLabels } from "@/lib/utils";
 import { ReplyUsageCard } from "@/components/reply-usage-card";
-import { useAuth } from "@/hooks/useAuth";
 import { StatCard } from "@/components/stat-card";
 import { EmptyState } from "@/components/empty-state";
 import { PageHeader } from "@/components/page-header";
@@ -88,7 +86,6 @@ function MiniReviewCard({ review }: { review: ReviewWithRestaurant }) {
 
 export default function Dashboard() {
   const { t } = useLanguage();
-  const { user } = useAuth();
 
   const { data: stats, isLoading: statsLoading } = useQuery<DashboardStats>({
     queryKey: ["/api/dashboard/stats"],
@@ -110,50 +107,10 @@ export default function Dashboard() {
       )
       .slice(0, 5) || [];
 
-  const getTrialDaysLeft = () => {
-    if (!user?.trialEndsAt) return null;
-    const status = user.subscriptionStatus;
-    if (status !== "trial" && status !== "trialing") return null;
-    const trialEnd = new Date(user.trialEndsAt);
-    const now = new Date();
-    const diffMs = trialEnd.getTime() - now.getTime();
-    if (diffMs <= 0) return 0;
-    return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-  };
-
-  const trialDaysLeft = getTrialDaysLeft();
   const pendingCount = reviews?.filter(r => r.replyStatus === "pending").length || 0;
 
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto">
-
-      {/* Trial Banner */}
-      {trialDaysLeft !== null && trialDaysLeft > 0 && (
-        <div className={cn(
-          "flex items-center justify-between gap-3 px-4 py-3 rounded-xl border text-sm",
-          trialDaysLeft <= 2
-            ? "bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-900"
-            : "bg-blue-50 border-blue-200 dark:bg-blue-950/30 dark:border-blue-900"
-        )} data-testid="dashboard-trial-banner">
-          <div className="flex items-center gap-2">
-            {trialDaysLeft <= 2
-              ? <AlertTriangle className="h-4 w-4 text-amber-600" />
-              : <Clock className="h-4 w-4 text-blue-600" />
-            }
-            <p className={cn(
-              "font-medium",
-              trialDaysLeft <= 2 ? "text-amber-800 dark:text-amber-400" : "text-blue-800 dark:text-blue-400"
-            )}>
-              {trialDaysLeft <= 2
-                ? t("billing.trialWarning").replace("{days}", String(trialDaysLeft))
-                : t("billing.trialDaysLeft").replace("{days}", String(trialDaysLeft))}
-            </p>
-          </div>
-          <Button variant="outline" size="sm" className="h-7 text-xs" asChild>
-            <Link href="/billing">{t("billing.manageSubscription")}</Link>
-          </Button>
-        </div>
-      )}
 
       {/* Page Header */}
       <PageHeader
