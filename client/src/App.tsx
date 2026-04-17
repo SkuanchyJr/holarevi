@@ -211,7 +211,7 @@ function LocalizedRouter({ currentPath }: { currentPath: string }) {
 
   // Onboarding is no longer forced — users see a Tutorial button in the sidebar instead
 
-  if (currentPath === "/select-plan") return <Redirect to={`/${language}/`} />;
+  if (currentPath === "/select-plan" || currentPath === "/auth") return <Redirect to={`/${language}/`} />;
 
   const isTrialExpired = (subscriptionStatus === "trial" || subscriptionStatus === "trialing") &&
     user?.trialEndsAt && new Date(user.trialEndsAt) < new Date();
