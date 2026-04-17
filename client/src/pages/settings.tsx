@@ -43,6 +43,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { PageHeader } from "@/components/page-header";
 import { cn } from "@/lib/utils";
+import notificationImage from "@assets/image_1776346833496.png";
 
 function SettingsSection({
   icon,
@@ -282,6 +283,12 @@ export default function Settings() {
         <div className="overflow-hidden rounded-lg border border-border bg-background">
           <div className="border-b border-border px-4 py-3">
             <div className="flex items-start gap-3">
+              <img
+                src={notificationImage}
+                alt={t("settings.notifications.title")}
+                className="h-12 w-12 rounded-md object-cover"
+                data-testid="img-notifications-preview"
+              />
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-foreground">
                   {t("settings.notifications.receiveEmails")}
