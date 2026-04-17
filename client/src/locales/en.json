@@ -661,9 +661,9 @@
         "f2": "Unlimited auto-responses",
         "f3": "Respond to old reviews",
         "f4": "Auto or review mode",
-        "f5": "Analytics & sentiment",
-        "f6": "1 user",
-        "f7": "Brand tone & templates"
+        "f5": "1 user",
+        "f6": "Brand tone & templates",
+        "f7": "AI executive summary, emails, etc."
       },
       "pro": {
         "name": "Pro",
@@ -674,7 +674,8 @@
         "f3": "Per-location control",
         "f4": "Priority for new features",
         "f5": "Up to 3 users",
-        "f6": "Priority support"
+        "f6": "Priority support",
+        "f7": "AI executive summary, emails, etc."
       },
       "business": {
         "name": "Business",
@@ -685,7 +686,8 @@
         "f2": "Advanced multi-location dashboard",
         "f3": "Team & collaboration",
         "f4": "Roles & permissions",
-        "f5": "Advanced SLA & support"
+        "f5": "Advanced SLA & support",
+        "f6": "AI executive summary, emails, etc."
       },
       "enterprise": {
         "name": "Enterprise",
@@ -694,7 +696,8 @@
         "f1": "API & Integrations",
         "f2": "CRM connection",
         "f3": "Advanced reporting",
-        "f4": "Dedicated account manager"
+        "f4": "Dedicated account manager",
+        "f5": "AI executive summary, emails, etc."
       }
     },
     "testimonials": {
@@ -1664,11 +1667,11 @@
         "f1": "1 Google location",
         "f2": "100 AI replies/month",
         "f3": "Manual or auto-reply",
-        "f4": "Analytics & sentiment",
-        "f5": "1 user",
-        "f6": "1 tone preset",
-        "f7": "Weekly performance report",
-        "f8": "Negative review alerts"
+        "f4": "1 user",
+        "f5": "1 tone preset",
+        "f6": "Weekly performance report",
+        "f7": "Negative review alerts",
+        "f8": "AI executive summary, emails, etc."
       }
     },
     "pro": {
@@ -1682,7 +1685,8 @@
         "f5": "Priority reply engine",
         "f6": "3 users",
         "f7": "5 tone presets",
-        "f8": "Priority email/WhatsApp support"
+        "f8": "Priority email/WhatsApp support",
+        "f9": "AI executive summary, emails, etc."
       }
     },
     "business": {
@@ -1692,16 +1696,16 @@
         "f1": "5 locations included",
         "f2": "+€39/month per extra location",
         "f3": "1000 AI replies/month",
-        "f4": "Instagram comment & DM auto-replies",
-        "f5": "WhatsApp Business auto-replies",
-        "f6": "TripAdvisor auto-replies",
-        "f7": "Multi-location dashboard",
-        "f8": "Unlimited team members",
-        "f9": "Permission controls",
-        "f10": "SLA & priority support",
-        "f11": "GDPR & compliance tools",
-        "f12": "Custom onboarding",
-        "f13": "Dedicated success manager"
+        "f4": "WhatsApp Business auto-replies",
+        "f5": "TripAdvisor auto-replies",
+        "f6": "Multi-location dashboard",
+        "f7": "Unlimited team members",
+        "f8": "Permission controls",
+        "f9": "SLA & priority support",
+        "f10": "GDPR & compliance tools",
+        "f11": "Custom onboarding",
+        "f12": "Dedicated success manager",
+        "f13": "AI executive summary, emails, etc."
       }
     },
     "enterprise": {
@@ -1715,7 +1719,8 @@
         "f5": "Advanced reporting",
         "f6": "SLA",
         "f7": "Account manager",
-        "f8": "Custom onboarding"
+        "f8": "Custom onboarding",
+        "f9": "AI executive summary, emails, etc."
       }
     }
   }

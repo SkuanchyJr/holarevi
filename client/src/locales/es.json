@@ -661,9 +661,9 @@
         "f2": "Respuestas automáticas ilimitadas",
         "f3": "Responder reseñas antiguas",
         "f4": "Modo automático o revisión",
-        "f5": "Analítica y sentimiento",
-        "f6": "1 usuario",
-        "f7": "Plantillas y tono de marca"
+        "f5": "1 usuario",
+        "f6": "Plantillas y tono de marca",
+        "f7": "Resumen ejecutivo con IA, emails, etc."
       },
       "pro": {
         "name": "Pro",
@@ -674,7 +674,8 @@
         "f3": "Control por ubicación",
         "f4": "Prioridad en nuevas funciones",
         "f5": "Hasta 3 usuarios",
-        "f6": "Soporte prioritario"
+        "f6": "Soporte prioritario",
+        "f7": "Resumen ejecutivo con IA, emails, etc."
       },
       "business": {
         "name": "Business",
@@ -685,7 +686,8 @@
         "f2": "Panel avanzado multi-ubicación",
         "f3": "Equipo y colaboración",
         "f4": "Roles y permisos",
-        "f5": "SLA y soporte avanzado"
+        "f5": "SLA y soporte avanzado",
+        "f6": "Resumen ejecutivo con IA, emails, etc."
       },
       "enterprise": {
         "name": "Enterprise",
@@ -694,7 +696,8 @@
         "f1": "API e integraciones",
         "f2": "Conexión con CRM",
         "f3": "Reporting avanzado",
-        "f4": "Account manager dedicado"
+        "f4": "Account manager dedicado",
+        "f5": "Resumen ejecutivo con IA, emails, etc."
       }
     },
     "testimonials": {
@@ -1664,11 +1667,11 @@
         "f1": "1 ubicación de Google",
         "f2": "100 respuestas IA/mes",
         "f3": "Respuesta manual o automática",
-        "f4": "Analíticas y sentimiento",
-        "f5": "1 usuario",
-        "f6": "1 preset de tono",
-        "f7": "Informe de rendimiento semanal",
-        "f8": "Alertas de reseñas negativas"
+        "f4": "1 usuario",
+        "f5": "1 preset de tono",
+        "f6": "Informe de rendimiento semanal",
+        "f7": "Alertas de reseñas negativas",
+        "f8": "Resumen ejecutivo con IA, emails, etc."
       }
     },
     "pro": {
@@ -1682,7 +1685,8 @@
         "f5": "Motor de respuestas prioritario",
         "f6": "3 usuarios",
         "f7": "5 presets de tono",
-        "f8": "Soporte prioritario email/WhatsApp"
+        "f8": "Soporte prioritario email/WhatsApp",
+        "f9": "Resumen ejecutivo con IA, emails, etc."
       }
     },
     "business": {
@@ -1692,16 +1696,16 @@
         "f1": "5 ubicaciones incluidas",
         "f2": "+39€/mes por ubicación extra",
         "f3": "1000 respuestas IA/mes",
-        "f4": "Respuestas auto en comentarios y DMs de Instagram",
-        "f5": "Respuestas auto en WhatsApp Business",
-        "f6": "Respuestas auto en TripAdvisor",
-        "f7": "Panel multi-ubicación",
-        "f8": "Miembros de equipo ilimitados",
-        "f9": "Control de permisos",
-        "f10": "SLA y soporte prioritario",
-        "f11": "Herramientas RGPD y cumplimiento",
-        "f12": "Onboarding personalizado",
-        "f13": "Gestor de éxito dedicado"
+        "f4": "Respuestas auto en WhatsApp Business",
+        "f5": "Respuestas auto en TripAdvisor",
+        "f6": "Panel multi-ubicación",
+        "f7": "Miembros de equipo ilimitados",
+        "f8": "Control de permisos",
+        "f9": "SLA y soporte prioritario",
+        "f10": "Herramientas RGPD y cumplimiento",
+        "f11": "Onboarding personalizado",
+        "f12": "Gestor de éxito dedicado",
+        "f13": "Resumen ejecutivo con IA, emails, etc."
       }
     },
     "enterprise": {
@@ -1715,7 +1719,8 @@
         "f5": "Informes avanzados",
         "f6": "SLA",
         "f7": "Gestor de cuenta",
-        "f8": "Onboarding personalizado"
+        "f8": "Onboarding personalizado",
+        "f9": "Resumen ejecutivo con IA, emails, etc."
       }
     }
   }
