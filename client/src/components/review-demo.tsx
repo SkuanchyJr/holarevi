@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -61,18 +61,15 @@ export function ReviewDemo() {
   const [timeSaved, setTimeSaved] = useState(0);
 
   // Cast since we know the structure in the JSON
-  const reviewTexts = t(`generator.reviews.${businessType}`, { returnObjects: true }) as string[] | string;
-  const replyTexts = t(`generator.replies.${businessType}`, { returnObjects: true }) as string[] | string;
+  const reviewTexts = t(`generator.reviews.${businessType}`, { returnObjects: true }) as string[];
+  const replyTexts = t(`generator.replies.${businessType}`, { returnObjects: true }) as string[];
   const businessLabels = t("generator.businessTypes", { returnObjects: true }) as Record<BusinessType, string>;
 
-  const reviews: Review[] = useMemo(() => {
-    const texts = Array.isArray(reviewTexts) ? reviewTexts : [];
-    return texts.map((text, index) => ({
-      text,
-      sentiment: index < 2 ? "positive" : "negative",
-      stars: index === 0 ? 5 : index === 1 ? 5 : index === 2 ? 2 : 1,
-    }));
-  }, [reviewTexts]);
+  const reviews: Review[] = reviewTexts.map((text, index) => ({
+    text,
+    sentiment: index < 2 ? "positive" : "negative",
+    stars: index === 0 ? 5 : index === 1 ? 5 : index === 2 ? 2 : 1,
+  }));
 
   const handleBusinessTypeChange = (value: BusinessType) => {
     setBusinessType(value);
@@ -92,7 +89,7 @@ export function ReviewDemo() {
     setGeneratedReply(null);
 
     setTimeout(() => {
-      const reply = Array.isArray(replyTexts) ? replyTexts[selectedReviewIndex] : "";
+      const reply = replyTexts[selectedReviewIndex];
       setGeneratedReply(reply);
       setIsGenerating(false);
       setTimeSaved((prev) => prev + 4);
