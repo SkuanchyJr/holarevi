@@ -1074,6 +1074,7 @@
     "lastName": "Last Name",
     "email": "Email",
     "password": "Password",
+    "confirmPassword": "Confirm password",
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "noAccount": "Don't have an account? ",
@@ -1081,6 +1082,7 @@
     "error": {
       "fillFields": "Please fill in all fields",
       "passwordLength": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords don't match",
       "loginFailed": "Login Failed",
       "registerFailed": "Registration Failed"
     },

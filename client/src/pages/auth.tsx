@@ -30,6 +30,7 @@ export default function AuthPage() {
     const [formData, setFormData] = useState({
         email: queryEmail || "",
         password: "",
+        confirmPassword: "",
         firstName: "",
         lastName: "",
     });
@@ -82,6 +83,10 @@ export default function AuthPage() {
             }
             if (formData.password.length < 8) {
                 toast({ title: t("common.error"), description: t("auth.error.passwordLength"), variant: "destructive" });
+                return;
+            }
+            if (formData.password !== formData.confirmPassword) {
+                toast({ title: t("common.error"), description: t("auth.error.passwordMismatch"), variant: "destructive" });
                 return;
             }
             registerMutation.mutate(
@@ -261,6 +266,29 @@ export default function AuthPage() {
                                 data-testid="input-password"
                             />
                         </div>
+                        {!isLogin && (
+                            <div className="space-y-2">
+                                <Label htmlFor="confirmPassword">{t("auth.confirmPassword")}</Label>
+                                <Input
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    type="password"
+                                    value={formData.confirmPassword}
+                                    onChange={handleChange}
+                                    disabled={isPending}
+                                    data-testid="input-confirm-password"
+                                />
+                                {formData.confirmPassword.length > 0 &&
+                                    formData.password !== formData.confirmPassword && (
+                                        <p
+                                            className="text-xs text-rose-600 dark:text-rose-400"
+                                            data-testid="text-password-mismatch"
+                                        >
+                                            {t("auth.error.passwordMismatch")}
+                                        </p>
+                                    )}
+                            </div>
+                        )}
 
                         <Button className="w-full" type="submit" disabled={isPending} data-testid="button-auth-submit">
                             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
