@@ -29,11 +29,6 @@ export type Plan = {
   extraLocationPrice?: number;
 };
 
-export const TRIAL_CONFIG = {
-  trialDays: 7,
-  maxTrialReplies: 7,
-} as const;
-
 export const PLANS: Record<PlanId, Plan> = {
   local: {
     id: "local",
@@ -183,27 +178,6 @@ export const PLAN_IDS: PlanId[] = ["local", "pro", "business", "enterprise"];
 
 export function getPlan(planId: PlanId): Plan {
   return PLANS[planId];
-}
-
-export function getPlanLimits(planId: PlanId): Plan["limits"] {
-  return PLANS[planId].limits;
-}
-
-export function isUnlimited(value: number | "unlimited"): value is "unlimited" {
-  return value === "unlimited";
-}
-
-export function getStripePriceId(planId: PlanId, billingCycle: BillingCycle): string {
-  return PLANS[planId].price.stripePriceIds[billingCycle];
-}
-
-export function getPlanFromPriceId(priceId: string): { planId: PlanId; billingCycle: BillingCycle } | null {
-  for (const planId of PLAN_IDS) {
-    const plan = PLANS[planId];
-    if (plan.price.stripePriceIds.monthly === priceId) return { planId, billingCycle: "monthly" };
-    if (plan.price.stripePriceIds.yearly === priceId) return { planId, billingCycle: "yearly" };
-  }
-  return null;
 }
 
 export function getPlanPrice(
