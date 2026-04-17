@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import heroScreenshot from "@assets/image_1776428145024.png";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -64,15 +65,24 @@ export function ReviewDemo() {
   const reviewTexts = t(`generator.reviews.${businessType}`, { returnObjects: true }) as string[] | string;
   const replyTexts = t(`generator.replies.${businessType}`, { returnObjects: true }) as string[] | string;
   const businessLabels = t("generator.businessTypes", { returnObjects: true }) as Record<BusinessType, string>;
+  const fallbackReviews = useMemo(
+    () => [
+      { text: t("reviews.demo.fallbackReview1"), sentiment: "positive" as const, stars: 5 },
+      { text: t("reviews.demo.fallbackReview2"), sentiment: "positive" as const, stars: 5 },
+      { text: t("reviews.demo.fallbackReview3"), sentiment: "negative" as const, stars: 2 },
+      { text: t("reviews.demo.fallbackReview4"), sentiment: "negative" as const, stars: 1 },
+    ],
+    [t],
+  );
 
   const reviews: Review[] = useMemo(() => {
     const texts = Array.isArray(reviewTexts) ? reviewTexts : [];
-    return texts.map((text, index) => ({
+    return (texts.length ? texts : fallbackReviews.map((review) => review.text)).map((text, index) => ({
       text,
       sentiment: index < 2 ? "positive" : "negative",
       stars: index === 0 ? 5 : index === 1 ? 5 : index === 2 ? 2 : 1,
     }));
-  }, [reviewTexts]);
+  }, [fallbackReviews, reviewTexts]);
 
   const handleBusinessTypeChange = (value: BusinessType) => {
     setBusinessType(value);
@@ -92,7 +102,7 @@ export function ReviewDemo() {
     setGeneratedReply(null);
 
     setTimeout(() => {
-      const reply = Array.isArray(replyTexts) ? replyTexts[selectedReviewIndex] : "";
+      const reply = Array.isArray(replyTexts) ? replyTexts[selectedReviewIndex] : t("reviews.demo.fallbackReply");
       setGeneratedReply(reply);
       setIsGenerating(false);
       setTimeSaved((prev) => prev + 4);
@@ -120,7 +130,7 @@ export function ReviewDemo() {
         </div>
 
         <div className="mx-auto max-w-2xl">
-          <Card>
+              <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
@@ -128,6 +138,14 @@ export function ReviewDemo() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
+                  <div className="overflow-hidden rounded-2xl border">
+                    <img
+                      src={heroScreenshot}
+                      alt="Preview of the application interface"
+                      className="block w-full object-cover"
+                      data-testid="img-reviews-preview"
+                    />
+                  </div>
               <div className="space-y-2">
                 <Label htmlFor="business-type">{t("generator.businessTypeLabel")}</Label>
                 <Select
