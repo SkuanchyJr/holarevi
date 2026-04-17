@@ -155,20 +155,34 @@ export function AppSidebar() {
   return (
     <Sidebar>
       {/* Logo */}
-      <SidebarHeader className="px-4 py-4 border-b border-sidebar-border">
+      <SidebarHeader className="px-3 py-3 border-b border-sidebar-border">
         <Link href={`/${language}/`}>
-          <div className="flex items-center gap-2.5 cursor-pointer group">
-            <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center shrink-0 shadow-sm">
+          <div
+            className={cn(
+              "flex items-center cursor-pointer",
+              isCollapsed ? "justify-center" : "px-1"
+            )}
+            data-testid="link-sidebar-logo"
+          >
+            {isCollapsed ? (
               <img
                 src="/favicon.png"
                 alt="HolaRevi"
-                className="h-5 w-5 rounded"
+                className="h-7 w-7 rounded"
               />
-            </div>
-            {!isCollapsed && (
-              <span className="font-semibold text-sm text-foreground tracking-tight">
-                HolaRevi
-              </span>
+            ) : (
+              <>
+                <img
+                  src="/holarevi-dark.png"
+                  alt="HolaRevi"
+                  className="h-9 w-auto block dark:hidden object-contain"
+                />
+                <img
+                  src="/holarevi-light.png"
+                  alt="HolaRevi"
+                  className="h-9 w-auto hidden dark:block object-contain"
+                />
+              </>
             )}
           </div>
         </Link>
