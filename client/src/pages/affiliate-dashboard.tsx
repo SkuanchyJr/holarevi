@@ -46,6 +46,7 @@ import {
   TrendingUp,
   Users,
   Plus,
+  FlaskConical,
 } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 
@@ -154,6 +155,29 @@ export default function AffiliateDashboard() {
     } catch {}
     setLocation(`/${language}/affiliate/login`);
   };
+
+  const launchDemo = useMutation({
+    mutationFn: async () => {
+      const res = await fetch("/api/affiliate/demo/launch", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to launch demo");
+      return res.json();
+    },
+    onSuccess: () => {
+      // Force /api/auth/user refetch on next mount and navigate to product.
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      window.location.href = `/${language}/`;
+    },
+    onError: () => {
+      toast({
+        title: t("common.error"),
+        description: t("demo.launchError"),
+        variant: "destructive",
+      });
+    },
+  });
 
   const updateStatus = useMutation({
     mutationFn: async (payload: { leadId: string; status: LeadStatus }) => {
@@ -289,6 +313,19 @@ export default function AffiliateDashboard() {
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              onClick={() => launchDemo.mutate()}
+              disabled={launchDemo.isPending}
+              data-testid="button-launch-demo"
+            >
+              {launchDemo.isPending ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <FlaskConical className="h-4 w-4 mr-2" />
+              )}
+              {t("demo.launchButton")}
+            </Button>
             <Button onClick={() => setAddOpen(true)} data-testid="button-add-leads">
               <Plus className="h-4 w-4 mr-2" />
               {t("affiliate.dashboard.actions.addLeads")}

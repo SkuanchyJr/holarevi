@@ -11,6 +11,7 @@ import { db } from "./db";
 import { eq, desc, asc, and, sql, gte, lte, or, isNull } from "drizzle-orm";
 import { reviews, restaurants } from "@shared/schema";
 import { setupAuth, isAuthenticated } from "./auth";
+import { ensureDemoEnvironment, DEMO_USER_EMAIL, isDemoEmail } from "./affiliateDemo";
 import { setupGoogleAuth } from "./googleAuth";
 import { getUncachableStripeClient, getStripePublishableKey } from "./stripeClient";
 import { onboardingRouter } from "./onboarding";
@@ -294,6 +295,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Redirect legacy /api/login GET requests to the frontend auth page
   app.get("/api/login", (_req, res) => {
     res.redirect(302, "/es/auth");
+  });
+
+  // Block sensitive actions (Stripe, Google connect, billing, profile mutations)
+  // for the affiliate demo user so demos can't accidentally charge or change
+  // anything in the underlying account.
+  app.use((req, res, next) => {
+    if (!req.session?.isDemo) return next();
+    const path = req.path;
+    const isSensitive =
+      path.startsWith("/api/billing") ||
+      path.startsWith("/api/stripe") ||
+      path.startsWith("/api/google/connect") ||
+      path.startsWith("/api/google/disconnect") ||
+      path.startsWith("/api/sync-all-reviews") ||
+      path.startsWith("/api/team") ||
+      (req.method === "POST" && path === "/api/restaurants") ||
+      (req.method === "PATCH" && path === "/api/auth/user") ||
+      (req.method === "DELETE" && path.startsWith("/api/restaurants"));
+    if (isSensitive) {
+      return res.status(403).json({
+        message: "Action not available in demo mode",
+        demoBlocked: true,
+      });
+    }
+    next();
   });
 
   // Google OAuth routes
@@ -3954,6 +3980,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching affiliate:", error);
       return res.status(500).json({ success: false, message: "Failed to fetch affiliate" });
+    }
+  });
+
+  // ============================
+  // AFFILIATE PRODUCT DEMO
+  // Allow affiliates to launch into a fully-functional demo of the
+  // HolaRevi product (real OpenAI replies, seeded reviews) so they can
+  // pitch the product to potential clients.
+  // ============================
+  app.post("/api/affiliate/demo/launch", isAffiliateAuthenticated, async (req, res) => {
+    try {
+      const { user: demoUser } = await ensureDemoEnvironment();
+      const affiliateId = (req as any).affiliateId as string;
+
+      // Switch the regular user session to the demo account.
+      req.session.userId = demoUser.id;
+      req.session.isDemo = true;
+      req.session.affiliateIdForDemo = affiliateId;
+
+      req.session.save((err) => {
+        if (err) {
+          console.error("Failed to save demo session:", err);
+          return res.status(500).json({ success: false, message: "Failed to start demo" });
+        }
+        return res.json({ success: true });
+      });
+    } catch (error) {
+      console.error("Affiliate demo launch error:", error);
+      return res.status(500).json({ success: false, message: "Failed to start demo" });
+    }
+  });
+
+  // Reset the demo back to the seeded reviews (deletes any AI replies
+  // generated during a previous demo session). Only the affiliate that
+  // launched the demo (or any authenticated affiliate) can reset.
+  app.post("/api/affiliate/demo/reset", isAffiliateAuthenticated, async (req, res) => {
+    try {
+      const demoUser = await storage.getUserByEmail(DEMO_USER_EMAIL);
+      if (demoUser) {
+        const demoRestaurants = await db
+          .select({ id: restaurants.id })
+          .from(restaurants)
+          .where(eq(restaurants.userId, demoUser.id));
+        for (const r of demoRestaurants) {
+          await db.delete(reviews).where(eq(reviews.restaurantId, r.id));
+        }
+      }
+      const fresh = await ensureDemoEnvironment();
+      return res.json({ success: true, restaurantId: fresh.restaurant.id });
+    } catch (error) {
+      console.error("Affiliate demo reset error:", error);
+      return res.status(500).json({ success: false, message: "Failed to reset demo" });
     }
   });
 

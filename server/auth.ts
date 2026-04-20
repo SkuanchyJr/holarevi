@@ -4,6 +4,8 @@ import session from "express-session";
 declare module "express-session" {
     interface SessionData {
         userId: string;
+        isDemo?: boolean;
+        affiliateIdForDemo?: string;
     }
 }
 import connectPg from "connect-pg-simple";
@@ -193,6 +195,8 @@ export async function setupAuth(app: Express) {
             }
 
             req.session.userId = user.id;
+            req.session.isDemo = false;
+            req.session.affiliateIdForDemo = undefined;
             return res.json({
                 message: "Login successful",
                 user: { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName },
@@ -229,6 +233,8 @@ export async function setupAuth(app: Express) {
         if (safeUser.subscriptionStatus) {
             (safeUser as Record<string, unknown>).subscriptionStatus = safeUser.subscriptionStatus.trim();
         }
+
+        (safeUser as Record<string, unknown>).isDemo = !!req.session.isDemo;
 
         return res.json(safeUser);
     });

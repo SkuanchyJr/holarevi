@@ -1850,5 +1850,16 @@
     "deleteError": "No se ha podido eliminar el código QR.",
     "copied": "Enlace copiado",
     "copiedDesc": "El enlace del QR se ha copiado al portapapeles."
+  },
+  "demo": {
+    "launchButton": "Abrir demo del producto",
+    "launchError": "No se pudo iniciar la demo",
+    "bannerMessage": "Estás navegando una demo de HolaRevi. Las respuestas se generan con IA real, pero no se publican en Google.",
+    "exit": "Salir de la demo",
+    "reset": "Reiniciar demo",
+    "resetDone": "Demo reiniciada",
+    "resetDoneDesc": "Las reseñas se han restaurado a los valores iniciales.",
+    "resetError": "No se pudo reiniciar la demo",
+    "blockedAction": "Acción no disponible en modo demo"
   }
 }
