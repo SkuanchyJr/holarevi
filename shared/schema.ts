@@ -167,6 +167,17 @@ export const affiliates = pgTable("affiliates", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Affiliate sessions table - persists affiliate logins across server restarts
+export const affiliateSessions = pgTable("affiliate_sessions", {
+  token: varchar("token").primaryKey(),
+  affiliateId: varchar("affiliate_id").notNull().references(() => affiliates.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+}, (table) => [
+  index("idx_affiliate_sessions_affiliate").on(table.affiliateId),
+  index("idx_affiliate_sessions_expires").on(table.expiresAt),
+]);
+
 // Affiliate leads table
 export const affiliateLeads = pgTable("affiliate_leads", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),

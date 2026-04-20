@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
@@ -127,16 +127,22 @@ export default function AffiliateDashboard() {
   const [addText, setAddText] = useState("");
 
   // Fetch affiliate session/me
-  const { data: me, isLoading: meLoading } = useQuery<AffiliateMe>({
+  const { data: me, isLoading: meLoading, error: meError } = useQuery<AffiliateMe>({
     queryKey: ["/api/affiliate/me"],
     retry: false,
   });
 
-  // If backend returns 401, we’ll redirect once we implement it.
-  // For now this is harmless.
+  // If the affiliate session expired (e.g. server restarted), bounce to login.
+  useEffect(() => {
+    if (meError && /401|unauth/i.test(String((meError as any)?.message || ""))) {
+      setLocation(`/${language}/affiliate/login`);
+    }
+  }, [meError, language, setLocation]);
+
   const { data: leads, isLoading: leadsLoading } = useQuery<Lead[]>({
     queryKey: ["/api/affiliate/leads"],
     retry: false,
+    enabled: !!me,
   });
 
   const stats = useMemo(() => {

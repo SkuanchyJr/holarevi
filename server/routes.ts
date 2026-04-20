@@ -9,7 +9,7 @@ function getPublicBaseUrl(req: Request): string {
 import { storage } from "./storage";
 import { db } from "./db";
 import { eq, desc, asc, and, sql, gte, lte, or, isNull } from "drizzle-orm";
-import { reviews, restaurants } from "@shared/schema";
+import { reviews, restaurants, affiliateSessions as affiliateSessionsTable } from "@shared/schema";
 import { setupAuth, isAuthenticated } from "./auth";
 import { ensureDemoEnvironment, DEMO_USER_EMAIL, isDemoEmail } from "./affiliateDemo";
 import { setupGoogleAuth } from "./googleAuth";
@@ -3862,26 +3862,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ============================
 
   // Affiliate session management (in-memory like admin sessions)
-  const affiliateSessions = new Map<string, { affiliateId: string; createdAt: number }>();
+  const AFFILIATE_SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-  // Affiliate authentication middleware
-  function isAffiliateAuthenticated(req: Request, res: Response, next: NextFunction) {
+  // Affiliate authentication middleware (DB-backed so sessions survive restarts)
+  async function isAffiliateAuthenticated(req: Request, res: Response, next: NextFunction) {
     const token = req.cookies?.affiliate_token;
-
-    if (!token || !affiliateSessions.has(token)) {
+    if (!token) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
-
-    const session = affiliateSessions.get(token);
-    const maxAge = 24 * 60 * 60 * 1000; // 24 hours
-    if (session && Date.now() - session.createdAt > maxAge) {
-      affiliateSessions.delete(token);
-      return res.status(401).json({ success: false, message: "Session expired" });
+    try {
+      const [row] = await db
+        .select()
+        .from(affiliateSessionsTable)
+        .where(eq(affiliateSessionsTable.token, token));
+      if (!row) {
+        return res.status(401).json({ success: false, message: "Unauthorized" });
+      }
+      if (row.expiresAt.getTime() < Date.now()) {
+        await db.delete(affiliateSessionsTable).where(eq(affiliateSessionsTable.token, token));
+        return res.status(401).json({ success: false, message: "Session expired" });
+      }
+      (req as any).affiliateId = row.affiliateId;
+      next();
+    } catch (err) {
+      console.error("Affiliate auth error:", err);
+      return res.status(500).json({ success: false, message: "Auth check failed" });
     }
-
-    // Attach affiliate info to request
-    (req as any).affiliateId = session!.affiliateId;
-    next();
   }
 
   // Helper to get current affiliate from request
@@ -3917,15 +3923,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ success: false, message: "Account paused. Contact administrator." });
       }
 
-      // Create session token
+      // Create session token (persisted in DB)
       const token = generateToken();
-      affiliateSessions.set(token, { affiliateId: affiliate.id, createdAt: Date.now() });
+      const now = new Date();
+      await db.insert(affiliateSessionsTable).values({
+        token,
+        affiliateId: affiliate.id,
+        createdAt: now,
+        expiresAt: new Date(now.getTime() + AFFILIATE_SESSION_TTL_MS),
+      });
 
       const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
       res.cookie('affiliate_token', token, {
         httpOnly: true,
         secure: isSecure,
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: AFFILIATE_SESSION_TTL_MS,
         sameSite: 'lax'
       });
 
@@ -3947,10 +3959,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Affiliate logout
-  app.post("/api/affiliate/logout", (req, res) => {
+  app.post("/api/affiliate/logout", async (req, res) => {
     const token = req.cookies?.affiliate_token;
     if (token) {
-      affiliateSessions.delete(token);
+      try {
+        await db.delete(affiliateSessionsTable).where(eq(affiliateSessionsTable.token, token));
+      } catch {}
     }
     res.clearCookie('affiliate_token');
     return res.json({ success: true, message: "Logged out" });
