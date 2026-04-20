@@ -1860,6 +1860,20 @@
     "resetDone": "Demo reset",
     "resetDoneDesc": "Reviews have been restored to their initial values.",
     "resetError": "Could not reset the demo",
-    "blockedAction": "Action not available in demo mode"
+    "blockedAction": "Action not available in demo mode",
+    "addReview": "Add review",
+    "addReviewTitle": "Add a custom review",
+    "addReviewDesc": "Create a custom review to show the prospect how the AI replies. The review will be added to the demo restaurant.",
+    "addReviewDone": "Review added",
+    "addReviewDoneDesc": "You can now see how the AI replies to it in the reviews list.",
+    "addReviewError": "Could not add the review",
+    "reviewerName": "Customer name",
+    "reviewerNamePlaceholder": "e.g. Marta López",
+    "rating": "Rating",
+    "reviewLanguage": "Language",
+    "reviewText": "Review text",
+    "reviewTextPlaceholder": "Write the review the way a real customer would leave it...",
+    "submitReview": "Add review",
+    "cancel": "Cancel"
   }
 }

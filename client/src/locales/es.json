@@ -1860,6 +1860,20 @@
     "resetDone": "Demo reiniciada",
     "resetDoneDesc": "Las reseñas se han restaurado a los valores iniciales.",
     "resetError": "No se pudo reiniciar la demo",
-    "blockedAction": "Acción no disponible en modo demo"
+    "blockedAction": "Acción no disponible en modo demo",
+    "addReview": "Añadir reseña",
+    "addReviewTitle": "Añadir reseña personalizada",
+    "addReviewDesc": "Crea una reseña a medida para mostrar al cliente cómo responde la IA. La reseña se añadirá al restaurante de la demo.",
+    "addReviewDone": "Reseña añadida",
+    "addReviewDoneDesc": "Ya puedes ver cómo la IA la responde en la lista de reseñas.",
+    "addReviewError": "No se pudo añadir la reseña",
+    "reviewerName": "Nombre del cliente",
+    "reviewerNamePlaceholder": "Ej. Marta López",
+    "rating": "Puntuación",
+    "reviewLanguage": "Idioma",
+    "reviewText": "Texto de la reseña",
+    "reviewTextPlaceholder": "Escribe la reseña tal y como la dejaría un cliente real...",
+    "submitReview": "Añadir reseña",
+    "cancel": "Cancelar"
   }
 }

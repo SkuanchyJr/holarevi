@@ -4026,6 +4026,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Add a custom review to the demo restaurant so affiliates can show
+  // prospects how the AI replies to any kind of review they want.
+  app.post("/api/affiliate/demo/review", async (req, res) => {
+    try {
+      if (!req.session?.isDemo) {
+        return res.status(403).json({ success: false, message: "Not in demo mode" });
+      }
+      const demoUser = await storage.getUserByEmail(DEMO_USER_EMAIL);
+      if (!demoUser) {
+        return res.status(500).json({ success: false, message: "Demo not initialized" });
+      }
+      const [demoRestaurant] = await db
+        .select()
+        .from(restaurants)
+        .where(eq(restaurants.userId, demoUser.id))
+        .limit(1);
+      if (!demoRestaurant) {
+        return res.status(500).json({ success: false, message: "Demo restaurant missing" });
+      }
+
+      const { reviewerName, rating, comment, language } = req.body || {};
+      const ratingNum = Number(rating);
+      if (!comment || typeof comment !== "string" || comment.trim().length < 3) {
+        return res.status(400).json({ success: false, message: "Review text required" });
+      }
+      if (!Number.isFinite(ratingNum) || ratingNum < 1 || ratingNum > 5) {
+        return res.status(400).json({ success: false, message: "Rating must be 1-5" });
+      }
+      const lang = ["es", "en", "ca"].includes(language) ? language : "es";
+      const sentiment =
+        ratingNum >= 4 ? "positive" : ratingNum <= 2 ? "negative" : "neutral";
+      const safeName =
+        (typeof reviewerName === "string" && reviewerName.trim()) || "Cliente Demo";
+
+      const [created] = await db
+        .insert(reviews)
+        .values({
+          restaurantId: demoRestaurant.id,
+          googleReviewId: `demo-custom-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          reviewerName: safeName.slice(0, 120),
+          reviewerPhotoUrl: null,
+          rating: ratingNum,
+          comment: comment.trim().slice(0, 2000),
+          language: lang,
+          sentiment,
+          generatedReply: null,
+          postedReply: null,
+          replyStatus: "pending",
+          reviewedAt: new Date(),
+          repliedAt: null,
+        } as any)
+        .returning();
+
+      return res.json({ success: true, review: created });
+    } catch (error) {
+      console.error("Affiliate demo add-review error:", error);
+      return res.status(500).json({ success: false, message: "Failed to add review" });
+    }
+  });
+
   // Reset the demo back to the seeded reviews (deletes any AI replies
   // generated during a previous demo session). Only the affiliate that
   // launched the demo (or any authenticated affiliate) can reset.
