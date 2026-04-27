@@ -142,6 +142,11 @@ export default function TermsOfService() {
             <li>{t("termsPage.s11item2")}</li>
           </ul>
           <p>{t("termsPage.s11p2")}</p>
+          <ul>
+            <li>{t("termsPage.s11item3")}</li>
+            <li>{t("termsPage.s11item4")}</li>
+            <li>{t("termsPage.s11item5")}</li>
+          </ul>
 
           <hr />
 
@@ -152,6 +157,7 @@ export default function TermsOfService() {
             <li>{t("termsPage.s12item2")}</li>
             <li>{t("termsPage.s12item3")}</li>
           </ul>
+          <p>{t("termsPage.s12p2")}</p>
 
           <hr />
 
@@ -163,6 +169,11 @@ export default function TermsOfService() {
             <li>{t("termsPage.s13item2")}</li>
             <li>{t("termsPage.s13item3")}</li>
             <li>{t("termsPage.s13item4")}</li>
+            <li>{t("termsPage.s13item5")}</li>
+            <li>{t("termsPage.s13item6")}</li>
+            <li>{t("termsPage.s13item7")}</li>
+            <li>{t("termsPage.s13item8")}</li>
+            <li>{t("termsPage.s13item9")}</li>
           </ul>
           <p>{t("termsPage.s13p3")}</p>
 
@@ -170,6 +181,12 @@ export default function TermsOfService() {
 
           <h2>{t("termsPage.s14Title")}</h2>
           <p>{t("termsPage.s14p1")}</p>
+          <ul>
+            <li>{t("termsPage.s14item1")}</li>
+            <li>{t("termsPage.s14item2")}</li>
+            <li>{t("termsPage.s14item3")}</li>
+            <li>{t("termsPage.s14item4")}</li>
+          </ul>
           <p>{t("termsPage.s14p2")}</p>
 
           <hr />
@@ -177,12 +194,43 @@ export default function TermsOfService() {
           <h2>{t("termsPage.s15Title")}</h2>
           <p>{t("termsPage.s15p1")}</p>
           <p>{t("termsPage.s15p2")}</p>
+          <ul>
+            <li>{t("termsPage.s15item1")}</li>
+            <li>{t("termsPage.s15item2")}</li>
+            <li>{t("termsPage.s15item3")}</li>
+            <li>{t("termsPage.s15item4")}</li>
+          </ul>
+          <p>{t("termsPage.s15p3")}</p>
 
           <hr />
 
           <h2>{t("termsPage.s16Title")}</h2>
           <p>{t("termsPage.s16p1")}</p>
-          <p><strong>{t("termsPage.s16email")}</strong> <a href="mailto:info@holarevi.com">info@holarevi.com</a></p>
+          <p>{t("termsPage.s16p2")}</p>
+
+          <hr />
+
+          <h2>{t("termsPage.s17Title")}</h2>
+          <p>{t("termsPage.s17p1")}</p>
+          <p>{t("termsPage.s17p2")}</p>
+
+          <hr />
+
+          <h2>{t("termsPage.s18Title")}</h2>
+          <p>{t("termsPage.s18p1")}</p>
+          <p>{t("termsPage.s18p2")}</p>
+          <p>{t("termsPage.s18p3")}</p>
+
+          <hr />
+
+          <h2>{t("termsPage.s19Title")}</h2>
+          <p>{t("termsPage.s19p1")}</p>
+          <p><strong>{t("termsPage.s19email")}</strong> <a href="mailto:info@holarevi.com">info@holarevi.com</a></p>
+
+          <hr />
+
+          <h2>{t("termsPage.s20Title")}</h2>
+          <p>{t("termsPage.s20p1")}</p>
         </article>
 
         <footer className="mt-16 pt-8 border-t text-center text-sm text-muted-foreground">

@@ -120,6 +120,7 @@ export default function PrivacyPolicy() {
             <li>{t("privacyPage.s4item3")}</li>
             <li>{t("privacyPage.s4item4")}</li>
             <li>{t("privacyPage.s4item5")}</li>
+            <li>{t("privacyPage.s4item6")}</li>
           </ul>
           <p><strong>{t("privacyPage.s4legal")}</strong></p>
 
@@ -166,6 +167,7 @@ export default function PrivacyPolicy() {
           <ul>
             <li>{t("privacyPage.s7_1item1")}</li>
             <li>{t("privacyPage.s7_1item2")}</li>
+            <li>{t("privacyPage.s7_1item3")}</li>
           </ul>
 
           <h3>{t("privacyPage.s7_2Title")}</h3>
