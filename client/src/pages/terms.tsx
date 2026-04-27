@@ -152,18 +152,12 @@ export default function TermsOfService() {
 
           <h2>{t("termsPage.s12Title")}</h2>
           <p>{t("termsPage.s12p1")}</p>
-          <ul>
-            <li>{t("termsPage.s12item1")}</li>
-            <li>{t("termsPage.s12item2")}</li>
-            <li>{t("termsPage.s12item3")}</li>
-          </ul>
           <p>{t("termsPage.s12p2")}</p>
 
           <hr />
 
           <h2>{t("termsPage.s13Title")}</h2>
           <p>{t("termsPage.s13p1")}</p>
-          <p>{t("termsPage.s13p2")}</p>
           <ul>
             <li>{t("termsPage.s13item1")}</li>
             <li>{t("termsPage.s13item2")}</li>
@@ -175,6 +169,7 @@ export default function TermsOfService() {
             <li>{t("termsPage.s13item8")}</li>
             <li>{t("termsPage.s13item9")}</li>
           </ul>
+          <p>{t("termsPage.s13p2")}</p>
           <p>{t("termsPage.s13p3")}</p>
 
           <hr />
@@ -187,7 +182,6 @@ export default function TermsOfService() {
             <li>{t("termsPage.s14item3")}</li>
             <li>{t("termsPage.s14item4")}</li>
           </ul>
-          <p>{t("termsPage.s14p2")}</p>
 
           <hr />
 
