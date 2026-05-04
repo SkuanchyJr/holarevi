@@ -550,6 +550,83 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/admin/regenerate-missing-replies", isAdminAuthenticated, async (req, res) => {
+    try {
+      const { restaurantId } = req.body;
+      if (!restaurantId) {
+        return res.status(400).json({ success: false, message: "restaurantId is required" });
+      }
+
+      const restaurant = await storage.getRestaurant(restaurantId);
+      if (!restaurant) {
+        return res.status(404).json({ success: false, message: "Restaurant not found" });
+      }
+
+      const user = await storage.getUser(restaurant.userId);
+      if (!user) {
+        return res.status(404).json({ success: false, message: "User not found for restaurant" });
+      }
+
+      const allReviews = await storage.getReviewsByRestaurantId(restaurantId);
+      const pendingReviews = allReviews.filter(
+        (r) => !r.generatedReply && r.replyStatus === "pending"
+      );
+
+      if (pendingReviews.length === 0) {
+        return res.json({ success: true, message: "No reviews need AI replies", generated: 0 });
+      }
+
+      let customInstructions: string | undefined;
+      let toneStyle = restaurant.toneOfVoice || "friendly";
+      if (restaurant.tonePresetId) {
+        const tonePreset = await storage.getTonePreset(restaurant.tonePresetId);
+        if (tonePreset && tonePreset.userId === restaurant.userId) {
+          customInstructions = tonePreset.instructions || undefined;
+          toneStyle = tonePreset.style || toneStyle;
+        }
+      }
+
+      let generated = 0;
+      let errors = 0;
+
+      for (const review of pendingReviews) {
+        try {
+          const aiReply = await generateReviewReply({
+            reviewerName: review.reviewerName || "Customer",
+            rating: review.rating,
+            comment: review.comment || "",
+            restaurantName: restaurant.name,
+            toneOfVoice: toneStyle,
+            customInstructions,
+          });
+
+          await storage.updateReview(review.id, {
+            generatedReply: aiReply.reply,
+            language: aiReply.language,
+            sentiment: aiReply.sentiment,
+          });
+
+          generated++;
+          console.log(`[Admin] Generated AI reply for review ${review.id} (${generated}/${pendingReviews.length})`);
+        } catch (err) {
+          console.error(`[Admin] Failed to generate reply for review ${review.id}:`, err);
+          errors++;
+        }
+      }
+
+      return res.json({
+        success: true,
+        message: `Generated ${generated} AI replies (${errors} errors)`,
+        generated,
+        errors,
+        total: pendingReviews.length,
+      });
+    } catch (error) {
+      console.error("Error regenerating missing replies:", error);
+      return res.status(500).json({ success: false, message: "Failed to regenerate replies" });
+    }
+  });
+
   // Admin promo codes routes
   app.get("/api/admin/promo-codes", isAdminAuthenticated, async (req, res) => {
     try {

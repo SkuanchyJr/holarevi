@@ -450,12 +450,6 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant, options?:
         }
       }
 
-      if (isAutoSync && !restaurant.autoPostEnabled) {
-        console.log(`${logPrefix} autoPostEnabled is OFF for ${restaurant.name}, skipping AI reply generation (review saved as pending)`);
-        synced++;
-        continue;
-      }
-
       try {
         // Check plan limits before generating AI reply
         const user = await storage.getUser(restaurant.userId);
@@ -516,8 +510,8 @@ export async function syncReviewsForRestaurant(restaurant: Restaurant, options?:
           console.log(`${logPrefix} Auto-publishing reply for review: ${savedReview.id}`);
           const posted = await postReplyToGoogle(restaurant, savedReview.id, aiReply.reply);
           if (posted) repliesPosted++;
-        } else if (restaurant.autoPostEnabled) {
-          console.log(`${logPrefix} Review ${savedReview.id} didn't match auto-publish rules, saving as draft`);
+        } else {
+          console.log(`${logPrefix} Review ${savedReview.id} saved as draft (autoPost: ${restaurant.autoPostEnabled}, auto-publish rules not met)`);
         }
       } catch (aiError) {
         console.error(`${logPrefix} AI reply generation failed:`, aiError);
