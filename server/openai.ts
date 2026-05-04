@@ -20,28 +20,28 @@ function truncateReply(reply: string, maxLength: number = 400): string {
   if (reply.length <= maxLength) {
     return reply;
   }
-  
+
   // Find the last sentence-ending punctuation before the limit
   const truncated = reply.substring(0, maxLength);
   const lastSentenceEnd = Math.max(
-    truncated.lastIndexOf('. '),
-    truncated.lastIndexOf('! '),
-    truncated.lastIndexOf('? '),
-    truncated.lastIndexOf('.'),
-    truncated.lastIndexOf('!'),
-    truncated.lastIndexOf('?')
+    truncated.lastIndexOf(". "),
+    truncated.lastIndexOf("! "),
+    truncated.lastIndexOf("? "),
+    truncated.lastIndexOf("."),
+    truncated.lastIndexOf("!"),
+    truncated.lastIndexOf("?"),
   );
-  
+
   if (lastSentenceEnd > maxLength * 0.5) {
     return reply.substring(0, lastSentenceEnd + 1).trim();
   }
-  
+
   // Fallback: cut at last space and add ellipsis
-  const lastSpace = truncated.lastIndexOf(' ');
+  const lastSpace = truncated.lastIndexOf(" ");
   if (lastSpace > maxLength * 0.5) {
-    return reply.substring(0, lastSpace).trim() + '...';
+    return reply.substring(0, lastSpace).trim() + "...";
   }
-  
+
   return truncated.trim();
 }
 
@@ -63,8 +63,14 @@ interface ReplyResult {
 export async function generateReviewReply(
   options: ReviewReplyOptions,
 ): Promise<ReplyResult> {
-  const { reviewerName, rating, comment, restaurantName, toneOfVoice, customInstructions } =
-    options;
+  const {
+    reviewerName,
+    rating,
+    comment,
+    restaurantName,
+    toneOfVoice,
+    customInstructions,
+  } = options;
 
   const toneDescriptions: Record<string, string> = {
     friendly: "warm, friendly, and approachable",
@@ -80,14 +86,14 @@ export async function generateReviewReply(
 
   // Generate a unique variation hint to ensure each reply is different
   const variationHint = Math.random().toString(36).substring(2, 8);
-  
+
   // Build custom instructions section if provided
-  const customInstructionsSection = customInstructions 
+  const customInstructionsSection = customInstructions
     ? `\n\nCUSTOM INSTRUCTIONS (MUST FOLLOW):\nThe business owner has provided specific instructions that you MUST incorporate into every reply:\n${customInstructions}\n`
     : "";
 
   const systemPrompt = `
-You are a warm, experienced restaurant owner in Barcelona writing personal replies to Google reviews.
+You are a warm, experienced restaurant owner writing personal replies to Google reviews.
 
 PERSONA:
 - Write as if you ARE the restaurant owner/manager, not an assistant
@@ -156,7 +162,7 @@ Generate the JSON reply as HolaRevi.`;
 
   try {
     const openai = getOpenAIClient();
-    
+
     // DEBUG: Log the full prompt being sent to OpenAI
     console.log("[OpenAI] Generating reply for:", {
       reviewerName,
@@ -166,11 +172,14 @@ Generate the JSON reply as HolaRevi.`;
       toneOfVoice,
       hasCustomInstructions: !!customInstructions,
     });
-    console.log("[OpenAI] System prompt preview:", systemPrompt.substring(0, 200) + "...");
+    console.log(
+      "[OpenAI] System prompt preview:",
+      systemPrompt.substring(0, 200) + "...",
+    );
     console.log("[OpenAI] User prompt:", userPrompt);
-    
+
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",  // Use gpt-4o which is a valid, powerful model
+      model: "gpt-4o", // Use gpt-4o which is a valid, powerful model
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
@@ -181,7 +190,7 @@ Generate the JSON reply as HolaRevi.`;
     });
 
     const rawContent = response.choices[0].message.content || "{}";
-    
+
     // DEBUG: Log the raw response from OpenAI
     console.log("[OpenAI] Raw response:", rawContent);
 
@@ -193,8 +202,10 @@ Generate the JSON reply as HolaRevi.`;
       result = {};
     }
 
-    const rawReply = result.reply || `¡Gracias por visitarnos en ${restaurantName}! Esperamos verte de nuevo pronto.`;
-    
+    const rawReply =
+      result.reply ||
+      `¡Gracias por visitarnos en ${restaurantName}! Esperamos verte de nuevo pronto.`;
+
     return {
       reply: truncateReply(rawReply, 400),
       language: result.language || "es",
@@ -247,7 +258,7 @@ export async function analyzeReviewSummary(
     sentiment?: string;
   }>,
   restaurantName: string,
-  language: string = "en"
+  language: string = "en",
 ): Promise<ReviewSummaryResult> {
   const languageNames: Record<string, string> = {
     es: "Spanish",
@@ -269,7 +280,7 @@ export async function analyzeReviewSummary(
       keyThemes: [],
       trends: { improving: [], declining: [], consistent: [] },
       recommendations: [],
-      summary: noReviewsMessages[language] || noReviewsMessages.en
+      summary: noReviewsMessages[language] || noReviewsMessages.en,
     };
   }
 
@@ -278,7 +289,10 @@ export async function analyzeReviewSummary(
 
     // Format reviews for analysis
     const reviewsText = reviews
-      .map((r, i) => `Review ${i + 1} (${r.rating}/5 stars): "${r.comment || 'No comment'}"`)
+      .map(
+        (r, i) =>
+          `Review ${i + 1} (${r.rating}/5 stars): "${r.comment || "No comment"}"`,
+      )
       .join("\n");
 
     const systemPrompt = `You are an expert restaurant review analyst. Analyze the provided Google reviews and extract meaningful insights.
@@ -342,21 +356,25 @@ Return JSON in this exact format:
       keyThemes: result.keyThemes || [],
       trends: result.trends || { improving: [], declining: [], consistent: [] },
       recommendations: result.recommendations || [],
-      summary: result.summary || "Analysis complete."
+      summary: result.summary || "Analysis complete.",
     };
   } catch (error: any) {
     console.error("OpenAI review analysis error:", error?.message ?? error);
-    
+
     // Calculate basic stats from reviews
-    const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
-    
+    const avgRating =
+      reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+
     return {
-      overallSentiment: avgRating >= 4 ? "positive" : avgRating >= 3 ? "neutral" : "negative",
+      overallSentiment:
+        avgRating >= 4 ? "positive" : avgRating >= 3 ? "neutral" : "negative",
       sentimentScore: Math.round(avgRating * 20),
       keyThemes: [],
       trends: { improving: [], declining: [], consistent: [] },
-      recommendations: ["Unable to generate AI analysis. Please try again later."],
-      summary: `Based on ${reviews.length} reviews with an average rating of ${avgRating.toFixed(1)} stars.`
+      recommendations: [
+        "Unable to generate AI analysis. Please try again later.",
+      ],
+      summary: `Based on ${reviews.length} reviews with an average rating of ${avgRating.toFixed(1)} stars.`,
     };
   }
 }
