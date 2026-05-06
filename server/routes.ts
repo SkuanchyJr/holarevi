@@ -1587,6 +1587,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Public API to retrieve reviews for a restaurant
+  // This can be used by the NFC stand landing page or external widgets
+  app.get("/api/public/reviews/:restaurantId", async (req, res) => {
+    try {
+      const { restaurantId } = req.params;
+      const { limit = "10" } = req.query;
+
+      const restaurant = await storage.getRestaurant(restaurantId);
+      if (!restaurant) {
+        return res.status(404).json({ success: false, message: "Restaurant not found" });
+      }
+
+      const allReviews = await storage.getReviewsByRestaurantId(restaurantId);
+      const recentReviews = allReviews
+        .filter(r => r.replyStatus === "posted") // Only show reviews that have been handled/posted
+        .slice(0, parseInt(limit as string));
+
+      return res.json({
+        success: true,
+        restaurantName: restaurant.name,
+        reviews: recentReviews
+      });
+    } catch (error) {
+      console.error("Error fetching public reviews:", error);
+      return res.status(500).json({ success: false, message: "Failed to fetch reviews" });
+    }
+  });
+
   app.post("/api/sync-all-reviews", isAuthenticated, async (req: any, res) => {
     try {
       // Use direct Google API

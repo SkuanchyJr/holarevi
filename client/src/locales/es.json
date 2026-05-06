@@ -567,6 +567,12 @@
       "review2_text": "Muy buen servicio, aunque la espera fue un poco larga. En general una visita muy agradable.",
       "review2_response": "Gracias, Carlos, por tu valoración y tus palabras. Tomamos nota sobre los tiempos de espera para seguir mejorando. ¡Esperamos verte pronto de nuevo!"
     },
+    "liveTest": {
+      "eyebrow": "Prueba en vivo",
+      "title": "¡Pon HolaRevi a prueba!",
+      "subtitle": "Deja una reseña en nuestro perfil de Google y observa en tiempo real cómo nuestra Inteligencia Artificial responde automáticamente.",
+      "cta": "Dejar una reseña ahora"
+    },
     "stats": {
       "reviews": "Reseñas respondidas",
       "responseTime": "Tiempo medio de respuesta",
@@ -1918,9 +1924,10 @@
     },
     "hero": {
       "badge": "Nuevo producto NFC",
-      "titlePrefix": "Más reseñas de Google con un",
-      "titleHighlight": "simple toque",
-      "subtitle": "Un elegante soporte NFC de sobremesa que permite a tus clientes dejar una reseña de Google acercando el móvil. Sin apps, sin QR. Solo un toque.",
+      "titlePrefix": "Déjanos tu reseña",
+      "titleHighlight": "TU OPINIÓN CUENTA",
+      "subtitle": "y mira cómo te respondemos",
+      "lightningText": "en menos de 5 min",
       "cta": "Reservar ahora",
       "ctaSecondary": "Ver cómo funciona",
       "footerText": "Envío gratuito · Diseño corporativo personalizable"

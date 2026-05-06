@@ -567,6 +567,12 @@
       "review2_text": "Very good service, although the wait was a bit long. Overall a very pleasant visit.",
       "review2_response": "Thanks, Carlos, for your rating and your words. We take note of the wait times to keep improving. Hope to see you again soon!"
     },
+    "liveTest": {
+      "eyebrow": "Live Test",
+      "title": "Put HolaRevi to the test!",
+      "subtitle": "Leave a review on our Google profile and watch in real-time how our AI automatically replies.",
+      "cta": "Leave a review now"
+    },
     "stats": {
       "reviews": "Reviews responded",
       "responseTime": "Average response time",
@@ -1918,9 +1924,10 @@
     },
     "hero": {
       "badge": "New NFC Product",
-      "titlePrefix": "More Google reviews with a",
-      "titleHighlight": "simple tap",
-      "subtitle": "An elegant desktop NFC stand that lets your customers leave a Google review by tapping their phone. No apps, no QR. Just a tap.",
+      "titlePrefix": "Leave us a review",
+      "titleHighlight": "YOUR OPINION MATTERS",
+      "subtitle": "and see how we respond",
+      "lightningText": "in less than 5 min",
       "cta": "Preorder now",
       "ctaSecondary": "See how it works",
       "footerText": "Free shipping · Customizable corporate design"

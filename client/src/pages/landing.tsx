@@ -667,6 +667,37 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ─── PRUEBA EN VIVO ───────────────────────────────────────────── */}
+      <section className="py-16 sm:py-24">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-5xl">
+            <div className="relative rounded-3xl overflow-hidden border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-primary/5">
+              <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-primary/20 blur-[100px] pointer-events-none" />
+              <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-blue-500/10 blur-[100px] pointer-events-none" />
+              
+              <div className="relative p-8 sm:p-12 text-center">
+                <Badge variant="outline" className="mb-4 border-primary/30 text-primary gap-1.5">
+                  <Star className="h-3.5 w-3.5" />
+                  {t("landing.liveTest.eyebrow")}
+                </Badge>
+                <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
+                  {t("landing.liveTest.title")}
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+                  {t("landing.liveTest.subtitle")}
+                </p>
+                <Button size="lg" asChild className="text-lg px-8">
+                  <a href="https://holarevi.com/r/ca387167-dafe-459d-a0cc-1005a11e221b" target="_blank" rel="noopener noreferrer">
+                    <Star className="mr-2 h-5 w-5 fill-current text-amber-400" />
+                    {t("landing.liveTest.cta")}
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ─── DEMO INTERACTIVA ───────────────────────────────────────────── */}
       <section id="demo" className="py-16 sm:py-24 border-y bg-background">
         <div className="container mx-auto px-4">

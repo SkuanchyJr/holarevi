@@ -252,15 +252,20 @@ export default function NFCStand() {
                 </Badge>
 
                 <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl leading-[1.1]">
-                  {t("nfc.hero.titlePrefix")}{" "}
+                  {t("nfc.hero.titleHighlight")}{" "}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-primary">
-                    {t("nfc.hero.titleHighlight")}
+                    {t("nfc.hero.titlePrefix")}
                   </span>
                 </h1>
 
                 <p className="mt-6 text-lg text-muted-foreground sm:text-xl leading-relaxed">
                   {t("nfc.hero.subtitle")}
                 </p>
+
+                <div className="mt-4 flex items-center gap-2 text-amber-500 font-semibold">
+                  <Zap className="h-5 w-5 fill-current" />
+                  {t("nfc.hero.lightningText") || "en menos de 5 min"}
+                </div>
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button size="lg" className="text-base px-8 bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90 shadow-lg shadow-primary/25" asChild data-testid="button-nfc-preorder-hero">
