@@ -30,6 +30,14 @@ export function LandingHeader({ showLoginButton = true }: LandingHeaderProps) {
             </div>
           </Link>
           <nav className="hidden sm:flex items-center gap-4">
+            <Link href={`/${language}/nfc`}>
+              <span className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer inline-flex items-center gap-1.5" data-testid="link-nfc">
+                NFC
+                <span className="inline-flex items-center rounded-full bg-primary/15 text-primary text-[10px] font-bold px-1.5 py-0.5 leading-none">
+                  {t("nav.new") || "New"}
+                </span>
+              </span>
+            </Link>
             <Link href={`/${language}/blog`}>
               <span className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer" data-testid="link-blog">
                 {t("nav.blog")}

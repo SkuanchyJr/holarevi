@@ -54,6 +54,7 @@ import Paywall from "@/pages/paywall";
 import BlogPage from "@/pages/blog";
 import BlogPostPage from "@/pages/blog-post";
 import Pricing from "@/pages/pricing";
+import NFCStand from "@/pages/nfc-stand";
 import NotFound from "@/pages/not-found";
 import { InvitationPopup } from "@/components/invitation-popup";
 import { TrialBanner } from "@/components/trial-banner";
@@ -104,7 +105,7 @@ function LoadingScreen() {
 function usePrelaunchGuard() {
   const [location, setLocation] = useLocation();
   const isAdminRoute = location.startsWith("/admin");
-  const allowedPaths = ["/prelaunch", "/contact", "/privacy", "/terms", "/google-permissions"];
+  const allowedPaths = ["/prelaunch", "/contact", "/privacy", "/terms", "/google-permissions", "/nfc"];
   const isAllowedPath = isAdminRoute || allowedPaths.some(p => location.includes(p));
 
   const { data: prelaunchStatus, isFetched, isFetching } = useQuery<{ success: boolean; prelaunchEnabled: boolean }>({
@@ -182,7 +183,7 @@ function LocalizedRouter({ currentPath }: { currentPath: string }) {
   if (authLoading && user === undefined) return <LoadingScreen />;
 
   const subscriptionStatus = user?.subscriptionStatus?.trim();
-  const isPublicRoute = currentPath === "/" || currentPath === "/auth" || currentPath === "/prelaunch" || currentPath.startsWith("/blog") || currentPath === "/contact" || currentPath === "/select-plan" || currentPath === "/pricing";
+  const isPublicRoute = currentPath === "/" || currentPath === "/auth" || currentPath === "/prelaunch" || currentPath.startsWith("/blog") || currentPath === "/contact" || currentPath === "/select-plan" || currentPath === "/pricing" || currentPath === "/nfc";
 
   // SUBSCRIPTION CHECK MUST COME FIRST
   // A new user with subscriptionStatus="pending" must select a plan before onboarding
@@ -206,6 +207,7 @@ function LocalizedRouter({ currentPath }: { currentPath: string }) {
         <Route path="/:lang/blog/:slug" component={BlogPostPage} />
         <Route path="/:lang/blog" component={BlogPage} />
         <Route path="/:lang/pricing" component={Pricing} />
+        <Route path="/:lang/nfc" component={NFCStand} />
         <Route path="/:lang/google-permissions" component={GooglePermissions} />
         <Route path="/:lang/prelaunch" component={Prelaunch} />
         <Route path="/:lang/*" component={NotFound} />

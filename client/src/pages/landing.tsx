@@ -911,6 +911,57 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ─── NFC STAND PROMO ─────────────────────────────────────────────── */}
+      <section className="py-16 sm:py-24">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-5xl">
+            <div className="relative rounded-3xl overflow-hidden border border-primary/20 bg-gradient-to-br from-primary/5 via-background to-primary/10">
+              {/* Glow */}
+              <div className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-primary/15 blur-[80px] pointer-events-none" />
+              <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-blue-400/10 blur-[60px] pointer-events-none" />
+
+              <div className="relative grid gap-8 lg:grid-cols-2 items-center p-8 sm:p-12">
+                {/* Left: Copy */}
+                <div>
+                  <Badge variant="outline" className="mb-4 border-primary/30 text-primary gap-1.5">
+                    <Wifi className="h-3.5 w-3.5" />
+                    {t("nfc.hero.badge")}
+                  </Badge>
+                  <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+                    {t("nfc.hero.titlePrefix")}{" "}
+                    <span className="text-primary">{t("nfc.hero.titleHighlight")}</span>
+                  </h2>
+                  <p className="mt-3 text-muted-foreground">
+                    {t("nfc.hero.subtitle")}
+                  </p>
+                  <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                    <Button size="lg" asChild data-testid="button-landing-nfc-preorder">
+                      <Link href={`/${language}/nfc`}>
+                        {t("nfc.hero.cta")}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Right: Product image */}
+                <div className="flex justify-center">
+                  <div className="relative w-64 sm:w-72">
+                    <div className="absolute inset-0 -z-10 rounded-full bg-primary/10 blur-[40px]" />
+                    <img
+                      src="/nfc-stand-hero.png"
+                      alt="HolaRevi NFC Stand"
+                      className="w-full h-auto rounded-2xl shadow-xl"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ─── I) FAQ ─────────────────────────────────────────────────────── */}
       <section id="faq" className="py-16 sm:py-24">
         <div className="container mx-auto px-4">
