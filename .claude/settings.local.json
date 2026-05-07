@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/DANIEL.ANACHE/Documents/HolaRevi app/.claude/worktrees/**)",
+      "Bash(find . -maxdepth 3 -name \".claude\" -type d)",
+      "Bash(cp brave-kowalevski-cf6e46/server/index.ts gifted-chandrasekhar-3b2d63/server/)",
+      "Bash(cp brave-kowalevski-cf6e46/shared/schema.ts gifted-chandrasekhar-3b2d63/shared/)",
+      "Bash(cp brave-kowalevski-cf6e46/server/jobs/checkoutRecoveryScheduler.ts gifted-chandrasekhar-3b2d63/server/jobs/)",
+      "Bash(cp brave-kowalevski-cf6e46/server/jobs/checkoutRecoveryTemplates.ts gifted-chandrasekhar-3b2d63/server/jobs/)",
+      "Bash(cp practical-bell-0e8f00/client/src/index.css gifted-chandrasekhar-3b2d63/client/src/)",
+      "Bash(cp practical-bell-0e8f00/client/src/locales/en.json gifted-chandrasekhar-3b2d63/client/src/locales/)",
+      "Bash(cp practical-bell-0e8f00/client/src/locales/es.json gifted-chandrasekhar-3b2d63/client/src/locales/)",
+      "Bash(cp practical-bell-0e8f00/client/src/pages/nfc-stand.tsx gifted-chandrasekhar-3b2d63/client/src/pages/)",
+      "Bash(cp practical-bell-0e8f00/tailwind.config.ts gifted-chandrasekhar-3b2d63/)",
+      "Bash(git add *)"
+    ]
+  }
+}

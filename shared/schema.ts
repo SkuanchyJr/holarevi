@@ -542,6 +542,19 @@ export const alerts = pgTable("alerts", {
   index("IDX_alerts_created_at").on(table.createdAt)
 ]);
 
+// Checkout recovery email logs — tracks the 3-email abandoned-checkout sequence
+export const checkoutRecoveryEmailLogs = pgTable("checkout_recovery_email_logs", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  emailNumber: integer("email_number").notNull(), // 1, 2, or 3
+  sentAt: timestamp("sent_at").defaultNow(),
+  status: varchar("status").notNull(), // 'success' | 'error'
+  errorMessage: text("error_message"),
+}, (table) => [
+  index("idx_checkout_recovery_user").on(table.userId),
+  index("idx_checkout_recovery_email_num").on(table.userId, table.emailNumber),
+]);
+
 // Weekly email logs table — tracks sent weekly analytics emails per user
 export const weeklyEmailLogs = pgTable("weekly_email_logs", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -555,6 +568,11 @@ export const weeklyEmailLogs = pgTable("weekly_email_logs", {
   index("idx_weekly_email_logs_user").on(table.userId),
   index("idx_weekly_email_logs_week").on(table.userId, table.weekStart),
 ]);
+
+export const insertCheckoutRecoveryEmailLogSchema = createInsertSchema(checkoutRecoveryEmailLogs).omit({
+  id: true,
+  sentAt: true,
+});
 
 export const insertWeeklyEmailLogSchema = createInsertSchema(weeklyEmailLogs).omit({
   id: true,
@@ -579,6 +597,8 @@ export const alertsRelations = relations(alerts, ({ one }) => ({
 export const insertAlertSchema = createInsertSchema(alerts);
 export type InsertAlert = z.infer<typeof insertAlertSchema>;
 export type Alert = typeof alerts.$inferSelect;
+export type InsertCheckoutRecoveryEmailLog = z.infer<typeof insertCheckoutRecoveryEmailLogSchema>;
+export type CheckoutRecoveryEmailLog = typeof checkoutRecoveryEmailLogs.$inferSelect;
 export type InsertWeeklyEmailLog = z.infer<typeof insertWeeklyEmailLogSchema>;
 export type WeeklyEmailLog = typeof weeklyEmailLogs.$inferSelect;
 export type InsertPromoCode = z.infer<typeof insertPromoCodeSchema>;

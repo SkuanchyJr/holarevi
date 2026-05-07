@@ -1918,66 +1918,155 @@
   },
   "nfc": {
     "seo": {
-      "title": "NFC Stand for Google Reviews | HolaRevi",
-      "description": "Get more Google reviews with our corporate NFC stand. Customers tap their phone and leave a review in 30 seconds. Premium design for businesses.",
-      "keywords": "NFC stand Google reviews, NFC restaurant reviews, NFC review device, corporate review stand"
+      "title": "NFC Stand for Google Reviews · Launch Preorder | HolaRevi",
+      "description": "The NFC stand that 5× your Google reviews. No apps, no QR codes. Launch preorder -40% — only first 100 units. Free shipping included.",
+      "keywords": "NFC stand Google reviews, preorder NFC, NFC restaurant reviews, tap to review, corporate review stand"
+    },
+    "promobar": {
+      "text": "Launch Preorder · First 100 units with -40%",
+      "cta": "Reserve"
     },
     "hero": {
-      "badge": "New NFC Product",
-      "titlePrefix": "Leave us a review",
-      "titleHighlight": "YOUR OPINION MATTERS",
-      "subtitle": "and see how we respond",
-      "lightningText": "in less than 5 min",
-      "cta": "Preorder now",
+      "badge": "Launch Preorder · 2026",
+      "rating": "+250 businesses interested",
+      "title1": "Turn every customer into a",
+      "titleHighlight": "Google review",
+      "title2": "in seconds.",
+      "subtitle": "The corporate NFC stand that 5× your Google reviews. No apps, no QR codes, no friction. Your customer taps their phone and you're done.",
+      "lightningText": "Set up in less than 5 minutes",
+      "priceCrossed": "$99",
+      "priceNew": "$59",
+      "saveText": "Save $40",
+      "saveBadge": "Launch offer",
+      "cta": "Reserve my NFC Stand",
       "ctaSecondary": "See how it works",
-      "footerText": "Free shipping · Customizable corporate design"
+      "trust1": "Free shipping",
+      "trust2": "100% secure payment",
+      "trust3": "30-day guarantee",
+      "trust4": "iOS + Android"
+    },
+    "urgency": {
+      "eyebrow": "Limited offer",
+      "title": "Launch pricing ends soon",
+      "subtitle": "Only the first 100 units get -40%. After that, retail price kicks in.",
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Min",
+      "seconds": "Sec",
+      "unitsLabel": "Units reserved",
+      "unitsLeftPrefix": "Only",
+      "unitsLeftSuffix": "left at launch price"
+    },
+    "logos": {
+      "title": "Built for every kind of local business",
+      "l1": "Restaurants",
+      "l2": "Hotels",
+      "l3": "Cafés",
+      "l4": "Clinics",
+      "l5": "Stores",
+      "l6": "Salons"
     },
     "stats": {
+      "eyebrow": "Why it works",
+      "s1Value": "30s",
+      "s1Label": "per review",
+      "s2Value": "5×",
+      "s2Label": "more reviews in 30 days",
+      "s3Value": "100%",
+      "s3Label": "iOS + Android",
+      "s4Value": "0",
+      "s4Label": "apps to install",
       "s1": "Time per review",
       "s2": "Mobile compatibility",
       "s3": "More reviews received"
     },
     "how": {
       "eyebrow": "How it works",
-      "title": "Reviews in 3 simple steps",
-      "subtitle": "So easy any customer can do it without help.",
+      "title": "More reviews in 3 steps",
+      "subtitle": "So simple any customer can do it on their own — no instructions needed.",
       "step1": {
-        "title": "Customer taps their phone",
-        "desc": "They just need to bring their smartphone close to the NFC stand. No downloading apps or scanning QR codes."
+        "title": "Tap the phone",
+        "desc": "Your customer brings their phone close to the NFC stand. No apps, no scanning."
       },
       "step2": {
-        "title": "Google Reviews opens",
-        "desc": "Your business Google review page opens automatically, ready for the customer to write."
+        "title": "Google opens",
+        "desc": "Your Google Business review page opens automatically, ready to write."
       },
       "step3": {
-        "title": "Review left in seconds",
-        "desc": "The customer writes their opinion and publishes it. The whole process takes less than 30 seconds."
+        "title": "Review published",
+        "desc": "Your customer leaves the review in under 30 seconds. You get a notification."
       }
     },
     "benefits": {
       "eyebrow": "Benefits",
-      "title": "Why an NFC stand?",
-      "subtitle": "Multiply your reviews effortlessly and boost your online reputation.",
+      "title": "What changes for your business",
+      "subtitle": "Multiply your reviews, raise your rating and attract more customers — with zero extra effort.",
       "b1": {
-        "title": "5x more reviews",
-        "desc": "Businesses with NFC stands receive up to 5 times more reviews than those using traditional methods."
+        "title": "5× more reviews",
+        "desc": "Businesses testing the NFC stand receive up to 5× more reviews in the first 30 days."
       },
       "b2": {
         "title": "Better reputation",
-        "desc": "More positive reviews improve your average rating and your Google ranking."
+        "desc": "More recent positive reviews lift your average rating and your local Google ranking."
       },
       "b3": {
-        "title": "More trust",
-        "desc": "Potential customers trust businesses with many recent, positive reviews."
+        "title": "More new customers",
+        "desc": "88% of users check reviews before choosing a business. More reviews = more customers."
       },
       "b4": {
-        "title": "Elegant design",
-        "desc": "A premium product that reinforces the professional image of your business."
+        "title": "Premium image",
+        "desc": "A sleek corporate design that elevates how your brand is perceived in every visit."
+      }
+    },
+    "comparison": {
+      "eyebrow": "Comparison",
+      "title": "Asking for reviews vs. NFC Stand",
+      "subtitle": "Stop losing reviews your customers were never going to leave.",
+      "manualHeader": "Manual method",
+      "nfcHeader": "HolaRevi NFC",
+      "row1": "Customer time",
+      "row1Manual": "+3 minutes",
+      "row1NFC": "30 seconds",
+      "row2": "Conversion to review",
+      "row2Manual": "1 in 20 customers",
+      "row2NFC": "1 in 4 customers",
+      "row3": "Brand image",
+      "row3Manual": "Improvised",
+      "row3NFC": "Premium and professional",
+      "row4": "Compatibility",
+      "row4Manual": "Paper or QR only",
+      "row4NFC": "iOS + Android NFC",
+      "row5": "Staff effort",
+      "row5Manual": "Ask every customer",
+      "row5NFC": "Zero · works on its own",
+      "row6": "Reviews in 30 days",
+      "row6Manual": "1× baseline",
+      "row6NFC": "Up to 5× more"
+    },
+    "testimonials": {
+      "eyebrow": "Beta testers",
+      "title": "Businesses already testing it",
+      "subtitle": "Real results from the first 50 pilot businesses.",
+      "t1": {
+        "quote": "We went from 2 reviews a month to 18 in just 3 weeks. Customers try it without us saying a word.",
+        "author": "María R.",
+        "role": "Costa Brava Restaurant"
+      },
+      "t2": {
+        "quote": "I wanted something professional for the front desk and this stand fits perfectly. It's a brand detail guests notice.",
+        "author": "Javier S.",
+        "role": "Director, Hotel Atlántico"
+      },
+      "t3": {
+        "quote": "We used to ask after every service and almost no one left a review. With the stand, they come on their own.",
+        "author": "Laura M.",
+        "role": "Beauty Salon"
       }
     },
     "specs": {
       "eyebrow": "Specifications",
       "title": "Technical details",
+      "subtitle": "Premium quality in every component.",
       "s1": { "label": "Front panel", "value": "12 × 14 cm" },
       "s2": { "label": "Base", "value": "12 × 10 cm" },
       "s3": { "label": "Shape", "value": "L (≈85°)" },
@@ -1987,33 +2076,65 @@
     },
     "mockups": {
       "eyebrow": "In your business",
-      "title": "Designed for any environment",
-      "subtitle": "From restaurants to hotels, the NFC stand fits on any counter.",
-      "restaurant": "Restaurant",
-      "hotel": "Hotel",
-      "shop": "Retail Store"
+      "title": "Designed for any counter",
+      "subtitle": "Premium design that fits any environment, from casual to high-end.",
+      "restaurant": "Restaurants",
+      "hotel": "Hotels",
+      "shop": "Stores",
+      "clinic": "Clinics",
+      "cafe": "Cafés",
+      "reception": "Reception desks"
+    },
+    "pricing": {
+      "eyebrow": "Launch Preorder",
+      "title": "Reserve yours at launch price",
+      "subtitle": "First 100 units at 40% off. Once they're gone, retail price applies.",
+      "tagPopular": "Most reserved",
+      "saveBadge": "Save $40",
+      "priceCrossed": "$99",
+      "priceNew": "$59",
+      "unit": "/ unit",
+      "feature1": "NFC stand customized with your logo and brand",
+      "feature2": "Guided 5-minute setup",
+      "feature3": "Works on iOS and Android (NFC)",
+      "feature4": "Free shipping",
+      "feature5": "30-day money-back guarantee",
+      "feature6": "Personal email + video-call support",
+      "feature7": "Priority access to the HolaRevi platform",
+      "cta": "Reserve my unit",
+      "secureNote": "100% secure payment · You're not charged until shipping",
+      "shipping": "First shipments: Q1 2026"
     },
     "faq": {
       "eyebrow": "FAQ",
-      "title": "NFC Stand Questions",
-      "q1": "Does it work with all phones?",
-      "a1": "Yes. It's compatible with all iOS smartphones (iPhone 7+) and Android devices with NFC, which is the vast majority of modern phones.",
-      "q2": "Do I need a special app?",
-      "a2": "No. The customer just needs to tap their phone. No app download required.",
-      "q3": "Can I customize the design?",
-      "a3": "Yes. We customize the stand with your logo, brand colors, and a direct link to your Google Business profile.",
-      "q4": "How long does delivery take?",
-      "a4": "Standard shipping takes 5-7 business days. We offer free shipping within Spain."
+      "title": "Questions answered",
+      "subtitle": "Everything you need to know before reserving your unit.",
+      "q1": "Does it work on all phones?",
+      "a1": "Yes. Compatible with iPhone 7 or newer and virtually every Android with NFC (most phones since 2018). Customer just taps the stand — that's it.",
+      "q2": "Do I need an app?",
+      "a2": "No. Neither you nor your customers need anything. The customer taps and your Google Reviews page opens directly.",
+      "q3": "How is it set up?",
+      "a3": "We ship the stand pre-configured with the link to your Google Business. You just place it on the counter. If you need help, we walk you through a free video call.",
+      "q4": "When will I get my order?",
+      "a4": "Preorders ship starting Q1 2026. We'll email you the tracking number. Free shipping (5-7 business days within the EU and US).",
+      "q5": "Is it reusable and durable?",
+      "a5": "Yes. The stand is built in premium acrylic and the NFC chip is durable. If you change your Google Business, we reprogram it remotely at no cost.",
+      "q6": "What if I'm not happy?",
+      "a6": "You have a 30-day money-back guarantee. If you're not satisfied, we refund the full amount, no questions asked.",
+      "q7": "Can I customize it with my logo?",
+      "a7": "Yes. Every stand is customized with your logo, brand colors and business name. You upload your logo in the preorder form."
     },
     "finalCta": {
-      "eyebrow": "Preorder available",
-      "title": "Get your NFC Stand",
-      "subtitle": "Preorder now and be among the first to multiply your Google reviews with NFC technology.",
-      "ctaPrimary": "Preorder now",
-      "ctaSecondary": "Contact for more info",
+      "eyebrow": "Last call",
+      "title": "Multiply your reviews today.",
+      "titleHighlight": "Start now.",
+      "subtitle": "Reserve your NFC Stand at launch price. Only a handful of units left at this price.",
+      "ctaPrimary": "Reserve my NFC Stand",
+      "ctaSecondary": "Talk to sales",
       "feature1": "Free shipping",
-      "feature2": "Customizable design",
-      "feature3": "Support included"
+      "feature2": "30-day guarantee",
+      "feature3": "Support included",
+      "feature4": "Secure payment"
     }
   }
 }
