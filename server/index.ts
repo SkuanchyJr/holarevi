@@ -11,7 +11,9 @@ import { WebhookHandlers } from "./webhookHandlers";
 import path from "path";
 import { initReviewSyncJob } from "./jobs/reviewSync";
 import { initWeeklyEmailScheduler } from "./jobs/weeklyEmailScheduler";
+import { initCheckoutRecoveryScheduler } from "./jobs/checkoutRecoveryScheduler";
 import { fixOnboardingData } from "./migrations/fix-onboarding-data";
+import { addCheckoutRecoveryTable } from "./migrations/add-checkout-recovery-table";
 
 const app = express();
 const httpServer = createServer(app);
@@ -179,6 +181,7 @@ app.use((req, res, next) => {
 
 (async () => {
   await fixOnboardingData();
+  await addCheckoutRecoveryTable();
 
   // Initialize Stripe before routes
   await initStripe();
@@ -212,6 +215,7 @@ app.use((req, res, next) => {
   // Initialize background jobs
   initReviewSyncJob();
   initWeeklyEmailScheduler(app);
+  initCheckoutRecoveryScheduler(app);
 
   server.listen(
     {

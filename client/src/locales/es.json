@@ -1918,66 +1918,155 @@
   },
   "nfc": {
     "seo": {
-      "title": "Stand NFC para Reseñas de Google | HolaRevi",
-      "description": "Consigue más reseñas de Google con nuestro stand NFC corporativo. El cliente acerca el móvil y deja su reseña en 30 segundos. Diseño premium para negocios.",
-      "keywords": "stand NFC reseñas Google, soporte NFC restaurante, dispositivo NFC reviews, stand reseñas corporativo"
+      "title": "Stand NFC para Reseñas de Google · Preorder Lanzamiento | HolaRevi",
+      "description": "El stand NFC que multiplica por 5 tus reseñas de Google. Sin apps, sin QR. Preorder lanzamiento -40% solo las primeras 100 unidades. Envío gratuito.",
+      "keywords": "stand NFC reseñas Google, preorder NFC, soporte NFC restaurante, dispositivo NFC reviews, stand reseñas corporativo, tap to review"
+    },
+    "promobar": {
+      "text": "Preorder Lanzamiento · Primeras 100 unidades con -40%",
+      "cta": "Reservar"
     },
     "hero": {
-      "badge": "Nuevo producto NFC",
-      "titlePrefix": "Déjanos tu reseña",
-      "titleHighlight": "TU OPINIÓN CUENTA",
-      "subtitle": "y mira cómo te respondemos",
-      "lightningText": "en menos de 5 min",
-      "cta": "Reservar ahora",
+      "badge": "Preorder Lanzamiento · 2026",
+      "rating": "+250 negocios interesados",
+      "title1": "Convierte cada cliente en una",
+      "titleHighlight": "reseña de Google",
+      "title2": "en segundos.",
+      "subtitle": "El stand NFC corporativo que multiplica por 5 tus reseñas. Sin apps, sin códigos QR, sin fricción. Tu cliente acerca el móvil y listo.",
+      "lightningText": "Configurado en menos de 5 minutos",
+      "priceCrossed": "99€",
+      "priceNew": "59€",
+      "saveText": "Ahorra 40€",
+      "saveBadge": "Oferta lanzamiento",
+      "cta": "Reservar mi NFC Stand",
       "ctaSecondary": "Ver cómo funciona",
-      "footerText": "Envío gratuito · Diseño corporativo personalizable"
+      "trust1": "Envío gratuito",
+      "trust2": "Pago 100% seguro",
+      "trust3": "Garantía 30 días",
+      "trust4": "Compatible iOS + Android"
+    },
+    "urgency": {
+      "eyebrow": "Oferta limitada",
+      "title": "El precio lanzamiento termina pronto",
+      "subtitle": "Solo las primeras 100 unidades llevan -40%. Después subirá al precio retail.",
+      "days": "Días",
+      "hours": "Horas",
+      "minutes": "Min",
+      "seconds": "Seg",
+      "unitsLabel": "Unidades reservadas",
+      "unitsLeftPrefix": "Quedan",
+      "unitsLeftSuffix": "a precio lanzamiento"
+    },
+    "logos": {
+      "title": "Pensado para todo tipo de negocios locales",
+      "l1": "Restaurantes",
+      "l2": "Hoteles",
+      "l3": "Cafeterías",
+      "l4": "Clínicas",
+      "l5": "Tiendas",
+      "l6": "Salones"
     },
     "stats": {
+      "eyebrow": "Por qué funciona",
+      "s1Value": "30s",
+      "s1Label": "por reseña dejada",
+      "s2Value": "5×",
+      "s2Label": "más reseñas en 30 días",
+      "s3Value": "100%",
+      "s3Label": "iOS + Android",
+      "s4Value": "0",
+      "s4Label": "apps que descargar",
       "s1": "Tiempo por reseña",
       "s2": "Compatibilidad móvil",
       "s3": "Más reseñas recibidas"
     },
     "how": {
       "eyebrow": "Cómo funciona",
-      "title": "Reseñas en 3 simples pasos",
-      "subtitle": "Tan fácil que cualquier cliente puede hacerlo sin ayuda.",
+      "title": "Más reseñas en 3 pasos",
+      "subtitle": "Tan simple que cualquier cliente puede hacerlo solo, sin instrucciones.",
       "step1": {
-        "title": "El cliente acerca el móvil",
-        "desc": "Solo necesita acercar su smartphone al stand NFC. Sin descargar apps ni escanear códigos QR."
+        "title": "Acerca el móvil",
+        "desc": "El cliente acerca su smartphone al stand NFC. Sin apps, sin escanear códigos."
       },
       "step2": {
-        "title": "Se abre Google Reviews",
-        "desc": "Automáticamente se abre la página de reseñas de Google de tu negocio, lista para escribir."
+        "title": "Se abre Google",
+        "desc": "Se abre automáticamente la página de reseñas de tu Google Business."
       },
       "step3": {
-        "title": "Deja la reseña en segundos",
-        "desc": "El cliente escribe su opinión y la publica. Todo el proceso tarda menos de 30 segundos."
+        "title": "Reseña publicada",
+        "desc": "Tu cliente deja la reseña en menos de 30 segundos. Tú recibes la notificación."
       }
     },
     "benefits": {
       "eyebrow": "Beneficios",
-      "title": "¿Por qué un stand NFC?",
-      "subtitle": "Multiplica tus reseñas sin esfuerzo y mejora tu reputación online.",
+      "title": "Lo que cambia en tu negocio",
+      "subtitle": "Multiplica tus reseñas, sube tu reputación y atrae más clientes sin esfuerzo extra.",
       "b1": {
-        "title": "5x más reseñas",
-        "desc": "Los negocios con stand NFC reciben hasta 5 veces más reseñas que los que usan métodos tradicionales."
+        "title": "5× más reseñas",
+        "desc": "Los negocios que prueban el stand NFC reciben hasta 5 veces más reseñas en los primeros 30 días."
       },
       "b2": {
         "title": "Mejor reputación",
-        "desc": "Más reseñas positivas mejoran tu puntuación media y tu posicionamiento en Google."
+        "desc": "Más reseñas recientes y positivas suben tu puntuación media y tu ranking local en Google."
       },
       "b3": {
-        "title": "Más confianza",
-        "desc": "Los clientes potenciales confían en negocios con muchas reseñas recientes y positivas."
+        "title": "Más clientes nuevos",
+        "desc": "El 88% de los usuarios revisa las reseñas antes de elegir un negocio. Más reseñas = más clientes."
       },
       "b4": {
-        "title": "Diseño elegante",
-        "desc": "Un producto premium que refuerza la imagen profesional de tu negocio."
+        "title": "Imagen premium",
+        "desc": "Diseño corporativo elegante que mejora la percepción de tu marca en cada visita."
+      }
+    },
+    "comparison": {
+      "eyebrow": "Comparativa",
+      "title": "Pedir reseñas a mano vs. NFC Stand",
+      "subtitle": "Deja de perder reseñas que tus clientes nunca van a dejar.",
+      "manualHeader": "Método manual",
+      "nfcHeader": "HolaRevi NFC",
+      "row1": "Tiempo del cliente",
+      "row1Manual": "+3 minutos",
+      "row1NFC": "30 segundos",
+      "row2": "Conversión a reseña",
+      "row2Manual": "1 de cada 20 clientes",
+      "row2NFC": "1 de cada 4 clientes",
+      "row3": "Imagen de marca",
+      "row3Manual": "Improvisada",
+      "row3NFC": "Premium y profesional",
+      "row4": "Compatibilidad",
+      "row4Manual": "Solo papel o QR",
+      "row4NFC": "iOS + Android NFC",
+      "row5": "Esfuerzo del personal",
+      "row5Manual": "Pedirla a cada cliente",
+      "row5NFC": "Cero · trabaja sola",
+      "row6": "Reseñas en 30 días",
+      "row6Manual": "1× base",
+      "row6NFC": "Hasta 5× más"
+    },
+    "testimonials": {
+      "eyebrow": "Beta testers",
+      "title": "Negocios que ya lo están probando",
+      "subtitle": "Resultados reales de los primeros 50 negocios en piloto.",
+      "t1": {
+        "quote": "Pasamos de 2 reseñas al mes a 18 en solo 3 semanas. Los clientes lo prueban sin que les digamos nada.",
+        "author": "María R.",
+        "role": "Restaurante Costa Brava"
+      },
+      "t2": {
+        "quote": "Buscaba algo profesional para la recepción y este stand encaja perfecto. Es un detalle de marca que se nota.",
+        "author": "Javier S.",
+        "role": "Director, Hotel Atlántico"
+      },
+      "t3": {
+        "quote": "Antes pedíamos reseñas tras cada servicio y casi nadie las dejaba. Con el stand, llegan solas.",
+        "author": "Laura M.",
+        "role": "Salón de Estética"
       }
     },
     "specs": {
       "eyebrow": "Especificaciones",
       "title": "Detalles técnicos",
+      "subtitle": "Calidad premium en cada componente.",
       "s1": { "label": "Panel frontal", "value": "12 × 14 cm" },
       "s2": { "label": "Base", "value": "12 × 10 cm" },
       "s3": { "label": "Forma", "value": "L (≈85°)" },
@@ -1987,33 +2076,65 @@
     },
     "mockups": {
       "eyebrow": "En tu negocio",
-      "title": "Diseñado para cualquier entorno",
-      "subtitle": "Desde restaurantes hasta hoteles, el stand NFC encaja en cualquier mostrador.",
-      "restaurant": "Restaurante",
-      "hotel": "Hotel",
-      "shop": "Tienda"
+      "title": "Diseñado para cualquier mostrador",
+      "subtitle": "Diseño premium que se integra en cualquier ambiente, desde el más casual al más exclusivo.",
+      "restaurant": "Restaurantes",
+      "hotel": "Hoteles",
+      "shop": "Tiendas",
+      "clinic": "Clínicas",
+      "cafe": "Cafeterías",
+      "reception": "Recepciones"
+    },
+    "pricing": {
+      "eyebrow": "Preorder Lanzamiento",
+      "title": "Reserva el tuyo a precio lanzamiento",
+      "subtitle": "Las primeras 100 unidades con un 40% de descuento. Una vez agotadas, sube al precio retail.",
+      "tagPopular": "Más reservado",
+      "saveBadge": "Ahorra 40€",
+      "priceCrossed": "99€",
+      "priceNew": "59€",
+      "unit": "/ unidad",
+      "feature1": "Stand NFC personalizado con tu logo y marca",
+      "feature2": "Configuración guiada en 5 minutos",
+      "feature3": "Compatible con iOS y Android (NFC)",
+      "feature4": "Envío gratuito a península",
+      "feature5": "Garantía de devolución 30 días",
+      "feature6": "Soporte personalizado por email + videollamada",
+      "feature7": "Acceso prioritario a la plataforma HolaRevi",
+      "cta": "Reservar mi unidad",
+      "secureNote": "Pago 100% seguro · No te cobramos hasta el envío",
+      "shipping": "Primeros envíos: Q1 2026"
     },
     "faq": {
       "eyebrow": "Preguntas frecuentes",
-      "title": "Preguntas sobre el Stand NFC",
+      "title": "Resolvemos tus dudas",
+      "subtitle": "Todo lo que necesitas saber antes de reservar tu unidad.",
       "q1": "¿Funciona con todos los móviles?",
-      "a1": "Sí. Es compatible con todos los smartphones iOS (iPhone 7+) y Android con NFC, que es la gran mayoría de móviles actuales.",
-      "q2": "¿Necesito alguna app especial?",
-      "a2": "No. El cliente solo necesita acercar su móvil. No requiere descargar ninguna aplicación.",
-      "q3": "¿Puedo personalizar el diseño?",
-      "a3": "Sí. Personalizamos el stand con tu logo, colores corporativos y enlace directo a tu perfil de Google Business.",
-      "q4": "¿Cuánto tarda en llegar?",
-      "a4": "El envío estándar tarda entre 5-7 días laborables. Ofrecemos envío gratuito en península."
+      "a1": "Sí. Compatible con iPhone 7 o superior y prácticamente todos los Android con NFC (la gran mayoría desde 2018). El cliente solo acerca el móvil al stand y listo.",
+      "q2": "¿Necesito instalar una app?",
+      "a2": "No. Ni tú ni tus clientes necesitáis nada. El cliente solo acerca el móvil y se abre directamente la página de reseñas de tu Google Business.",
+      "q3": "¿Cómo se configura?",
+      "a3": "Te enviamos el stand ya configurado con el enlace a tu Google Business. Solo lo pones sobre el mostrador. Si necesitas ayuda, te acompañamos en una videollamada gratuita.",
+      "q4": "¿Cuándo recibiré mi pedido?",
+      "a4": "Los preorders empiezan a enviarse en Q1 2026. Te avisaremos por email con el número de seguimiento. Envío gratuito a península (5-7 días laborables).",
+      "q5": "¿Es reutilizable y duradero?",
+      "a5": "Sí. El stand está fabricado en acrílico premium y el chip NFC es duradero. Si cambias tu Google Business, lo reprogramamos a distancia sin coste.",
+      "q6": "¿Qué pasa si no me convence?",
+      "a6": "Tienes 30 días de garantía de devolución. Si no estás satisfecho, te devolvemos el dinero íntegro sin preguntas.",
+      "q7": "¿Puedo personalizarlo con mi logo?",
+      "a7": "Sí. Todos los stands se personalizan con el logo, colores y nombre de tu negocio. Subes tu logo en el formulario de preorder."
     },
     "finalCta": {
-      "eyebrow": "Preorder disponible",
-      "title": "Consigue tu Stand NFC",
-      "subtitle": "Reserva ahora y sé de los primeros en multiplicar tus reseñas de Google con tecnología NFC.",
-      "ctaPrimary": "Hacer preorder",
-      "ctaSecondary": "Contactar para más info",
+      "eyebrow": "Última llamada",
+      "title": "Multiplica tus reseñas hoy.",
+      "titleHighlight": "Empieza ahora.",
+      "subtitle": "Reserva tu Stand NFC al precio lanzamiento. Solo quedan unas pocas unidades a este precio.",
+      "ctaPrimary": "Reservar mi NFC Stand",
+      "ctaSecondary": "Hablar con ventas",
       "feature1": "Envío gratuito",
-      "feature2": "Diseño personalizable",
-      "feature3": "Soporte incluido"
+      "feature2": "Garantía 30 días",
+      "feature3": "Soporte incluido",
+      "feature4": "Pago seguro"
     }
   }
 }
