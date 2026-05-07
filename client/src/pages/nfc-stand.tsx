@@ -824,10 +824,10 @@ export default function NFCStand() {
       <section className="py-14 sm:py-16 reveal-on-scroll" ref={useReveal<HTMLElement>()}>
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-5xl grid grid-cols-2 md:grid-cols-4 gap-8">
-            <StatBlock value={t("nfc.stats.s1Value")} label={t("nfc.stats.s1Label")} />
-            <StatBlock value={t("nfc.stats.s2Value")} label={t("nfc.stats.s2Label")} />
-            <StatBlock value={t("nfc.stats.s3Value")} label={t("nfc.stats.s3Label")} />
-            <StatBlock value={t("nfc.stats.s4Value")} label={t("nfc.stats.s4Label")} />
+            <AnimatedStat value={30} suffix="s" label={t("nfc.stats.s1Label")} />
+            <AnimatedStat value={5} suffix="×" label={t("nfc.stats.s2Label")} />
+            <AnimatedStat value={100} suffix="%" label={t("nfc.stats.s3Label")} />
+            <AnimatedStat value={0} label={t("nfc.stats.s4Label")} />
           </div>
         </div>
       </section>
