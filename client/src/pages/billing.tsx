@@ -461,7 +461,7 @@ export default function Billing() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3">
-            {(["local", "pro", "business"] as PlanId[]).map((planId) => {
+            {(["local", "pro", "business"] as const).map((planId) => {
               const plan = PLANS[planId];
               const price = getPrice(planId, upgradeBillingCycle);
               const isCurrent = currentPlan === planId;

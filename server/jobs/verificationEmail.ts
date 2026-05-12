@@ -17,7 +17,7 @@ function getAppUrl(): string {
   if (process.env.NODE_ENV === "production") return "https://holarevi.com";
   const replitDomains = process.env.REPLIT_DOMAINS;
   if (replitDomains) return `https://${replitDomains.split(",")[0]}`;
-  return "https://holarevi.com";
+  return "http://localhost:5000";
 }
 
 interface SendVerificationParams {

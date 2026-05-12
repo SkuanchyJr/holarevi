@@ -579,6 +579,42 @@ export const insertWeeklyEmailLogSchema = createInsertSchema(weeklyEmailLogs).om
   sentAt: true,
 });
 
+// NFC Stand orders table
+export const nfcOrders = pgTable("nfc_orders", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  stripePaymentIntentId: varchar("stripe_payment_intent_id").unique(),
+  status: varchar("status").default("pending_payment"), // pending_payment, paid, processing, shipped, delivered, cancelled, refunded
+  firstName: varchar("first_name").notNull(),
+  lastName: varchar("last_name").notNull(),
+  email: varchar("email").notNull(),
+  phone: varchar("phone"),
+  company: varchar("company"),
+  address: varchar("address").notNull(),
+  city: varchar("city").notNull(),
+  postalCode: varchar("postal_code").notNull(),
+  province: varchar("province"),
+  country: varchar("country").default("ES"),
+  quantity: integer("quantity").default(1),
+  unitPriceCents: integer("unit_price_cents").default(2500),
+  totalCents: integer("total_cents").default(2500),
+  notes: text("notes"),
+  confirmationEmailSent: boolean("confirmation_email_sent").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_nfc_orders_email").on(table.email),
+  index("idx_nfc_orders_stripe_pi").on(table.stripePaymentIntentId),
+]);
+
+export const insertNfcOrderSchema = createInsertSchema(nfcOrders).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  confirmationEmailSent: true,
+});
+export type InsertNfcOrder = z.infer<typeof insertNfcOrderSchema>;
+export type NfcOrder = typeof nfcOrders.$inferSelect;
+
 export const alertsRelations = relations(alerts, ({ one }) => ({
   user: one(users, {
     fields: [alerts.userId],

@@ -16,14 +16,29 @@
     "getStarted": "Get Started",
     "new": "New"
   },
+  "promo": {
+    "bar": {
+      "text": "New pricing: 90% off all plans, forever",
+      "cta": "See pricing"
+    }
+  },
   "pricing": {
-    "title": "Simple, transparent pricing",
-    "subtitle": "Choose the plan that fits your business size. All include our leading AI technology.",
+    "badge": "New pricing · 90% off, forever",
+    "title": "Your reviews on autopilot. Now 90% cheaper.",
+    "subtitle": "We cut the price of every plan by 90% — permanently. Same AI, same features, same support — no fine print and no expiry date.",
+    "hero": {
+      "badge": "New pricing · 90% off all plans, forever",
+      "title": "Automate your Google reviews for a tenth of the price",
+      "subtitle": "We cut every plan by 90%, permanently. Pick yours: set it up in minutes, no card to try it, cancel anytime."
+    },
+    "footer": {
+      "questions": "Not sure which plan fits? We'll help you decide in 1 minute."
+    },
     "local": {
       "name": "Local",
       "description": "For a business with one location.",
-      "cta": "Start 3-day free trial",
-      "footnote": "No commitment. If you don't cancel within 3 days, you'll be charged €49/month.",
+      "cta": "Start free — 3 days",
+      "footnote": "No commitment. If you don't cancel within 3 days, you'll be charged €4.90/month (was €49).",
       "f1": "1 location",
       "f2": "Unlimited auto-responses",
       "f3": "Respond to old reviews",
@@ -85,13 +100,13 @@
     "error": "Failed to send message. Please try again."
   },
   "hero": {
-    "badge": "AI Review Management",
+    "badge": "AI Google review management · 90% off all plans",
     "titlePrefix": "Respond to every Google review",
     "titleHighlight": "with AI, automatically",
-    "subtitle": "HolaRevi generates and posts personalized responses to every Google review, in your brand's voice, without you lifting a finger. Save hours and dominate local search.",
-    "ctaPrimary": "Start Free Trial",
-    "ctaSecondary": "Watch Demo",
-    "footerText": "Set up in minutes · 3-day free trial"
+    "subtitle": "HolaRevi reads every Google review and posts a personalized reply in your brand's voice, without you lifting a finger. More reputation, better local SEO, hours back every week — from €4.90/month.",
+    "ctaPrimary": "Start free in 5 minutes",
+    "ctaSecondary": "Watch live demo",
+    "footerText": "No card to start · 3 days free · Cancel anytime · Plans from €4.90/month"
   },
   "common": {
     "loading": "Loading...",
@@ -134,7 +149,18 @@
     "contactUsForPricing": "Contact us for pricing",
     "saveChanges": "Save changes",
     "subscribe": "Subscribe",
+    "subscribeNow": "Subscribe now",
     "customer": "Customer",
+    "discountBadge": "-90%",
+    "before": "Was",
+    "now": "Now",
+    "forever": "forever",
+    "permanentOffer": "This price, forever",
+    "noCommitment": "No lock-in",
+    "cancelAnytime": "Cancel anytime",
+    "securePayment": "Secure payment with Stripe",
+    "humanSupport": "Human support",
+    "instantSetup": "Ready in minutes",
     "days": {
       "dom": "Sun",
       "lun": "Mon",
@@ -709,7 +735,7 @@
         "name": "Local",
         "description": "For a business with one location.",
         "cta": "Start 3-day free trial",
-        "footnote": "No commitment. If you don't cancel within 3 days, you'll be charged €49/month.",
+        "footnote": "No commitment. If you don't cancel within 3 days, you'll be charged €4.90/month (was €49).",
         "f1": "1 location",
         "f2": "Unlimited auto-responses",
         "f3": "Respond to old reviews",
@@ -754,6 +780,10 @@
       "eyebrow": "What customers are saying",
       "title": "Real results from local businesses",
       "subtitle": "From restaurants to clinics. The result is the same: more reputation, less work.",
+      "googleSubtitle": "Real Google Maps reviews and the replies that were published with HolaRevi.",
+      "googleReviewsLabel": "reviews on Google",
+      "repliedWith": "Replied with HolaRevi",
+      "anonymous": "Google user",
       "t1": {
         "text": "Before, it took us days to respond. Now every review gets a response in minutes, with the exact tone we want. Our average rating has increased by half a point in two months.",
         "author": "Operations Manager, Restaurant Chain"
@@ -788,13 +818,22 @@
       },
       "cta": "Contact for advanced solutions"
     },
+    "priceTeaser": {
+      "eyebrow": "HolaRevi's new pricing",
+      "title": "A price that's no longer an excuse",
+      "subtitle": "We cut every plan by 90%, permanently. Same AI, same features — from €4.90/month.",
+      "perMonth": "/month",
+      "cta": "See all plans",
+      "ctaSecondary": "Start for free",
+      "note": "No lock-in · Cancel anytime · Secure payment with Stripe"
+    },
     "finalCta": {
       "eyebrow": "Start Today",
       "title": "Start automating your reviews today",
-      "subtitle": "3 days free. No card. No complications. Connect your Google Business and let AI work for you.",
+      "subtitle": "Every plan now costs 90% less, forever. Connect your Google Business in minutes and let AI reply for you — from €4.90/month.",
       "ctaPrimary": "Start for free — 3 days",
-      "ctaSecondary": "Talk to sales",
-      "feature1": "Connect in minutes",
+      "ctaSecondary": "See pricing",
+      "feature1": "No card to start",
       "feature2": "Cancel anytime"
     },
     "blogSection": {
@@ -948,8 +987,9 @@
     }
   },
   "selectPlan": {
-    "title": "Choose the perfect plan for your business",
-    "subtitle": "Boost your online reputation with the power of AI. All plans include a free trial.",
+    "title": "Choose your plan — now 90% off",
+    "subtitle": "Same product, same features, a tenth of the price. Start with 3 days free, no commitment, cancel anytime.",
+    "discountBanner": "All plans 90% off — forever",
     "monthly": "Monthly",
     "yearly": "Yearly",
     "save20": "Save 20%",
@@ -988,7 +1028,7 @@
         "description": "For chains and multi-location operations.",
         "features": {
           "locationsIncluded": "5 locations included",
-          "extraLocation": "+€39/month per extra location",
+          "extraLocation": "+€3.90/month per extra location",
           "dashboard": "Multi-location dashboard",
           "team": "Unlimited users",
           "permissions": "Permission controls",
@@ -1395,9 +1435,10 @@
     }
   },
   "paywall": {
-    "title": "Subscription Required",
-    "subtitle": "Subscribe to a plan to continue using HolaRevi and manage your Google reviews with AI.",
-    "subscribe": "Subscribe",
+    "title": "Reactivate your account",
+    "subtitle": "Pick any plan — now 90% cheaper, forever — and keep automating your Google reviews with AI.",
+    "discountBadge": "90% off all plans",
+    "subscribe": "Subscribe now",
     "manageBilling": "Manage billing settings",
     "perMonth": "/month"
   },
@@ -1811,7 +1852,7 @@
       "description": "For multi-location chains.",
       "features": {
         "f1": "5 locations included",
-        "f2": "+€39/month per extra location",
+        "f2": "+€3.90/month per extra location",
         "f3": "1000 AI replies/month",
         "f4": "Instagram comment & DM auto-replies",
         "f5": "WhatsApp Business auto-replies",
@@ -1919,26 +1960,26 @@
   "nfc": {
     "seo": {
       "title": "NFC Stand for Google Reviews · Launch Preorder | HolaRevi",
-      "description": "The NFC stand that 5× your Google reviews. No apps, no QR codes. Launch preorder -40% — only first 100 units. Free shipping included.",
+      "description": "The NFC stand that 5× your Google reviews. No apps, no QR codes. Launch preorder -75% — only first 100 units. Free shipping included.",
       "keywords": "NFC stand Google reviews, preorder NFC, NFC restaurant reviews, tap to review, corporate review stand"
     },
     "promobar": {
-      "text": "Launch Preorder · First 100 units with -40%",
-      "cta": "Reserve"
+      "text": "Launch Preorder · First 100 units with -75%",
+      "cta": "Buy now"
     },
     "hero": {
-      "badge": "Launch Preorder · 2026",
+      "badge": "Launch Offer · Only 100 units",
       "rating": "+250 businesses interested",
       "title1": "Turn every customer into a",
       "titleHighlight": "Google review",
       "title2": "in seconds.",
       "subtitle": "The corporate NFC stand that 5× your Google reviews. No apps, no QR codes, no friction. Your customer taps their phone and you're done.",
       "lightningText": "Set up in less than 5 minutes",
-      "priceCrossed": "$99",
-      "priceNew": "$59",
-      "saveText": "Save $40",
+      "priceCrossed": "99€",
+      "priceNew": "25€",
+      "saveText": "Save 74€",
       "saveBadge": "Launch offer",
-      "cta": "Reserve my NFC Stand",
+      "cta": "Buy my NFC Stand — 25€",
       "ctaSecondary": "See how it works",
       "trust1": "Free shipping",
       "trust2": "100% secure payment",
@@ -1948,7 +1989,7 @@
     "urgency": {
       "eyebrow": "Limited offer",
       "title": "Launch pricing ends soon",
-      "subtitle": "Only the first 100 units get -40%. After that, retail price kicks in.",
+      "subtitle": "Only the first 100 units get -75%. After that, retail price kicks in.",
       "days": "Days",
       "hours": "Hours",
       "minutes": "Min",
@@ -2088,11 +2129,11 @@
     "pricing": {
       "eyebrow": "Launch Preorder",
       "title": "Reserve yours at launch price",
-      "subtitle": "First 100 units at 40% off. Once they're gone, retail price applies.",
+      "subtitle": "First 100 units at 75% off. Once they're gone, retail price applies.",
       "tagPopular": "Most reserved",
-      "saveBadge": "Save $40",
-      "priceCrossed": "$99",
-      "priceNew": "$59",
+      "saveBadge": "Save 74€",
+      "priceCrossed": "99€",
+      "priceNew": "25€",
       "unit": "/ unit",
       "feature1": "NFC stand customized with your logo and brand",
       "feature2": "Guided 5-minute setup",
@@ -2101,8 +2142,8 @@
       "feature5": "30-day money-back guarantee",
       "feature6": "Personal email + video-call support",
       "feature7": "Priority access to the HolaRevi platform",
-      "cta": "Reserve my unit",
-      "secureNote": "100% secure payment · You're not charged until shipping",
+      "cta": "Buy my unit — 25€",
+      "secureNote": "100% secure payment with Stripe · 256-bit SSL",
       "shipping": "First shipments: Q1 2026"
     },
     "faq": {
@@ -2129,7 +2170,7 @@
       "title": "Multiply your reviews today.",
       "titleHighlight": "Start now.",
       "subtitle": "Reserve your NFC Stand at launch price. Only a handful of units left at this price.",
-      "ctaPrimary": "Reserve my NFC Stand",
+      "ctaPrimary": "Buy my NFC Stand — 25€",
       "ctaSecondary": "Talk to sales",
       "feature1": "Free shipping",
       "feature2": "30-day guarantee",

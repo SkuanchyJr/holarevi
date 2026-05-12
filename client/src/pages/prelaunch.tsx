@@ -37,10 +37,11 @@ import { useLanguage } from "@/lib/i18n";
 
 type BillingCycle = "monthly" | "yearly";
 
+// Permanent -90% pricing (kept in sync with shared/plans.ts).
 const PRICING = {
-  local: { monthly: 49, yearly: 470.4 },
-  pro: { monthly: 99, yearly: 950.4 },
-  business: { monthly: 199, yearly: 1909.6 },
+  local: { monthly: 4.9, yearly: 47.04 },
+  pro: { monthly: 9.9, yearly: 95.04 },
+  business: { monthly: 19.9, yearly: 190.96 },
 };
 
 export default function Prelaunch() {
@@ -89,7 +90,7 @@ export default function Prelaunch() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="page-texture min-h-screen flex flex-col">
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center py-4">

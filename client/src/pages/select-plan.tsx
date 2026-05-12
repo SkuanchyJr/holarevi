@@ -6,9 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Check, Loader2, MapPin, Zap, Building2 } from "lucide-react";
+import { Check, Loader2, MapPin, Zap, Building2, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { PLANS, type PlanId, type BillingCycle } from "@shared/plans";
+import {
+  PLANS,
+  formatPrice,
+  getPlanMonthlyEquivalent,
+  getPlanPreviousMonthlyEquivalent,
+  type PlanId,
+  type BillingCycle,
+} from "@shared/plans";
 import { LandingHeader } from "@/components/landing-header";
 import { useLanguage } from "@/lib/i18n";
 
@@ -26,7 +33,7 @@ const planColors: Record<string, string> = {
 
 export default function SelectPlan() {
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [billingCycle, setBillingCycle] = useState<BillingCycle>("monthly");
 
   const checkoutMutation = useMutation({
@@ -57,13 +64,8 @@ export default function SelectPlan() {
     checkoutMutation.mutate({ planId, billingCycle });
   };
 
-  const getPrice = (planId: PlanId) => {
-    const plan = PLANS[planId];
-    if (billingCycle === "yearly") {
-      return Math.round((plan.price.yearly / 12) * 100) / 100;
-    }
-    return plan.price.monthly;
-  };
+  const getPrice = (planId: PlanId) => formatPrice(getPlanMonthlyEquivalent(planId, billingCycle), language);
+  const getOldPrice = (planId: PlanId) => formatPrice(getPlanPreviousMonthlyEquivalent(planId, billingCycle), language);
 
   const plans = ["local", "pro", "business"] as PlanId[];
 
@@ -86,13 +88,17 @@ export default function SelectPlan() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="page-texture min-h-screen">
       <LandingHeader showLoginButton={false} />
       <div className="flex flex-col items-center justify-center p-6">
         <div className="max-w-4xl w-full space-y-8">
           <div className="text-center">
+            <Badge variant="secondary" className="mb-4 gap-1.5">
+              <Sparkles className="h-3.5 w-3.5 text-primary" />
+              {t("selectPlan.discountBanner")}
+            </Badge>
             <h1 className="text-3xl font-bold" data-testid="text-select-plan-title">{t("selectPlan.title")}</h1>
-            <p className="text-muted-foreground mt-2">{t("selectPlan.subtitle")}</p>
+            <p className="text-muted-foreground mt-2 max-w-xl mx-auto">{t("selectPlan.subtitle")}</p>
           </div>
         
         <div className="flex items-center justify-center gap-3">
@@ -120,8 +126,14 @@ export default function SelectPlan() {
                   <CardTitle className="mt-4">{getPlanName(planId)}</CardTitle>
                   <CardDescription>{getPlanDescription(planId)}</CardDescription>
                   <div className="mt-4">
-                    <span className="text-3xl font-bold" data-testid={`text-price-${planId}`}>€{getPrice(planId)}</span>
-                    <span className="text-muted-foreground">{t("selectPlan.perMonth")}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm line-through text-muted-foreground" data-testid={`text-old-price-${planId}`}>€{getOldPrice(planId)}</span>
+                      <span className="inline-flex items-center rounded-full bg-primary/15 text-primary text-[10px] font-bold px-1.5 py-0.5 leading-none">{t("common.discountBadge")}</span>
+                    </div>
+                    <div className="mt-0.5">
+                      <span className="text-3xl font-bold" data-testid={`text-price-${planId}`}>€{getPrice(planId)}</span>
+                      <span className="text-muted-foreground">{t("selectPlan.perMonth")}</span>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>

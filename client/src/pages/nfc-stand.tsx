@@ -339,28 +339,43 @@ function StepCard({
   icon,
   title,
   description,
+  delay = 0,
 }: {
   step: string;
   icon: React.ReactNode;
   title: string;
   description: string;
+  delay?: number;
 }) {
+  const ref = useReveal<HTMLDivElement>();
   return (
-    <div className="group relative h-full">
-      <div className="relative rounded-3xl border border-foreground/10 bg-card/50 backdrop-blur-sm p-7 h-full transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/40 overflow-hidden">
-        {/* Hover gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    <div
+      ref={ref}
+      className="reveal-on-scroll group relative h-full"
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      <div className="relative h-full overflow-hidden rounded-3xl border border-primary/20 bg-card p-7 shadow-sm transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/20">
+        {/* Glowing corner */}
+        <div className="pointer-events-none absolute -right-7 -top-7 h-24 w-24 rounded-full bg-primary/30 blur-2xl animate-glow-pulse" />
+        {/* Top accent bar */}
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-blue-400 to-primary bg-[length:200%_100%] animate-shimmer" />
+        {/* Hover wash */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/[0.09] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-        <div className="relative flex items-start justify-between mb-6">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary group-hover:from-primary group-hover:to-blue-500 group-hover:text-primary-foreground transition-all duration-500 shadow-sm">
-            {icon}
-          </div>
-          <span className="text-6xl font-black bg-gradient-to-br from-foreground/10 to-foreground/0 bg-clip-text text-transparent select-none leading-none">
-            {step}
+        {/* Step number — neutral, high contrast */}
+        <div className="absolute right-5 top-5">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-foreground text-base font-extrabold leading-none text-background shadow-md">
+            {Number(step)}
           </span>
         </div>
-        <h3 className="relative text-xl font-bold mb-2 tracking-tight">{title}</h3>
-        <p className="relative text-sm text-muted-foreground leading-relaxed">{description}</p>
+
+        {/* Icon — bold, colorful */}
+        <div className="relative mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-blue-500 text-primary-foreground shadow-lg shadow-primary/30 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
+          {icon}
+        </div>
+
+        <h3 className="relative mb-2 text-xl font-bold tracking-tight">{title}</h3>
+        <p className="relative text-sm leading-relaxed text-muted-foreground">{description}</p>
       </div>
     </div>
   );
@@ -557,7 +572,7 @@ export default function NFCStand() {
   const { t, language } = useLanguage();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const contactHref = `/${language}/contact`;
+  const contactHref = `/${language}/nfc/checkout`;
 
   const STEPS = [
     {
@@ -665,7 +680,7 @@ export default function NFCStand() {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
+    <div className="page-texture min-h-screen text-foreground selection:bg-primary selection:text-primary-foreground">
       <Seo
         title={t("nfc.seo.title")}
         description={t("nfc.seo.description")}
@@ -833,14 +848,20 @@ export default function NFCStand() {
       </section>
 
       {/* ─── HOW IT WORKS ─────────────────────────────────────────────────── */}
-      <section
-        id="how"
-        className="py-16 sm:py-24 reveal-on-scroll"
-        ref={useReveal<HTMLElement>()}
-      >
+      <section id="how" className="relative overflow-hidden py-16 sm:py-24">
+        {/* Backdrop — adds depth & a touch of colour */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-grid-pattern opacity-[0.35] [mask-image:radial-gradient(ellipse_at_center,black,transparent_72%)]" />
+          <div className="absolute left-1/2 top-1/4 h-72 w-[44rem] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]" />
+        </div>
+
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-2xl text-center mb-14">
-            <Badge variant="secondary" className="mb-4">
+          <div
+            className="reveal-on-scroll mx-auto mb-14 max-w-2xl text-center"
+            ref={useReveal<HTMLDivElement>()}
+          >
+            <Badge variant="secondary" className="mb-4 gap-1.5 border-primary/20 bg-primary/10">
+              <Zap className="h-3.5 w-3.5 text-primary" />
               {t("nfc.how.eyebrow")}
             </Badge>
             <h2 className="text-3xl font-bold tracking-tight sm:text-5xl">
@@ -849,13 +870,25 @@ export default function NFCStand() {
             <p className="mt-4 text-muted-foreground text-lg">{t("nfc.how.subtitle")}</p>
           </div>
 
-          <div className="mx-auto max-w-5xl grid gap-6 md:grid-cols-3 relative">
-            {/* connector line */}
-            <div className="absolute left-0 right-0 top-[3.5rem] hidden md:block">
-              <div className="mx-[16%] h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+          <div className="relative mx-auto max-w-5xl grid gap-6 md:grid-cols-3">
+            {/* Animated connector (desktop) */}
+            <div className="pointer-events-none absolute inset-x-0 top-14 hidden h-7 md:block">
+              <div className="absolute inset-x-[15%] top-1/2 h-0.5 -translate-y-1/2 rounded-full bg-gradient-to-r from-transparent via-primary/50 to-transparent bg-[length:200%_100%] animate-shimmer" />
+              {[1, 2].map((n) => (
+                <div
+                  key={n}
+                  className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  style={{ left: n === 1 ? "33.333%" : "66.667%" }}
+                >
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full border border-primary/25 bg-background text-primary shadow-md">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </div>
+                </div>
+              ))}
             </div>
-            {STEPS.map((step) => (
-              <StepCard key={step.step} {...step} />
+
+            {STEPS.map((step, i) => (
+              <StepCard key={step.step} {...step} delay={i * 130} />
             ))}
           </div>
         </div>
@@ -1322,7 +1355,7 @@ export default function NFCStand() {
                 {t("nfc.hero.priceCrossed")}
               </span>
               <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 text-[10px] py-0 h-4">
-                -40%
+                -75%
               </Badge>
             </div>
             <div className="text-[11px] text-muted-foreground truncate">

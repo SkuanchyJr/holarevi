@@ -4,9 +4,16 @@ import { apiRequest } from "@/lib/queryClient";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Loader2, MapPin, Zap, Building2, AlertCircle } from "lucide-react";
+import { Check, Loader2, MapPin, Zap, Building2, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { PLANS, type PlanId, type BillingCycle } from "@shared/plans";
+import {
+  PLANS,
+  formatPrice,
+  getPlanMonthlyEquivalent,
+  getPlanPreviousMonthlyEquivalent,
+  type PlanId,
+  type BillingCycle,
+} from "@shared/plans";
 import { Link } from "wouter";
 import { useLanguage } from "@/lib/i18n";
 
@@ -23,7 +30,7 @@ const planColors: Record<string, string> = {
 };
 
 export default function Paywall() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { toast } = useToast();
   const [billingCycle] = useState<BillingCycle>("monthly");
 
@@ -52,14 +59,11 @@ export default function Paywall() {
     checkoutMutation.mutate({ planId, billingCycle: effectiveCycle });
   };
 
-  const getDisplayPrice = (planId: PlanId) => {
-    const plan = PLANS[planId];
-    if (billingCycle === "yearly" && plan.hasYearly) {
-      return Math.round((plan.price.yearly / 12) * 100) / 100;
-    }
-    return plan.price.monthly;
-  };
-  
+  const getDisplayPrice = (planId: PlanId) =>
+    formatPrice(getPlanMonthlyEquivalent(planId, getEffectiveBillingCycle(planId)), language);
+  const getOldDisplayPrice = (planId: PlanId) =>
+    formatPrice(getPlanPreviousMonthlyEquivalent(planId, getEffectiveBillingCycle(planId)), language);
+
   const getEffectiveBillingCycle = (planId: PlanId): BillingCycle => {
     const plan = PLANS[planId];
     if (billingCycle === "yearly" && !plan.hasYearly) {
@@ -73,9 +77,12 @@ export default function Paywall() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
       <div className="max-w-4xl w-full space-y-8">
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10 mb-4">
-            <AlertCircle className="h-8 w-8 text-destructive" />
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-1">
+            <Sparkles className="h-8 w-8 text-primary" />
+          </div>
+          <div>
+            <Badge variant="secondary" className="bg-primary/10 text-primary font-semibold">{t("paywall.discountBadge")}</Badge>
           </div>
           <h1 className="text-3xl font-bold" data-testid="text-paywall-title">{t("paywall.title")}</h1>
           <p className="text-muted-foreground max-w-md mx-auto">
@@ -97,8 +104,14 @@ export default function Paywall() {
                   <CardTitle className="mt-4">{t(`plans.${planId}.name`)}</CardTitle>
                   <CardDescription>{t(`plans.${planId}.description`)}</CardDescription>
                   <div className="mt-4">
-                    <span className="text-3xl font-bold" data-testid={`text-price-${planId}`}>€{getDisplayPrice(planId)}</span>
-                    <span className="text-muted-foreground">{t("paywall.perMonth")}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm line-through text-muted-foreground" data-testid={`text-old-price-${planId}`}>€{getOldDisplayPrice(planId)}</span>
+                      <span className="inline-flex items-center rounded-full bg-primary/15 text-primary text-[10px] font-bold px-1.5 py-0.5 leading-none">{t("common.discountBadge")}</span>
+                    </div>
+                    <div className="mt-0.5">
+                      <span className="text-3xl font-bold" data-testid={`text-price-${planId}`}>€{getDisplayPrice(planId)}</span>
+                      <span className="text-muted-foreground">{t("paywall.perMonth")}</span>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>

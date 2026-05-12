@@ -306,6 +306,26 @@
     background-size: 48px 48px;
   }
 
+  /* Page-level paper texture for public screens */
+  .page-texture {
+    position: relative;
+    isolation: isolate;
+    background-color: hsl(var(--background));
+    background-image:
+      linear-gradient(135deg, hsl(var(--primary) / 0.055), transparent 34%, hsl(160 75% 45% / 0.035) 68%, transparent),
+      radial-gradient(circle at 1px 1px, hsl(var(--foreground) / 0.08) 1px, transparent 0),
+      repeating-linear-gradient(0deg, hsl(var(--foreground) / 0.025) 0 1px, transparent 1px 6px);
+    background-size: 100% 100%, 22px 22px, 100% 6px;
+    background-attachment: fixed, fixed, fixed;
+  }
+
+  .dark .page-texture {
+    background-image:
+      linear-gradient(135deg, hsl(var(--primary) / 0.08), transparent 36%, hsl(160 75% 55% / 0.04) 70%, transparent),
+      radial-gradient(circle at 1px 1px, hsl(var(--foreground) / 0.07) 1px, transparent 0),
+      repeating-linear-gradient(0deg, hsl(var(--foreground) / 0.02) 0 1px, transparent 1px 6px);
+  }
+
   /* Subtle dotted overlay */
   .bg-dot-pattern {
     background-image: radial-gradient(circle at 1px 1px, hsl(var(--foreground) / 0.08) 1px, transparent 0);

@@ -30,7 +30,7 @@ export default function BlogPage() {
   const blogs = blogsData?.blogs || [];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="page-texture min-h-screen">
       <LandingHeader />
       
       <main className="container mx-auto px-4 py-12">

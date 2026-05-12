@@ -39,6 +39,7 @@ import {
   PLAN_ERROR_CODES,
 } from "./planHelpers";
 import { createPrelaunchMiddleware, setPrelaunchEnabled, isPrelaunchEnabled } from "./prelaunchMiddleware";
+import { registerNfcShopRoutes } from "./nfcShopRoutes";
 import Database from "@replit/database";
 
 let replitDb: any;
@@ -1175,6 +1176,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Cancel Stripe subscription if exists
       if (user.stripeSubscriptionId) {
         try {
+          const stripe = await getUncachableStripeClient();
           await stripe.subscriptions.cancel(user.stripeSubscriptionId);
           console.log(`Cancelled subscription ${user.stripeSubscriptionId} for user ${userId}`);
         } catch (stripeError: any) {
@@ -3200,7 +3202,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const sales = await storage.getAffiliateSales(affiliate.id);
           const totalSalesEur = sales.reduce((sum, s) => sum + (s.planSoldEur || 0), 0);
           const validatedSales = sales.filter(s => s.status === "validated" || s.status === "paid");
-          const totalCommission = validatedSales.reduce((sum, s) => sum + (s.planSoldEur || 0) * (affiliate.commissionPct / 100), 0);
+          const totalCommission = validatedSales.reduce((sum, s) => sum + (s.planSoldEur || 0) * ((affiliate.commissionPct ?? 0) / 100), 0);
           return {
             ...affiliate,
             passwordHash: undefined, // Don't expose password hash
@@ -3785,7 +3787,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
 
       // Create checkout session for extra location
-      // Use a price ID for the extra location addon (€39/month)
+      // Extra location add-on for the Business plan (€3.90/month — permanent -90% pricing)
       const session = await stripe.checkout.sessions.create({
         customer: customerId,
         payment_method_types: ["card"],
@@ -3796,7 +3798,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               name: "Extra Location Add-on",
               description: "Add one extra location to your Business plan",
             },
-            unit_amount: 3900, // €39 in cents
+            unit_amount: 390, // €3.90 in cents
             recurring: {
               interval: "month",
             },
@@ -4415,6 +4417,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ success: false, message: "Failed to fetch sales" });
     }
   });
+
+  registerNfcShopRoutes(app);
 
   const httpServer = createServer(app);
   return httpServer;

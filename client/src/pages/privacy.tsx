@@ -6,7 +6,7 @@ import { useLanguage } from "@/lib/i18n";
 export default function PrivacyPolicy() {
   const { t } = useLanguage();
   return (
-    <div className="min-h-screen bg-background">
+    <div className="page-texture min-h-screen">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8">
           <Link href="/">

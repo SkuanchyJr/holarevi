@@ -55,6 +55,8 @@ import BlogPage from "@/pages/blog";
 import BlogPostPage from "@/pages/blog-post";
 import Pricing from "@/pages/pricing";
 import NFCStand from "@/pages/nfc-stand";
+import NFCCheckout from "@/pages/nfc-checkout";
+import NFCOrderSuccess from "@/pages/nfc-order-success";
 import NotFound from "@/pages/not-found";
 import { InvitationPopup } from "@/components/invitation-popup";
 import { TrialBanner } from "@/components/trial-banner";
@@ -183,7 +185,7 @@ function LocalizedRouter({ currentPath }: { currentPath: string }) {
   if (authLoading && user === undefined) return <LoadingScreen />;
 
   const subscriptionStatus = user?.subscriptionStatus?.trim();
-  const isPublicRoute = currentPath === "/" || currentPath === "/auth" || currentPath === "/prelaunch" || currentPath.startsWith("/blog") || currentPath === "/contact" || currentPath === "/select-plan" || currentPath === "/pricing" || currentPath === "/nfc";
+  const isPublicRoute = currentPath === "/" || currentPath === "/auth" || currentPath === "/prelaunch" || currentPath.startsWith("/blog") || currentPath === "/contact" || currentPath === "/select-plan" || currentPath === "/pricing" || currentPath === "/nfc" || currentPath === "/nfc/checkout" || currentPath === "/nfc/order-success";
 
   // SUBSCRIPTION CHECK MUST COME FIRST
   // A new user with subscriptionStatus="pending" must select a plan before onboarding
@@ -208,6 +210,8 @@ function LocalizedRouter({ currentPath }: { currentPath: string }) {
         <Route path="/:lang/blog" component={BlogPage} />
         <Route path="/:lang/pricing" component={Pricing} />
         <Route path="/:lang/nfc" component={NFCStand} />
+        <Route path="/:lang/nfc/checkout" component={NFCCheckout} />
+        <Route path="/:lang/nfc/order-success" component={NFCOrderSuccess} />
         <Route path="/:lang/google-permissions" component={GooglePermissions} />
         <Route path="/:lang/prelaunch" component={Prelaunch} />
         <Route path="/:lang/*" component={NotFound} />

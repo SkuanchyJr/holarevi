@@ -470,7 +470,7 @@ export default function QRReviews() {
                     size="sm"
                     className="flex-1 h-8 text-xs gap-1"
                     onClick={() => {
-                      const svg = document.getElementById(`qr-detail-svg-${qrDetails.qr.id}`) as SVGElement;
+                      const svg = document.getElementById(`qr-detail-svg-${qrDetails.qr.id}`) as unknown as SVGElement;
                       if (svg) {
                         const blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: "image/svg+xml" });
                         const url = URL.createObjectURL(blob);

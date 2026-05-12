@@ -107,7 +107,7 @@ export default function ReviewSummary() {
   });
 
   const getDateLocale = () => {
-    switch (uiLanguage) {
+    switch (uiLanguage as string) {
       case "es": return es;
       case "ca": return ca;
       default: return enUS;

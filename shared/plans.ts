@@ -16,12 +16,18 @@ export interface PlanFeature {
 export interface PlanPrice {
   monthly: number;
   yearly: number;
+  /** Pre-discount price, kept for "before / now" price contrast in the UI. */
+  previousMonthly?: number;
+  previousYearly?: number;
   currency: string;
   stripePriceIds: {
     monthly: string;
     yearly: string;
   };
 }
+
+/** Permanent price-cut applied to every plan (percentage off the old price). */
+export const PERMANENT_DISCOUNT_PERCENT = 90;
 
 export interface Plan {
   id: PlanId;
@@ -36,6 +42,16 @@ export interface Plan {
   trialAllowed: boolean;
   extraLocationPrice?: number;
 }
+
+// ──────────────────────────────────────────────────────────────────────────
+// PRICING NOTE — PERMANENT -90% PRICE CUT (May 2026)
+// All plan prices below were reduced by 90% (e.g. Local 49€ → 4,90€/mo).
+// `stripePriceIds` still point at the OLD Stripe Prices. Before this goes to
+// production you MUST create new Stripe Prices that match the amounts here and
+// replace the IDs below, otherwise checkout will charge the old amounts.
+// The same applies to the server-side "extra location" add-on price in
+// server/routes.ts (currently unit_amount: 3900 → should become 390).
+// ──────────────────────────────────────────────────────────────────────────
 
 export const TRIAL_CONFIG = {
   trialDays: 3, // Local plan trial duration (managed by Stripe)
@@ -53,9 +69,12 @@ export const PLANS: Record<PlanId, Plan> = {
     name: "Local",
     description: "Perfect for single-location restaurants.",
     price: {
-      monthly: 49,
-      yearly: 470,
+      monthly: 4.9,
+      yearly: 47,
+      previousMonthly: 49,
+      previousYearly: 470,
       currency: "EUR",
+      // TODO(pricing): replace with the new -90% Stripe Price IDs before going live.
       stripePriceIds: {
         monthly: "price_1SeggpCWGp48IrUqKKOzqamR",
         yearly: "price_1SkUlcCWGp48IrUqVLKjDbFq",
@@ -87,9 +106,12 @@ export const PLANS: Record<PlanId, Plan> = {
     name: "Pro",
     description: "For growing restaurant groups.",
     price: {
-      monthly: 99,
-      yearly: 950,
+      monthly: 9.9,
+      yearly: 95,
+      previousMonthly: 99,
+      previousYearly: 950,
       currency: "EUR",
+      // TODO(pricing): replace with the new -90% Stripe Price IDs before going live.
       stripePriceIds: {
         monthly: "price_1SkU3TCWGp48IrUqyRn3Oah2",
         yearly: "price_1SkUkqCWGp48IrUqtvbzyOT3",
@@ -122,9 +144,12 @@ export const PLANS: Record<PlanId, Plan> = {
     name: "Business",
     description: "For multi-location chains.",
     price: {
-      monthly: 199,
-      yearly: 1910,
+      monthly: 19.9,
+      yearly: 191,
+      previousMonthly: 199,
+      previousYearly: 1910,
       currency: "EUR",
+      // TODO(pricing): replace with the new -90% Stripe Price IDs before going live.
       stripePriceIds: {
         monthly: "price_1SkUKbCWGp48IrUqdNXhOqkS",
         yearly: "price_1SkUj8CWGp48IrUqQYuEMtpv",
@@ -138,7 +163,7 @@ export const PLANS: Record<PlanId, Plan> = {
     },
     features: [
       "5 locations included",
-      "+€39/month per extra location",
+      "+€3.90/month per extra location",
       "1000 AI replies/month",
       "WhatsApp Business auto-replies",
       "TripAdvisor auto-replies",
@@ -155,7 +180,7 @@ export const PLANS: Record<PlanId, Plan> = {
     isCustomPricing: false,
     isPopular: false,
     trialAllowed: false,
-    extraLocationPrice: 39,
+    extraLocationPrice: 3.9,
   },
   enterprise: {
     id: "enterprise",
@@ -219,6 +244,34 @@ export function getPlanMonthlyEquivalent(
     return Math.round((plan.price.yearly / 12) * 100) / 100;
   }
   return plan.price.monthly;
+}
+
+// Pre-discount ("before") monthly-equivalent price, used for "was X / now Y" UI.
+// Falls back to 10x the current price if no explicit previous price is set.
+export function getPlanPreviousMonthlyEquivalent(
+  planId: PlanId,
+  billingCycle: BillingCycle,
+): number {
+  const plan = PLANS[planId];
+  if (plan.isCustomPricing) return 0;
+  if (billingCycle === "yearly") {
+    const prevYearly =
+      plan.price.previousYearly ?? plan.price.yearly * (100 / (100 - PERMANENT_DISCOUNT_PERCENT));
+    return Math.round((prevYearly / 12) * 100) / 100;
+  }
+  return (
+    plan.price.previousMonthly ?? plan.price.monthly * (100 / (100 - PERMANENT_DISCOUNT_PERCENT))
+  );
+}
+
+// Format a price number for display (no currency symbol; callers prefix "€").
+// Keeps two decimals only when the amount has cents (4.9 → "4,90", 47 → "47").
+export function formatPrice(amount: number, language: "es" | "en" = "es"): string {
+  const hasCents = Math.round(amount * 100) % 100 !== 0;
+  return new Intl.NumberFormat(language === "es" ? "es-ES" : "en-US", {
+    minimumFractionDigits: hasCents ? 2 : 0,
+    maximumFractionDigits: 2,
+  }).format(amount);
 }
 
 export function getStripePriceId(

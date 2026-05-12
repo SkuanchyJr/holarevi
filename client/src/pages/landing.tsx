@@ -55,19 +55,22 @@ import { LandingHeader } from "@/components/landing-header";
 import { Link } from "wouter";
 import { ReviewDemo } from "@/components/review-demo";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
+import { format, formatDistanceToNow } from "date-fns";
+import { es, enUS } from "date-fns/locale";
 import type { Blog } from "@shared/schema";
+import { formatPrice } from "@shared/plans";
 import { SiInstagram, SiTiktok } from "react-icons/si";
 import { Seo } from "@/components/seo";
 import { useLanguage } from "@/lib/i18n";
 
 type BillingCycle = "monthly" | "yearly";
 
+// Permanent -90% pricing. `oldMonthly` is the pre-discount price (kept for the
+// "before / now" contrast in the landing price teaser).
 const PRICING = {
-  local: { monthly: 49, yearly: 470.4 },
-  pro: { monthly: 99, yearly: 950.4 },
-  business: { monthly: 199, yearly: 1909.6 },
+  local: { monthly: 4.9, yearly: 47.04, oldMonthly: 49 },
+  pro: { monthly: 9.9, yearly: 95.04, oldMonthly: 99 },
+  business: { monthly: 19.9, yearly: 190.96, oldMonthly: 199 },
 };
 
 type PlanKey = keyof typeof PRICING | "enterprise";
@@ -79,6 +82,33 @@ const STATS = [
   { label: "landing.stats.responseTime", value: "2 min" },
   { label: "landing.stats.locations", value: "120+" },
 ];
+
+// Google Business profile that powers the "testimonios" section: real Google Maps
+// reviews + the replies that were published with HolaRevi. Set this to the
+// restaurant ID (restaurants table) whose reviews should be showcased. While it's
+// empty the section falls back to the static testimonials carousel below.
+const SHOWCASE_RESTAURANT_ID = "";
+// How many reviews to pull for the wall (only reviews with a published reply are returned).
+const SHOWCASE_REVIEWS_LIMIT = 100;
+
+type PublicReview = {
+  id: string;
+  reviewerName: string | null;
+  reviewerPhotoUrl: string | null;
+  rating: number;
+  comment: string | null;
+  language: string | null;
+  postedReply: string | null;
+  generatedReply: string | null;
+  reviewedAt: string | null;
+  repliedAt: string | null;
+};
+
+type PublicReviewsResponse = {
+  success: boolean;
+  restaurantName: string;
+  reviews: PublicReview[];
+};
 
 // LOGOS moved inside component
 
@@ -211,6 +241,125 @@ function ReviewCard({
   );
 }
 
+// ─── Google-styled review card for the testimonials wall ────────────────────
+
+function GoogleGLogo({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden="true">
+      <path
+        fill="#EA4335"
+        d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+      />
+      <path
+        fill="#4285F4"
+        d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+      />
+      <path
+        fill="#34A853"
+        d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+      />
+    </svg>
+  );
+}
+
+function GoogleStars({ rating, className }: { rating: number; className?: string }) {
+  return (
+    <div className={cn("flex gap-0.5", className)}>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star
+          key={i}
+          className={cn(
+            "h-3.5 w-3.5",
+            i < rating ? "fill-[#FBBC04] text-[#FBBC04]" : "text-muted-foreground/25"
+          )}
+        />
+      ))}
+    </div>
+  );
+}
+
+function GoogleReviewCard({
+  review,
+  businessName,
+}: {
+  review: PublicReview;
+  businessName: string;
+}) {
+  const { t, language } = useLanguage();
+  const [imgFailed, setImgFailed] = useState(false);
+  const reply = (review.postedReply ?? review.generatedReply ?? "").trim();
+  const dateLocale = language === "es" ? es : enUS;
+  const reviewedDate = review.reviewedAt ? new Date(review.reviewedAt) : null;
+  const showPhoto = Boolean(review.reviewerPhotoUrl) && !imgFailed;
+  const reviewerName =
+    review.reviewerName?.trim() || t("landing.testimonials.anonymous");
+  const initial = reviewerName.charAt(0).toUpperCase();
+
+  return (
+    <Card className="rounded-2xl bg-background shadow-sm">
+      <CardContent className="p-6">
+        {/* Header: reviewer + Google badge */}
+        <div className="flex items-start gap-3">
+          {showPhoto ? (
+            <img
+              src={review.reviewerPhotoUrl as string}
+              alt={reviewerName}
+              className="h-10 w-10 rounded-full object-cover"
+              loading="lazy"
+              referrerPolicy="no-referrer"
+              onError={() => setImgFailed(true)}
+            />
+          ) : (
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
+              {initial}
+            </div>
+          )}
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-medium leading-tight">{reviewerName}</p>
+            <div className="mt-1 flex items-center gap-2">
+              <GoogleStars rating={review.rating} />
+              {reviewedDate ? (
+                <span className="text-xs text-muted-foreground">
+                  {formatDistanceToNow(reviewedDate, { addSuffix: true, locale: dateLocale })}
+                </span>
+              ) : null}
+            </div>
+          </div>
+          <GoogleGLogo className="h-5 w-5 shrink-0" />
+        </div>
+
+        {/* Review text */}
+        {review.comment ? (
+          <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-foreground/90">
+            {review.comment}
+          </p>
+        ) : null}
+
+        {/* Owner reply published with HolaRevi — intentionally smaller */}
+        {reply ? (
+          <div className="mt-4 rounded-xl border-l-2 border-primary/30 bg-muted/40 p-3">
+            <div className="mb-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+              <span className="text-xs font-medium">{businessName}</span>
+              <span className="text-[11px] text-muted-foreground">·</span>
+              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary">
+                <Sparkles className="h-3 w-3" />
+                {t("landing.testimonials.repliedWith")}
+              </span>
+            </div>
+            <p className="whitespace-pre-line text-xs leading-relaxed text-muted-foreground">
+              {reply}
+            </p>
+          </div>
+        ) : null}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function Landing() {
   const { t, language } = useLanguage();
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -305,6 +454,24 @@ export default function Landing() {
   });
   const blogs = blogsData?.blogs?.slice(0, 3) || [];
 
+  // Real Google Maps reviews (with their published HolaRevi replies) for the
+  // testimonials wall. Falls back to the static carousel when no showcase
+  // restaurant is configured or none of its reviews have a published reply.
+  const { data: googleReviewsData } = useQuery<PublicReviewsResponse>({
+    queryKey: [
+      `/api/public/reviews/${SHOWCASE_RESTAURANT_ID}?limit=${SHOWCASE_REVIEWS_LIMIT}`,
+    ],
+    enabled: SHOWCASE_RESTAURANT_ID.length > 0,
+  });
+  const googleReviews = (googleReviewsData?.reviews ?? []).filter(
+    (r) => (r.postedReply ?? r.generatedReply ?? "").trim().length > 0
+  );
+  const hasGoogleReviews = googleReviews.length > 0;
+  const showcaseBusinessName = googleReviewsData?.restaurantName ?? "HolaRevi";
+  const googleAvgRating = hasGoogleReviews
+    ? googleReviews.reduce((sum, r) => sum + r.rating, 0) / googleReviews.length
+    : 0;
+
   const testimonials = [
     {
       text: t("landing.testimonials.t1.text"),
@@ -357,7 +524,7 @@ export default function Landing() {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
+    <div className="page-texture min-h-screen text-foreground selection:bg-primary selection:text-primary-foreground">
       <Seo 
         title={t("seo.home.title")}
         description={t("seo.home.description")}
@@ -824,50 +991,77 @@ export default function Landing() {
           <SectionHeader
             eyebrow={t("landing.testimonials.eyebrow")}
             title={t("landing.testimonials.title")}
-            subtitle={t("landing.testimonials.subtitle")}
+            subtitle={
+              hasGoogleReviews
+                ? t("landing.testimonials.googleSubtitle")
+                : t("landing.testimonials.subtitle")
+            }
           />
 
-          <div className="mx-auto mt-12 max-w-3xl">
-            <Card className="rounded-2xl">
-              <CardContent className="p-8 sm:p-10">
-                <div className="flex gap-1 mb-6">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
-                  ))}
-                </div>
-                <p className="text-lg sm:text-xl text-foreground leading-relaxed">
-                  "{testimonials[currentTestimonial].text}"
-                </p>
-                <p className="mt-6 font-semibold text-sm text-muted-foreground">
-                  — {testimonials[currentTestimonial].author}
-                </p>
+          {hasGoogleReviews ? (
+            <>
+              {/* Google rating summary — gives the section an "official" feel */}
+              <div className="mx-auto mt-6 flex flex-wrap items-center justify-center gap-2 text-sm">
+                <GoogleGLogo className="h-4 w-4" />
+                <span className="font-semibold">{googleAvgRating.toFixed(1)}</span>
+                <GoogleStars rating={Math.round(googleAvgRating)} />
+                <span className="text-muted-foreground">
+                  {googleReviews.length} {t("landing.testimonials.googleReviewsLabel")}
+                </span>
+              </div>
 
-                <div className="mt-8 flex items-center justify-between">
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={goPrev}
-                      aria-label={t("landing.testimonials.prev")}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={goNext}
-                      aria-label={t("landing.testimonials.next")}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
+              {/* Masonry wall of real Google reviews + the replies posted with HolaRevi */}
+              <div className="mx-auto mt-12 max-w-6xl columns-1 gap-6 sm:columns-2 lg:columns-3">
+                {googleReviews.map((review) => (
+                  <div key={review.id} className="mb-6 break-inside-avoid">
+                    <GoogleReviewCard review={review} businessName={showcaseBusinessName} />
                   </div>
-                  <span className="text-sm text-muted-foreground">
-                    {currentTestimonial + 1} / {totalTestimonials}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="mx-auto mt-12 max-w-3xl">
+              <Card className="rounded-2xl">
+                <CardContent className="p-8 sm:p-10">
+                  <div className="flex gap-1 mb-6">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
+                    ))}
+                  </div>
+                  <p className="text-lg sm:text-xl text-foreground leading-relaxed">
+                    "{testimonials[currentTestimonial].text}"
+                  </p>
+                  <p className="mt-6 font-semibold text-sm text-muted-foreground">
+                    — {testimonials[currentTestimonial].author}
+                  </p>
+
+                  <div className="mt-8 flex items-center justify-between">
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={goPrev}
+                        aria-label={t("landing.testimonials.prev")}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={goNext}
+                        aria-label={t("landing.testimonials.next")}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <span className="text-sm text-muted-foreground">
+                      {currentTestimonial + 1} / {totalTestimonials}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       </section>
 
@@ -993,6 +1187,74 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ─── PRECIO / PRICE TEASER ──────────────────────────────────────── */}
+      <section id="pricing" className="py-16 sm:py-24 bg-muted/20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-4xl text-center">
+            <Badge variant="secondary" className="mb-4 gap-1.5">
+              <Sparkles className="h-3.5 w-3.5 text-primary" />
+              {t("landing.priceTeaser.eyebrow")}
+            </Badge>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              {t("landing.priceTeaser.title")}
+            </h2>
+            <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
+              {t("landing.priceTeaser.subtitle")}
+            </p>
+
+            <div className="mt-10 grid gap-4 sm:grid-cols-3 max-w-3xl mx-auto">
+              {([
+                { id: "local", name: "Local", popular: false },
+                { id: "pro", name: "Pro", popular: true },
+                { id: "business", name: "Business", popular: false },
+              ] as const).map((p) => (
+                <Card
+                  key={p.id}
+                  className={cn(
+                    "rounded-2xl",
+                    p.popular && "border-primary border-2"
+                  )}
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="text-sm font-semibold text-muted-foreground">{p.name}</span>
+                      {p.popular && (
+                        <Badge variant="secondary" className="text-[10px]">{t("common.mostPopular")}</Badge>
+                      )}
+                    </div>
+                    <div className="mt-3 flex items-center justify-center gap-2">
+                      <span className="text-sm line-through text-muted-foreground">
+                        €{formatPrice(PRICING[p.id].oldMonthly, language)}
+                      </span>
+                      <span className="inline-flex items-center rounded-full bg-primary/15 text-primary text-[10px] font-bold px-1.5 py-0.5 leading-none">
+                        {t("common.discountBadge")}
+                      </span>
+                    </div>
+                    <div className="mt-1 flex items-baseline justify-center gap-1">
+                      <span className="text-3xl font-bold">€{formatPrice(PRICING[p.id].monthly, language)}</span>
+                      <span className="text-sm text-muted-foreground">{t("landing.priceTeaser.perMonth")}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <Button size="lg" asChild className="text-base px-8" data-testid="button-price-teaser-pricing">
+                <Link href={`/${language}/pricing`}>
+                  {t("landing.priceTeaser.cta")}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild className="text-base" data-testid="button-price-teaser-start">
+                <a href={`/${language}/auth`}>{t("landing.priceTeaser.ctaSecondary")}</a>
+              </Button>
+            </div>
+            <p className="mt-4 text-sm text-muted-foreground">{t("landing.priceTeaser.note")}</p>
+          </div>
+        </div>
+      </section>
+
       {/* ─── I) FAQ ─────────────────────────────────────────────────────── */}
       <section id="faq" className="py-16 sm:py-24">
         <div className="container mx-auto px-4">
@@ -1035,8 +1297,8 @@ export default function Landing() {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </a>
               </Button>
-              <Button size="lg" variant="outline" asChild className="text-base" data-testid="button-final-cta-contact">
-                <Link href={`/${language}/contact`}>{t("landing.finalCta.ctaSecondary")}</Link>
+              <Button size="lg" variant="outline" asChild className="text-base" data-testid="button-final-cta-pricing">
+                <Link href={`/${language}/pricing`}>{t("landing.finalCta.ctaSecondary")}</Link>
               </Button>
             </div>
 
