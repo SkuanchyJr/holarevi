@@ -65,12 +65,11 @@ import { useLanguage } from "@/lib/i18n";
 
 type BillingCycle = "monthly" | "yearly";
 
-// Permanent -90% pricing. `oldMonthly` is the pre-discount price (kept for the
-// "before / now" contrast in the landing price teaser).
+// Keep these in sync with shared/plans.ts (yearly = monthly × 10, i.e. "2 months free").
 const PRICING = {
-  local: { monthly: 4.9, yearly: 47.04, oldMonthly: 49 },
-  pro: { monthly: 9.9, yearly: 95.04, oldMonthly: 99 },
-  business: { monthly: 19.9, yearly: 190.96, oldMonthly: 199 },
+  local: { monthly: 14, yearly: 140 },
+  pro: { monthly: 39, yearly: 390 },
+  business: { monthly: 99, yearly: 990 },
 };
 
 type PlanKey = keyof typeof PRICING | "enterprise";
@@ -83,12 +82,7 @@ const STATS = [
   { label: "landing.stats.locations", value: "120+" },
 ];
 
-// Google Business profile that powers the "testimonios" section: real Google Maps
-// reviews + the replies that were published with HolaRevi. Set this to the
-// restaurant ID (restaurants table) whose reviews should be showcased. While it's
-// empty the section falls back to the static testimonials carousel below.
-const SHOWCASE_RESTAURANT_ID = "";
-// How many reviews to pull for the wall (only reviews with a published reply are returned).
+// How many reviews to pull for the testimonials wall (only posted replies are returned).
 const SHOWCASE_REVIEWS_LIMIT = 100;
 
 type PublicReview = {
@@ -237,6 +231,82 @@ function ReviewCard({
           <p className="text-xs text-muted-foreground">{response}</p>
         </div>
       )}
+    </div>
+  );
+}
+
+// ─── Product-themed background visual for the landing hero ──────────────────
+
+function HeroBackgroundVisual() {
+  const floatingItems = [
+    {
+      className: "left-[5%] top-14 w-44 rotate-[-8deg]",
+      icon: <Star className="h-4 w-4 fill-amber-400 text-amber-400" />,
+      label: "Nueva reseña",
+      value: "5.0",
+      detail: "Google Reviews",
+    },
+    {
+      className: "right-[6%] top-24 w-48 rotate-[7deg]",
+      icon: <TrendingUp className="h-4 w-4 text-emerald-500" />,
+      label: "Reputación",
+      value: "+32%",
+      detail: "más respuestas",
+    },
+    {
+      className: "left-[8%] bottom-28 w-48 rotate-[6deg]",
+      icon: <span className="text-sm font-bold text-emerald-600">€</span>,
+      label: "Ingresos protegidos",
+      value: "+1.240€",
+      detail: "clientes recuperados",
+    },
+    {
+      className: "right-[9%] bottom-20 w-52 rotate-[-6deg]",
+      icon: <MessageSquare className="h-4 w-4 text-primary" />,
+      label: "Respuesta IA",
+      value: "2 min",
+      detail: "lista para publicar",
+    },
+  ];
+
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/8 via-background to-background" />
+      <div className="absolute -top-32 left-1/2 h-96 w-[50rem] -translate-x-1/2 rounded-full bg-primary/12 blur-3xl" />
+      <div className="absolute left-[8%] top-1/4 h-72 w-72 rounded-full bg-emerald-400/10 blur-3xl" />
+      <div className="absolute right-[4%] top-1/3 h-80 w-80 rounded-full bg-amber-300/12 blur-3xl" />
+      <div className="absolute inset-x-0 top-28 hidden h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent md:block" />
+      <div className="absolute inset-x-0 bottom-36 hidden h-px bg-gradient-to-r from-transparent via-emerald-400/20 to-transparent md:block" />
+
+      <div className="hidden md:block">
+        {floatingItems.map((item) => (
+          <div
+            key={item.label}
+            className={cn(
+              "absolute rounded-2xl border border-foreground/10 bg-background/70 p-4 shadow-xl shadow-primary/5 backdrop-blur-xl",
+              item.className
+            )}
+          >
+            <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-muted/70">
+                {item.icon}
+              </span>
+              {item.label}
+            </div>
+            <div className="mt-3 flex items-end justify-between gap-3">
+              <span className="text-2xl font-bold tracking-tight text-foreground">{item.value}</span>
+              <span className="text-right text-xs text-muted-foreground">{item.detail}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="absolute left-[16%] top-[18%] hidden text-7xl font-black text-primary/[0.035] lg:block">
+        ★★★★★
+      </div>
+      <div className="absolute right-[14%] top-[44%] hidden text-8xl font-black text-emerald-500/[0.04] lg:block">
+        €
+      </div>
     </div>
   );
 }
@@ -454,14 +524,20 @@ export default function Landing() {
   });
   const blogs = blogsData?.blogs?.slice(0, 3) || [];
 
+  // Fetch the landing config to know which restaurant to showcase.
+  const { data: landingConfig } = useQuery<{ success: boolean; showcaseRestaurantId: string | null }>({
+    queryKey: ["/api/config/landing"],
+  });
+  const showcaseRestaurantId = landingConfig?.showcaseRestaurantId ?? "";
+
   // Real Google Maps reviews (with their published HolaRevi replies) for the
   // testimonials wall. Falls back to the static carousel when no showcase
   // restaurant is configured or none of its reviews have a published reply.
   const { data: googleReviewsData } = useQuery<PublicReviewsResponse>({
     queryKey: [
-      `/api/public/reviews/${SHOWCASE_RESTAURANT_ID}?limit=${SHOWCASE_REVIEWS_LIMIT}`,
+      `/api/public/reviews/${showcaseRestaurantId}?limit=${SHOWCASE_REVIEWS_LIMIT}`,
     ],
-    enabled: SHOWCASE_RESTAURANT_ID.length > 0,
+    enabled: showcaseRestaurantId.length > 0,
   });
   const googleReviews = (googleReviewsData?.reviews ?? []).filter(
     (r) => (r.postedReply ?? r.generatedReply ?? "").trim().length > 0
@@ -534,11 +610,7 @@ export default function Landing() {
 
       {/* ─── A) HERO ────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
-        {/* Background glow */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/8 via-background to-background" />
-          <div className="absolute -top-32 left-1/2 h-96 w-[50rem] -translate-x-1/2 rounded-full bg-primary/12 blur-3xl" />
-        </div>
+        <HeroBackgroundVisual />
 
         <div className="container mx-auto px-4 pt-20 pb-16 sm:pt-28 sm:pb-24">
           <div className="mx-auto max-w-6xl">
@@ -1222,15 +1294,7 @@ export default function Landing() {
                         <Badge variant="secondary" className="text-[10px]">{t("common.mostPopular")}</Badge>
                       )}
                     </div>
-                    <div className="mt-3 flex items-center justify-center gap-2">
-                      <span className="text-sm line-through text-muted-foreground">
-                        €{formatPrice(PRICING[p.id].oldMonthly, language)}
-                      </span>
-                      <span className="inline-flex items-center rounded-full bg-primary/15 text-primary text-[10px] font-bold px-1.5 py-0.5 leading-none">
-                        {t("common.discountBadge")}
-                      </span>
-                    </div>
-                    <div className="mt-1 flex items-baseline justify-center gap-1">
+                    <div className="mt-3 flex items-baseline justify-center gap-1">
                       <span className="text-3xl font-bold">€{formatPrice(PRICING[p.id].monthly, language)}</span>
                       <span className="text-sm text-muted-foreground">{t("landing.priceTeaser.perMonth")}</span>
                     </div>
