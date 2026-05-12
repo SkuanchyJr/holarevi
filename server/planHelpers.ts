@@ -7,7 +7,12 @@ export const PLAN_ERROR_CODES = {
   TEAM_LIMIT_REACHED: "team_limit_reached",
   TONE_PRESET_LIMIT_REACHED: "tone_preset_limit_reached",
   FEATURE_NOT_IN_PLAN: "feature_not_in_plan",
+  UPGRADE_REQUIRED: "upgrade_required",
 } as const;
+
+export function isFreePlan(user: User): boolean {
+  return user.subscriptionStatus === "free" || user.subscriptionPlan === "free";
+}
 
 export interface PlanCheckResult {
   allowed: boolean;
@@ -24,11 +29,15 @@ export function isTrialUser(user: User): boolean {
 export function getEffectivePlanId(user: User): PlanId {
   const status = user.subscriptionStatus || "pending";
   const planId = (user.subscriptionPlan as PlanId) || "local";
-  
+
+  if (status === "free" || planId === "free") {
+    return "free";
+  }
+
   if (status === "active" || status === "past_due" || status === "trialing" || status === "trial") {
     return planId;
   }
-  
+
   return "local";
 }
 
@@ -103,6 +112,12 @@ export function getNextBillingPeriodStart(user: User): Date {
 }
 
 export function getMonthlyReplyUsage(user: User): { used: number; needsReset: boolean } {
+  // The free plan has no monthly reply allowance to reset — keep needsReset false
+  // so callers that skip limit checks on a period rollover don't accidentally let
+  // a free user through.
+  if (getEffectivePlanId(user) === "free") {
+    return { used: 0, needsReset: false };
+  }
   if (shouldResetMonthlyReplies(user)) {
     return { used: 0, needsReset: true };
   }
@@ -110,13 +125,24 @@ export function getMonthlyReplyUsage(user: User): { used: number; needsReset: bo
 }
 
 export function canSendReply(user: User): PlanCheckResult {
+  const planId = getEffectivePlanId(user);
+
+  if (planId === "free") {
+    return {
+      allowed: false,
+      reason: "AI replies are available on a paid plan. Upgrade to generate and post replies to your reviews.",
+      errorCode: PLAN_ERROR_CODES.UPGRADE_REQUIRED,
+      limit: 0,
+      current: 0,
+    };
+  }
+
   const { used, needsReset } = getMonthlyReplyUsage(user);
   const currentUsed = needsReset ? 0 : used;
-  
-  const planId = getEffectivePlanId(user);
+
   const limits = getPlanLimits(planId);
   const isTrial = isTrialUser(user);
-  
+
   if (isTrial) {
     const trialMax = TRIAL_CONFIG.maxTrialReplies;
     const allowed = currentUsed < trialMax;
@@ -170,12 +196,12 @@ const FEATURE_ACCESS_MAP: Record<string, PlanId[]> = {
   "gdpr_compliance": ["business", "enterprise"],
   "multi_location_dashboard": ["business", "enterprise"],
   "permission_controls": ["business", "enterprise"],
-  "analytics_export": ["local", "pro", "business", "enterprise"],
+  "analytics_export": ["free", "local", "pro", "business", "enterprise"],
   "instagram_replies": ["business", "enterprise"],
   "whatsapp_replies": ["business", "enterprise"],
   "tripadvisor_replies": ["business", "enterprise"],
   "priority_support": ["pro", "business", "enterprise"],
-  "advanced_analytics": ["local", "pro", "business", "enterprise"],
+  "advanced_analytics": ["free", "local", "pro", "business", "enterprise"],
   "faster_ai": ["pro", "business", "enterprise"],
   "tone_personalization": ["pro", "business", "enterprise"],
   "auto_reply": ["local", "pro", "business", "enterprise"],
@@ -240,7 +266,9 @@ export function getUserPlanInfo(user: User) {
     effectiveMaxLocations = limits.maxLocations + (user.extraLocations || 0);
   }
   
-  const replyLimit = isTrial ? TRIAL_CONFIG.maxTrialReplies : limits.maxRepliesPerMonth;
+  const replyLimit = planId === "free"
+    ? 0
+    : isTrial ? TRIAL_CONFIG.maxTrialReplies : limits.maxRepliesPerMonth;
   
   return {
     planId,
@@ -291,6 +319,7 @@ export function calculateTotalLocationsAllowed(user: User): number | "unlimited"
 }
 
 export function canAddExtraLocation(user: User): boolean {
-  const planId = getEffectivePlanId(user);
-  return planId === "business";
+  // The Business plan now includes unlimited locations, so the paid add-on no
+  // longer applies. Kept for backward compatibility with the billing routes.
+  return false;
 }

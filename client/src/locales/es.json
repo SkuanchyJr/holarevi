@@ -18,59 +18,59 @@
   },
   "promo": {
     "bar": {
-      "text": "Nuevo precio: -90% en todos los planes, para siempre",
-      "cta": "Ver precios"
+      "text": "Empieza gratis · Configúralo en minutos · Cancela cuando quieras",
+      "cta": "Ver planes"
     }
   },
   "pricing": {
-    "badge": "Nuevo precio · -90% permanente",
-    "title": "Tus reseñas en piloto automático. Ahora un 90% más barato.",
-    "subtitle": "Hemos bajado el precio de todos los planes un 90%, de forma permanente. Misma IA, mismas funciones, mismo soporte — sin letra pequeña y sin fecha de caducidad.",
+    "badge": "Empieza gratis · Sin tarjeta",
+    "title": "Tus reseñas en piloto automático",
+    "subtitle": "Empieza gratis y, cuando quieras responder en automático, elige el plan que necesites. Lo configuras en minutos y cancelas cuando quieras.",
     "hero": {
-      "badge": "Nuevo precio · -90% en todos los planes, para siempre",
-      "title": "Automatiza tus reseñas de Google por una décima parte del precio",
-      "subtitle": "Bajamos un 90% el precio de todos los planes, de forma permanente. Elige el tuyo: lo configuras en minutos, sin tarjeta para probar y cancelas cuando quieras."
+      "badge": "Empieza gratis — sin tarjeta",
+      "title": "Responde todas tus reseñas de Google, sin esfuerzo",
+      "subtitle": "Conecta Google gratis y descubre el valor. Cuando quieras publicar respuestas en automático, mejora a un plan de pago — desde 14€/mes."
     },
     "footer": {
       "questions": "¿No sabes qué plan elegir? Te ayudamos a decidir en 1 minuto."
     },
     "local": {
       "name": "Local",
-      "description": "Para un negocio con una ubicación.",
-      "cta": "Empezar gratis — 3 días",
-      "footnote": "Sin compromiso. Si no cancelas antes de 3 días, se cobrará automáticamente 4,90€/mes (antes 49€).",
-      "f1": "1 ubicación",
-      "f2": "Respuestas automáticas ilimitadas",
-      "f3": "Responder reseñas antiguas",
-      "f4": "Modo automático o revisión",
+      "description": "Para un restaurante con una ubicación.",
+      "cta": "Probar 14 días gratis",
+      "footnote": "14 días gratis. Si no cancelas antes, se cobra automáticamente 14€/mes.",
+      "f1": "1 ubicación de Google",
+      "f2": "Respuestas IA ilimitadas",
+      "f3": "Publica en automático o revisa antes",
+      "f4": "Responde reseñas antiguas",
       "f5": "1 usuario",
       "f6": "Plantillas y tono de marca",
-      "f7": "Resumen ejecutivo con IA, emails, etc."
+      "f7": "Resumen ejecutivo con IA + email semanal"
     },
     "pro": {
       "name": "Pro",
-      "description": "Para equipos y operaciones con varias ubicaciones.",
-      "cta": "Empezar ahora",
-      "f1": "Hasta 3 ubicaciones",
-      "f2": "Respuestas automáticas ilimitadas",
-      "f3": "Control por ubicación",
-      "f4": "Prioridad en nuevas funciones",
-      "f5": "Hasta 3 usuarios · Próximamente",
+      "description": "Para grupos de hasta 5 ubicaciones.",
+      "cta": "Probar 14 días gratis",
+      "f1": "Hasta 5 ubicaciones",
+      "f2": "Respuestas IA ilimitadas",
+      "f3": "Panel multi-ubicación",
+      "f4": "Hasta 5 usuarios",
+      "f5": "Control por ubicación",
       "f6": "Soporte prioritario",
-      "f7": "Resumen ejecutivo con IA, emails, etc."
+      "f7": "Resumen ejecutivo con IA + email semanal"
     },
     "business": {
       "name": "Business",
       "description": "Para cadenas y operaciones multi-ubicación.",
-      "cta": "Probar gratis",
-      "footnote": "Añade ubicaciones extra según necesidad.",
-      "f1": "Ubicaciones ilimitadas (opcional)",
+      "cta": "Suscribirme",
+      "footnote": "Locales y usuarios ilimitados.",
+      "f1": "Ubicaciones ilimitadas",
       "f2": "Panel avanzado multi-ubicación",
-      "f3": "Equipo y colaboración",
-      "f4": "Roles y permisos",
-      "f5": "SLA y soporte avanzado",
+      "f3": "Usuarios y roles ilimitados",
+      "f4": "WhatsApp y TripAdvisor",
+      "f5": "SLA y soporte prioritario",
       "f6": "Resumen ejecutivo con IA, emails, etc.",
-      "f7": "Usuarios ilimitados · Próximamente"
+      "f7": "Respuestas IA ilimitadas"
     },
     "enterprise": {
       "name": "Enterprise",
@@ -100,19 +100,19 @@
     "error": "Hubo un error al enviar el mensaje. Por favor, inténtalo de nuevo."
   },
   "hero": {
-    "badge": "Gestión de reseñas de Google con IA · -90% en todos los planes",
+    "badge": "Gestión de reseñas de Google con IA",
     "titlePrefix": "Responde todas tus reseñas de Google",
     "titleHighlight": "con IA, automáticamente",
-    "subtitle": "HolaRevi lee cada reseña de Google y publica una respuesta personalizada en tu tono de marca, sin que muevas un dedo. Más reputación, mejor SEO local y horas de trabajo que recuperas — desde 4,90€/mes.",
+    "subtitle": "HolaRevi lee cada reseña de Google y publica una respuesta personalizada en tu tono de marca, sin que muevas un dedo. Más reputación, mejor SEO local y horas de trabajo que recuperas.",
     "ctaPrimary": "Empieza gratis en 5 minutos",
     "ctaSecondary": "Ver demo en vivo",
-    "footerText": "Sin tarjeta para empezar · 3 días gratis · Cancela cuando quieras · Planes desde 4,90€/mes"
+    "footerText": "Sin tarjeta para empezar · Conéctate en minutos · Cancela cuando quieras"
   },
   "common": {
     "loading": "Cargando...",
     "error": "Error",
     "checkoutError": "No se pudo iniciar el pago",
-    "success": "Éxito",
+    "success": "Listo",
     "cancel": "Cancelar",
     "save": "Guardar",
     "delete": "Eliminar",
@@ -137,7 +137,7 @@
     "contact": "Contacto",
     "monthly": "Mensual",
     "yearly": "Anual",
-    "save20": "(Ahorra 20%)",
+    "save20": "2 meses gratis",
     "perMonth": "/mes",
     "billedAnnually": "facturado anualmente",
     "startFreeTrial": "Empezar prueba gratuita",
@@ -170,7 +170,12 @@
       "vie": "Vie",
       "sab": "Sáb"
     },
-    "email": "Correo electrónico"
+    "email": "Correo electrónico",
+    "startTrial": "Probar 14 días gratis",
+    "freePlanCta": "Empezar gratis",
+    "freePrice": "Gratis",
+    "trialNote14": "14 días gratis · Sin compromiso · Cancela cuando quieras",
+    "upgradeNow": "Mejorar plan"
   },
   "sidebar": {
     "totalReviewsLabel": "Reseñas totales",
@@ -734,8 +739,8 @@
       "local": {
         "name": "Local",
         "description": "Para un negocio con una ubicación.",
-        "cta": "Probar 3 días gratis",
-        "footnote": "Sin compromiso. Si no cancelas antes de 3 días, se cobrará automáticamente 4,90€/mes (antes 49€).",
+        "cta": "Probar 14 días gratis",
+        "footnote": "Sin compromiso. Si no cancelas antes de 14 días, se cobra automáticamente 14€/mes.",
         "f1": "1 ubicación",
         "f2": "Respuestas automáticas ilimitadas",
         "f3": "Responder reseñas antiguas",
@@ -819,9 +824,9 @@
       "cta": "Contactar para soluciones avanzadas"
     },
     "priceTeaser": {
-      "eyebrow": "El nuevo precio de HolaRevi",
-      "title": "Un precio que ya no es excusa",
-      "subtitle": "Hemos bajado todos los planes un 90%, de forma permanente. Misma IA, mismas funciones — desde 4,90€/mes.",
+      "eyebrow": "Precios HolaRevi",
+      "title": "Empieza gratis. Crece cuando quieras.",
+      "subtitle": "Conecta Google y descubre el valor — gratis. Planes de pago desde 14€/mes.",
       "perMonth": "/mes",
       "cta": "Ver todos los planes",
       "ctaSecondary": "Empezar gratis",
@@ -830,8 +835,8 @@
     "finalCta": {
       "eyebrow": "Empieza hoy",
       "title": "Empieza a automatizar tus reseñas hoy",
-      "subtitle": "Ahora todos los planes cuestan un 90% menos, para siempre. Conecta tu Google Business en minutos y deja que la IA responda por ti — desde 4,90€/mes.",
-      "ctaPrimary": "Empezar gratis — 3 días",
+      "subtitle": "Conecta tu Google Business en minutos y deja que la IA responda por ti. Empieza gratis, sin tarjeta.",
+      "ctaPrimary": "Empezar gratis",
       "ctaSecondary": "Ver precios",
       "feature1": "Sin tarjeta para empezar",
       "feature2": "Cancela cuando quieras"
@@ -987,12 +992,12 @@
     }
   },
   "selectPlan": {
-    "title": "Elige tu plan — ahora con un 90% de descuento",
-    "subtitle": "Mismo producto, mismas funciones, una décima parte del precio. Empieza con 3 días gratis, sin compromiso y cancela cuando quieras.",
+    "title": "Elige tu plan",
+    "subtitle": "Empieza gratis o prueba un plan de pago 14 días sin compromiso. Cancela cuando quieras.",
     "discountBanner": "Precio rebajado un 90% en todos los planes — para siempre",
     "monthly": "Mensual",
     "yearly": "Anual",
-    "save20": "Ahorra 20%",
+    "save20": "2 meses gratis",
     "mostPopular": "Más popular",
     "perMonth": "/mes",
     "tryFree": "Probar gratis",
@@ -1001,41 +1006,60 @@
     "plans": {
       "local": {
         "name": "Local",
-        "description": "Para negocios con una ubicación única.",
+        "description": "Para un restaurante con una ubicación.",
         "features": {
           "location": "1 ubicación de Google",
-          "newReplies": "100 respuestas IA al mes",
-          "pastReplies": "Responder reseñas antiguas",
-          "mode": "Modo automático o revisión",
+          "newReplies": "Respuestas IA ilimitadas",
+          "pastReplies": "Responde reseñas antiguas",
+          "mode": "Publica en automático o revisa antes",
           "analytics": "Analítica y sentimiento",
-          "users": "1 usuario"
+          "users": "1 usuario",
+          "alerts": "Alertas de reseña negativa"
         }
       },
       "pro": {
         "name": "Pro",
-        "description": "Para grupos de restaurantes en crecimiento.",
+        "description": "Para grupos de hasta 5 ubicaciones.",
         "features": {
           "locations": "Hasta 5 ubicaciones",
-          "newReplies": "300 respuestas IA al mes",
+          "newReplies": "Respuestas IA ilimitadas",
           "pastReplies": "Analítica y sentimiento",
           "analytics": "Motor de respuesta prioritario",
           "priority": "Soporte prioritario",
-          "users": "3 usuarios"
+          "users": "Hasta 5 usuarios",
+          "dashboard": "Panel multi-ubicación",
+          "controls": "Control por ubicación"
         }
       },
       "business": {
         "name": "Business",
-        "description": "Para cadenas con múltiples locales.",
+        "description": "Para cadenas y operaciones multi-ubicación.",
         "features": {
           "locationsIncluded": "5 ubicaciones incluidas",
           "extraLocation": "+3,90€/mes por local extra",
-          "dashboard": "Panel multi-ubicación",
-          "team": "Usuarios ilimitados",
+          "dashboard": "Panel avanzado multi-ubicación",
+          "team": "Usuarios y presets de tono ilimitados",
           "permissions": "Control de permisos",
-          "sla": "SLA y soporte avanzado"
+          "sla": "SLA y soporte prioritario",
+          "locations": "Ubicaciones ilimitadas",
+          "newReplies": "Respuestas IA ilimitadas",
+          "channels": "WhatsApp y TripAdvisor en automático"
+        }
+      },
+      "free": {
+        "name": "Free",
+        "description": "Conecta Google y descubre el valor — sin tarjeta.",
+        "note": "Las respuestas con IA requieren un plan de pago.",
+        "features": {
+          "location": "1 ubicación de Google",
+          "dashboard": "Todas tus reseñas en un panel",
+          "sentiment": "Análisis de sentimiento y temas",
+          "summary": "Resumen ejecutivo con IA (mensual)",
+          "weeklyEmail": "Email semanal de rendimiento"
         }
       }
-    }
+    },
+    "banner": "Empieza gratis · Sin tarjeta"
   },
   "onboarding": {
     "pageTitle": "Bienvenido a HolaRevi",
@@ -1195,7 +1219,9 @@
       "blogs": "Blogs",
       "blogsDesc": "Crear y gestionar artículos de blog para SEO",
       "qrReviews": "Reseñas QR",
-      "qrReviewsDesc": "Crear y rastrear códigos QR de reseñas de Google"
+      "qrReviewsDesc": "Crear y rastrear códigos QR de reseñas de Google",
+      "settings": "Ajustes del sitio",
+      "settingsDesc": "Configurar el landing, el negocio escaparate y otras opciones globales"
     },
     "goTo": "Ir a {{section}}"
   },
@@ -1436,7 +1462,7 @@
   },
   "paywall": {
     "title": "Reactiva tu cuenta",
-    "subtitle": "Elige cualquier plan — ahora un 90% más baratos, para siempre — y sigue automatizando tus reseñas de Google con IA.",
+    "subtitle": "Elige un plan y sigue automatizando tus reseñas de Google con IA — respuestas ilimitadas.",
     "discountBadge": "-90% en todos los planes",
     "subscribe": "Suscribirme ahora",
     "manageBilling": "Gestionar ajustes de facturación",
@@ -1821,45 +1847,45 @@
   "plans": {
     "local": {
       "name": "Local",
-      "description": "Perfecto para restaurantes con una sola ubicación.",
+      "description": "Para un restaurante con una ubicación.",
       "features": {
         "f1": "1 ubicación de Google",
-        "f2": "100 respuestas IA/mes",
-        "f3": "Respuesta manual o automática",
-        "f4": "Analíticas y sentimiento",
+        "f2": "Respuestas IA ilimitadas",
+        "f3": "Publica en automático o revisa antes",
+        "f4": "Responde reseñas antiguas",
         "f5": "1 usuario",
-        "f6": "1 preset de tono",
-        "f7": "Informe de rendimiento semanal",
-        "f8": "Alertas de reseñas negativas"
+        "f6": "Plantillas y tono de marca",
+        "f7": "Alertas de reseña negativa",
+        "f8": "Resumen ejecutivo con IA + email semanal"
       }
     },
     "pro": {
       "name": "Pro",
-      "description": "Para grupos de restaurantes en crecimiento.",
+      "description": "Para grupos de hasta 5 ubicaciones.",
       "features": {
         "f1": "Hasta 5 ubicaciones",
-        "f2": "300 respuestas IA/mes",
-        "f3": "Analíticas y sentimiento",
-        "f4": "Rendimiento más rápido",
-        "f5": "Motor de respuestas prioritario",
-        "f6": "3 usuarios",
-        "f7": "5 presets de tono",
-        "f8": "Soporte prioritario email/WhatsApp"
+        "f2": "Respuestas IA ilimitadas",
+        "f3": "Panel multi-ubicación",
+        "f4": "Hasta 5 usuarios",
+        "f5": "5 presets de tono",
+        "f6": "Control por ubicación",
+        "f7": "Soporte prioritario",
+        "f8": "Todo lo del plan Local"
       }
     },
     "business": {
       "name": "Business",
-      "description": "Para cadenas con múltiples ubicaciones.",
+      "description": "Para cadenas y operaciones multi-ubicación.",
       "features": {
-        "f1": "5 ubicaciones incluidas",
-        "f2": "+3,90€/mes por ubicación extra",
-        "f3": "1000 respuestas IA/mes",
-        "f4": "Respuestas auto en comentarios y DMs de Instagram",
-        "f5": "Respuestas auto en WhatsApp Business",
-        "f6": "Respuestas auto en TripAdvisor",
-        "f7": "Panel multi-ubicación",
-        "f8": "Miembros de equipo ilimitados",
-        "f9": "Control de permisos",
+        "f1": "Ubicaciones ilimitadas",
+        "f2": "Respuestas IA ilimitadas",
+        "f3": "Panel avanzado multi-ubicación",
+        "f4": "Usuarios y presets de tono ilimitados",
+        "f5": "Roles y permisos",
+        "f6": "WhatsApp y TripAdvisor en automático",
+        "f7": "SLA y soporte prioritario",
+        "f8": "Onboarding y success manager dedicados",
+        "f9": "Todo lo del plan Pro",
         "f10": "SLA y soporte prioritario",
         "f11": "Herramientas RGPD y cumplimiento",
         "f12": "Onboarding personalizado",
@@ -1878,6 +1904,18 @@
         "f6": "SLA",
         "f7": "Gestor de cuenta",
         "f8": "Onboarding personalizado"
+      }
+    },
+    "free": {
+      "name": "Free",
+      "description": "Conecta Google y descubre el valor — sin tarjeta.",
+      "features": {
+        "f1": "1 ubicación de Google",
+        "f2": "Todas tus reseñas en un panel",
+        "f3": "Análisis de sentimiento y temas",
+        "f4": "Resumen ejecutivo con IA (mensual)",
+        "f5": "Email semanal de rendimiento",
+        "f6": "Respuestas con IA en cualquier plan de pago"
       }
     }
   },
@@ -2108,12 +2146,30 @@
       "eyebrow": "Especificaciones",
       "title": "Detalles técnicos",
       "subtitle": "Calidad premium en cada componente.",
-      "s1": { "label": "Panel frontal", "value": "12 × 14 cm" },
-      "s2": { "label": "Base", "value": "12 × 10 cm" },
-      "s3": { "label": "Forma", "value": "L (≈85°)" },
-      "s4": { "label": "Tecnología", "value": "NFC NTAG" },
-      "s5": { "label": "Compatibilidad", "value": "iOS & Android" },
-      "s6": { "label": "Material", "value": "Acrílico premium" }
+      "s1": {
+        "label": "Panel frontal",
+        "value": "12 × 14 cm"
+      },
+      "s2": {
+        "label": "Base",
+        "value": "12 × 10 cm"
+      },
+      "s3": {
+        "label": "Forma",
+        "value": "L (≈85°)"
+      },
+      "s4": {
+        "label": "Tecnología",
+        "value": "NFC NTAG"
+      },
+      "s5": {
+        "label": "Compatibilidad",
+        "value": "iOS & Android"
+      },
+      "s6": {
+        "label": "Material",
+        "value": "Acrílico premium"
+      }
     },
     "mockups": {
       "eyebrow": "En tu negocio",

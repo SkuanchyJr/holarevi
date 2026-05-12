@@ -334,6 +334,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             return res.status(400).json({ success: false, message: "Username and password required" });
         }
 
+        console.log(`[Admin login] username="${username}" expected="${ADMIN_USERNAME}" match=${username === ADMIN_USERNAME} | password match=${password === ADMIN_PASSWORD}`);
         if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
             const token = generateToken();
             adminSessions.set(token, { createdAt: Date.now() });
@@ -385,6 +386,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error checking prelaunch status:", error);
       return res.status(500).json({ success: false, message: "Failed to check prelaunch status" });
+    }
+  });
+
+  // Public landing-page config endpoint (no auth required)
+  app.get("/api/config/landing", async (_req, res) => {
+    try {
+      const showcaseRestaurantId = await storage.getConfig("showcaseRestaurantId");
+      return res.json({ success: true, showcaseRestaurantId: showcaseRestaurantId ?? null });
+    } catch (error) {
+      console.error("Error fetching landing config:", error);
+      return res.status(500).json({ success: false, message: "Failed to fetch config" });
     }
   });
 
@@ -548,6 +560,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error enabling prelaunch:", error);
       return res.status(500).json({ success: false, message: "Failed to enable prelaunch mode" });
+    }
+  });
+
+  // Admin: read / update the showcase restaurant shown on the landing testimonials
+  app.get("/api/admin/config/showcase-restaurant", isAdminAuthenticated, async (_req, res) => {
+    try {
+      const restaurantId = await storage.getConfig("showcaseRestaurantId");
+      return res.json({ success: true, restaurantId: restaurantId ?? null });
+    } catch (error) {
+      console.error("Error fetching showcase config:", error);
+      return res.status(500).json({ success: false, message: "Failed to fetch config" });
+    }
+  });
+
+  app.post("/api/admin/config/showcase-restaurant", isAdminAuthenticated, async (req, res) => {
+    try {
+      const { restaurantId } = req.body;
+      if (restaurantId !== null && restaurantId !== "" && typeof restaurantId !== "string") {
+        return res.status(400).json({ success: false, message: "restaurantId must be a string or null" });
+      }
+      // Pass empty string to clear; stored as empty = effectively disabled
+      await storage.setConfig("showcaseRestaurantId", restaurantId ?? "");
+      return res.json({ success: true });
+    } catch (error) {
+      console.error("Error updating showcase config:", error);
+      return res.status(500).json({ success: false, message: "Failed to update config" });
     }
   });
 
@@ -2146,6 +2184,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.json({ enterprise: true, redirectTo: "/contact" });
       }
 
+      // Handle Free plan - no Stripe, just flip the user onto the free tier.
+      if (planId === "free") {
+        const user = await storage.getUser(userId);
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+        const status = (user.subscriptionStatus || "").trim();
+        if (status === "active" || status === "trialing" || status === "trial" || status === "past_due") {
+          return res.status(400).json({
+            message: "Ya tienes un plan activo. Gestiónalo desde Facturación.",
+            code: "HAS_ACTIVE_PLAN",
+          });
+        }
+        await storage.updateUserStripeInfo(userId, {
+          subscriptionStatus: "free",
+          subscriptionPlan: "free",
+          billingCycle: "monthly",
+        });
+        console.log(`[Checkout] User ${userId} switched to the free plan`);
+        return res.json({
+          free: true,
+          redirectTo: user.onboardingCompleted ? "/" : "/onboarding",
+        });
+      }
+
       // Validate planId if provided
       const validPlanIds: PlanId[] = ["local", "pro", "business"];
       if (planId && !validPlanIds.includes(planId)) {
@@ -2306,7 +2369,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const plan = PLANS[finalPlanId as PlanId];
-      const isTrialEligible = !hasHistory && plan?.trialAllowed && finalPlanId === 'local';
+      const isTrialEligible = !hasHistory && !!plan?.trialAllowed;
 
       console.log(`[Checkout] Trial eligibility for user ${userId}: hasHistory=${hasHistory}, trialAllowed=${plan?.trialAllowed}, plan=${finalPlanId}, eligible=${isTrialEligible}`);
 
@@ -2352,7 +2415,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
       };
 
-      // Add 7-day trial for eligible Local plan users (Stripe manages the trial)
+      // Add the full-experience trial for eligible users (Stripe manages the trial)
       if (isTrialEligible) {
         sessionOptions.subscription_data.trial_period_days = TRIAL_CONFIG.trialDays;
         console.log(`[Checkout] Adding ${TRIAL_CONFIG.trialDays}-day trial for user ${userId}`);
@@ -2424,6 +2487,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       if (!user?.stripeCustomerId) {
         return res.status(400).json({ message: "No billing account found" });
+      }
+
+      // Free plan (local) has no Stripe subscription — nothing to sync
+      if (user.subscriptionPlan === 'local' && !user.stripeSubscriptionId) {
+        return res.json({ success: true, message: "Free plan, no Stripe sync needed", status: user.subscriptionStatus });
       }
 
       const stripe = await getUncachableStripeClient();

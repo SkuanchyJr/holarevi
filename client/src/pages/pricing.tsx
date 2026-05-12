@@ -12,6 +12,7 @@ import {
   MapPin,
   Zap,
   Building2,
+  Gift,
   ArrowRight,
   Sparkles,
   ShieldCheck,
@@ -24,7 +25,6 @@ import {
   PLANS,
   formatPrice,
   getPlanMonthlyEquivalent,
-  getPlanPreviousMonthlyEquivalent,
   type PlanId,
   type BillingCycle,
 } from "@shared/plans";
@@ -34,12 +34,14 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLocation, Link } from "wouter";
 
 const planIcons: Record<string, typeof MapPin> = {
+  free: Gift,
   local: MapPin,
   pro: Zap,
   business: Building2,
 };
 
 const planColors: Record<string, string> = {
+  free: "text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800",
   local: "text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950",
   pro: "text-primary bg-primary/10",
   business: "text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-950",
@@ -67,8 +69,13 @@ export default function Pricing() {
     onSuccess: (data) => {
       if (data.enterprise) {
         window.location.href = data.redirectTo || `/${language}/contact`;
+      } else if (data.free) {
+        window.location.href = `/${language}${data.redirectTo || "/"}`;
       } else if (data.url) {
         window.location.href = data.url;
+      } else if (data.upgraded) {
+        toast({ title: data.message || t("common.success") });
+        window.location.href = `/${language}/billing`;
       }
     },
     onError: (error: Error) => {
@@ -85,23 +92,22 @@ export default function Pricing() {
   };
 
   const getPrice = (planId: PlanId) => formatPrice(getPlanMonthlyEquivalent(planId, billingCycle), language);
-  const getOldPrice = (planId: PlanId) => formatPrice(getPlanPreviousMonthlyEquivalent(planId, billingCycle), language);
   const getYearlyTotal = (planId: PlanId) => formatPrice(PLANS[planId].price.yearly, language);
 
-  const plans = ["local", "pro", "business"] as PlanId[];
+  const plans = ["free", "local", "pro", "business"] as PlanId[];
 
   const getPlanName = (planId: PlanId) => t(`selectPlan.plans.${planId}.name`);
   const getPlanDescription = (planId: PlanId) => t(`selectPlan.plans.${planId}.description`);
 
-  const getPlanFeatures = (planId: PlanId): string[] => {
-    const featureKeys: Record<PlanId, string[]> = {
-      local: ["location", "newReplies", "pastReplies", "mode", "analytics", "users"],
-      pro: ["locations", "newReplies", "pastReplies", "analytics", "priority", "users"],
-      business: ["locationsIncluded", "extraLocation", "dashboard", "team", "permissions", "sla"],
-      enterprise: ["api", "crm", "automations", "auditLogs", "reporting", "sla"],
-    };
-    return featureKeys[planId].map((key) => t(`selectPlan.plans.${planId}.features.${key}`));
+  const featureKeys: Record<PlanId, string[]> = {
+    free: ["location", "dashboard", "sentiment", "summary", "weeklyEmail"],
+    local: ["location", "newReplies", "pastReplies", "mode", "users", "alerts"],
+    pro: ["locations", "newReplies", "dashboard", "users", "controls", "priority"],
+    business: ["locations", "newReplies", "dashboard", "team", "channels", "sla"],
+    enterprise: ["api", "crm", "automations", "auditLogs", "reporting", "sla"],
   };
+  const getPlanFeatures = (planId: PlanId): string[] =>
+    featureKeys[planId].map((key) => t(`selectPlan.plans.${planId}.features.${key}`));
 
   const trustItems = [
     { icon: <Unlock className="h-4 w-4" />, label: t("common.noCommitment") },
@@ -110,6 +116,12 @@ export default function Pricing() {
     { icon: <Zap className="h-4 w-4" />, label: t("common.instantSetup") },
     { icon: <Headphones className="h-4 w-4" />, label: t("common.humanSupport") },
   ];
+
+  const ctaLabel = (planId: PlanId) => {
+    if (planId === "free") return t("common.freePlanCta");
+    if (PLANS[planId].trialAllowed) return t("common.startTrial");
+    return t("common.subscribeNow");
+  };
 
   return (
     <div className="page-texture min-h-screen pb-12">
@@ -144,15 +156,15 @@ export default function Pricing() {
             </Label>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 pt-2">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 pt-2">
             {plans.map((planId) => {
               const plan = PLANS[planId];
               const Icon = planIcons[planId];
-              const isLocal = planId === "local";
+              const isFree = planId === "free";
               return (
                 <Card
                   key={planId}
-                  className={`relative flex flex-col h-full ${plan.isPopular ? "border-primary border-2 shadow-lg md:scale-105 md:z-10" : "border-border shadow-sm hover:shadow-md transition-shadow"}`}
+                  className={`relative flex flex-col h-full ${plan.isPopular ? "border-primary border-2 shadow-lg lg:scale-105 lg:z-10" : "border-border shadow-sm hover:shadow-md transition-shadow"}`}
                   data-testid={`card-plan-${planId}`}
                 >
                   {plan.isPopular && (
@@ -161,30 +173,28 @@ export default function Pricing() {
                     </Badge>
                   )}
                   <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${planColors[planId]}`}>
-                        <Icon className="h-6 w-6" />
-                      </div>
-                      <Badge variant="secondary" className="bg-primary/10 text-primary font-bold" data-testid={`badge-discount-${planId}`}>
-                        {t("common.discountBadge")}
-                      </Badge>
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${planColors[planId]}`}>
+                      <Icon className="h-6 w-6" />
                     </div>
                     <CardTitle className="text-2xl font-bold mt-4">{getPlanName(planId)}</CardTitle>
                     <CardDescription className="min-h-[40px]">{getPlanDescription(planId)}</CardDescription>
-                    <div className="mt-5">
-                      <span className="text-base text-muted-foreground line-through" data-testid={`text-old-price-${planId}`}>
-                        €{getOldPrice(planId)}
-                      </span>
+                    <div className="mt-5 flex items-baseline gap-1">
+                      {isFree ? (
+                        <span className="text-4xl font-bold" data-testid={`text-price-${planId}`}>{t("common.freePrice")}</span>
+                      ) : (
+                        <>
+                          <span className="text-4xl font-bold" data-testid={`text-price-${planId}`}>€{getPrice(planId)}</span>
+                          <span className="text-muted-foreground">{t("common.perMonth")}</span>
+                        </>
+                      )}
                     </div>
-                    <div className="mt-0.5 flex items-baseline gap-1">
-                      <span className="text-4xl font-bold" data-testid={`text-price-${planId}`}>€{getPrice(planId)}</span>
-                      <span className="text-muted-foreground">{t("common.perMonth")}</span>
-                    </div>
-                    <p className="mt-1 text-xs font-medium text-primary">{t("common.permanentOffer")}</p>
-                    {billingCycle === "yearly" && (
+                    {!isFree && billingCycle === "yearly" && plan.hasYearly && (
                       <p className="text-xs text-muted-foreground mt-1">
                         €{getYearlyTotal(planId)} {t("common.billedAnnually")}
                       </p>
+                    )}
+                    {isFree && (
+                      <p className="mt-1 text-xs text-muted-foreground">{t("selectPlan.plans.free.note")}</p>
                     )}
                   </CardHeader>
                   <CardContent className="flex-grow">
@@ -210,17 +220,11 @@ export default function Pricing() {
                       ) : (
                         <ArrowRight className="h-5 w-5 mr-0 opacity-0 -ml-5 group-hover:opacity-100 group-hover:mr-2 transition-all" />
                       )}
-                      {isAuthenticated
-                        ? isLocal
-                          ? t("common.start3DayTrial")
-                          : t("common.subscribeNow")
-                        : isLocal
-                          ? t("common.start3DayTrial")
-                          : t("nav.getStarted")}
+                      {ctaLabel(planId)}
                     </Button>
-                    {isLocal && (
+                    {plan.trialAllowed && (
                       <p className="text-xs text-muted-foreground text-center mt-4">
-                        {t("common.startFreeTrial")} · {t("common.trialLimitedReplies")}
+                        {t("common.trialNote14")}
                       </p>
                     )}
                   </div>

@@ -18,65 +18,65 @@
   },
   "promo": {
     "bar": {
-      "text": "New pricing: 90% off all plans, forever",
-      "cta": "See pricing"
+      "text": "Start free · Set it up in minutes · Cancel anytime",
+      "cta": "See plans"
     }
   },
   "pricing": {
-    "badge": "New pricing · 90% off, forever",
-    "title": "Your reviews on autopilot. Now 90% cheaper.",
-    "subtitle": "We cut the price of every plan by 90% — permanently. Same AI, same features, same support — no fine print and no expiry date.",
+    "badge": "Start free · No card needed",
+    "title": "Your reviews on autopilot",
+    "subtitle": "Start free, and when you're ready to auto-reply, pick the plan you need. Set it up in minutes, cancel anytime.",
     "hero": {
-      "badge": "New pricing · 90% off all plans, forever",
-      "title": "Automate your Google reviews for a tenth of the price",
-      "subtitle": "We cut every plan by 90%, permanently. Pick yours: set it up in minutes, no card to try it, cancel anytime."
+      "badge": "Start free — no card needed",
+      "title": "Reply to every Google review, effortlessly",
+      "subtitle": "Connect Google for free and see the value. When you want to auto-publish replies, upgrade to a paid plan — from €14/month."
     },
     "footer": {
       "questions": "Not sure which plan fits? We'll help you decide in 1 minute."
     },
     "local": {
       "name": "Local",
-      "description": "For a business with one location.",
-      "cta": "Start free — 3 days",
-      "footnote": "No commitment. If you don't cancel within 3 days, you'll be charged €4.90/month (was €49).",
-      "f1": "1 location",
-      "f2": "Unlimited auto-responses",
-      "f3": "Respond to old reviews",
-      "f4": "Auto or review mode",
+      "description": "For a single-location restaurant.",
+      "cta": "Start 14-day trial",
+      "footnote": "14 days free. If you don't cancel first, you'll be charged €14/month.",
+      "f1": "1 Google location",
+      "f2": "Unlimited AI replies",
+      "f3": "Auto-post or review before publishing",
+      "f4": "Reply to old reviews",
       "f5": "1 user",
       "f6": "Brand tone & templates",
-      "f7": "AI executive summary, emails, etc."
+      "f7": "AI executive summary + weekly email"
     },
     "pro": {
       "name": "Pro",
-      "description": "For teams and multi-location operations.",
-      "cta": "Get started now",
-      "f1": "Up to 3 locations",
-      "f2": "Unlimited auto-responses",
-      "f3": "Per-location control",
-      "f4": "Priority for new features",
-      "f5": "Up to 3 users · Coming soon",
+      "description": "For groups of up to 5 locations.",
+      "cta": "Start 14-day trial",
+      "f1": "Up to 5 locations",
+      "f2": "Unlimited AI replies",
+      "f3": "Multi-location dashboard",
+      "f4": "Up to 5 users",
+      "f5": "Per-location controls",
       "f6": "Priority support",
-      "f7": "AI executive summary, emails, etc."
+      "f7": "AI executive summary + weekly email"
     },
     "business": {
       "name": "Business",
-      "description": "For chains and large operations.",
-      "cta": "Try for free",
-      "footnote": "Add extra locations as needed.",
-      "f1": "Unlimited locations (optional)",
+      "description": "For chains and multi-location operations.",
+      "cta": "Subscribe",
+      "footnote": "Unlimited locations and users.",
+      "f1": "Unlimited locations",
       "f2": "Advanced multi-location dashboard",
-      "f3": "Team & collaboration",
-      "f4": "Roles & permissions",
-      "f5": "Advanced SLA & support",
+      "f3": "Unlimited users & roles",
+      "f4": "WhatsApp & TripAdvisor",
+      "f5": "SLA & priority support",
       "f6": "AI executive summary, emails, etc.",
-      "f7": "Unlimited users · Coming soon"
+      "f7": "Unlimited AI replies"
     },
     "enterprise": {
       "name": "Enterprise",
       "description": "Custom integrations and scalability.",
       "cta": "Talk to sales",
-      "f1": "API & Integrations",
+      "f1": "API & integrations",
       "f2": "CRM connection",
       "f3": "Advanced reporting",
       "f4": "Dedicated account manager",
@@ -100,19 +100,19 @@
     "error": "Failed to send message. Please try again."
   },
   "hero": {
-    "badge": "AI Google review management · 90% off all plans",
+    "badge": "AI Google review management",
     "titlePrefix": "Respond to every Google review",
     "titleHighlight": "with AI, automatically",
-    "subtitle": "HolaRevi reads every Google review and posts a personalized reply in your brand's voice, without you lifting a finger. More reputation, better local SEO, hours back every week — from €4.90/month.",
+    "subtitle": "HolaRevi reads every Google review and posts a personalized reply in your brand's voice, without you lifting a finger. More reputation, better local SEO, hours back every week.",
     "ctaPrimary": "Start free in 5 minutes",
     "ctaSecondary": "Watch live demo",
-    "footerText": "No card to start · 3 days free · Cancel anytime · Plans from €4.90/month"
+    "footerText": "No card to start · Set it up in minutes · Cancel anytime"
   },
   "common": {
     "loading": "Loading...",
     "error": "Error",
     "checkoutError": "Failed to start checkout",
-    "success": "Success",
+    "success": "Done",
     "cancel": "Cancel",
     "save": "Save",
     "delete": "Delete",
@@ -137,7 +137,7 @@
     "contact": "Contact",
     "monthly": "Monthly",
     "yearly": "Yearly",
-    "save20": "(Save 20%)",
+    "save20": "2 months free",
     "perMonth": "/month",
     "billedAnnually": "billed annually",
     "startFreeTrial": "Start Free Trial",
@@ -170,7 +170,12 @@
       "vie": "Fri",
       "sab": "Sat"
     },
-    "email": "Email"
+    "email": "Email",
+    "startTrial": "Start 14-day trial",
+    "freePlanCta": "Start free",
+    "freePrice": "Free",
+    "trialNote14": "14 days free · No commitment · Cancel anytime",
+    "upgradeNow": "Upgrade"
   },
   "sidebar": {
     "totalReviewsLabel": "Total Reviews",
@@ -734,8 +739,8 @@
       "local": {
         "name": "Local",
         "description": "For a business with one location.",
-        "cta": "Start 3-day free trial",
-        "footnote": "No commitment. If you don't cancel within 3 days, you'll be charged €4.90/month (was €49).",
+        "cta": "Start 14-day trial",
+        "footnote": "No commitment. If you don't cancel within 14 days, you'll be charged €14/month.",
         "f1": "1 location",
         "f2": "Unlimited auto-responses",
         "f3": "Respond to old reviews",
@@ -819,9 +824,9 @@
       "cta": "Contact for advanced solutions"
     },
     "priceTeaser": {
-      "eyebrow": "HolaRevi's new pricing",
-      "title": "A price that's no longer an excuse",
-      "subtitle": "We cut every plan by 90%, permanently. Same AI, same features — from €4.90/month.",
+      "eyebrow": "HolaRevi pricing",
+      "title": "Start free. Scale when you want.",
+      "subtitle": "Connect Google and see the value — free. Paid plans from €14/month.",
       "perMonth": "/month",
       "cta": "See all plans",
       "ctaSecondary": "Start for free",
@@ -830,8 +835,8 @@
     "finalCta": {
       "eyebrow": "Start Today",
       "title": "Start automating your reviews today",
-      "subtitle": "Every plan now costs 90% less, forever. Connect your Google Business in minutes and let AI reply for you — from €4.90/month.",
-      "ctaPrimary": "Start for free — 3 days",
+      "subtitle": "Connect your Google Business in minutes and let AI reply for you. Start free, no card needed.",
+      "ctaPrimary": "Start free",
       "ctaSecondary": "See pricing",
       "feature1": "No card to start",
       "feature2": "Cancel anytime"
@@ -987,12 +992,12 @@
     }
   },
   "selectPlan": {
-    "title": "Choose your plan — now 90% off",
-    "subtitle": "Same product, same features, a tenth of the price. Start with 3 days free, no commitment, cancel anytime.",
+    "title": "Choose your plan",
+    "subtitle": "Start free or try a paid plan for 14 days, no commitment. Cancel anytime.",
     "discountBanner": "All plans 90% off — forever",
     "monthly": "Monthly",
     "yearly": "Yearly",
-    "save20": "Save 20%",
+    "save20": "2 months free",
     "mostPopular": "Most popular",
     "perMonth": "/month",
     "tryFree": "Try for free",
@@ -1001,26 +1006,29 @@
     "plans": {
       "local": {
         "name": "Local",
-        "description": "For businesses with a single location.",
+        "description": "For a single-location restaurant.",
         "features": {
           "location": "1 Google location",
-          "newReplies": "100 AI replies per month",
+          "newReplies": "Unlimited AI replies",
           "pastReplies": "Reply to old reviews",
-          "mode": "Auto or review mode",
+          "mode": "Auto-post or review before publishing",
           "analytics": "Analytics & sentiment",
-          "users": "1 user"
+          "users": "1 user",
+          "alerts": "Negative review alerts"
         }
       },
       "pro": {
         "name": "Pro",
-        "description": "For growing restaurant groups.",
+        "description": "For groups of up to 5 locations.",
         "features": {
           "locations": "Up to 5 locations",
-          "newReplies": "300 AI replies per month",
+          "newReplies": "Unlimited AI replies",
           "pastReplies": "Analytics & sentiment",
           "analytics": "Priority reply engine",
           "priority": "Priority support",
-          "users": "3 users"
+          "users": "Up to 5 users",
+          "dashboard": "Multi-location dashboard",
+          "controls": "Per-location controls"
         }
       },
       "business": {
@@ -1029,13 +1037,29 @@
         "features": {
           "locationsIncluded": "5 locations included",
           "extraLocation": "+€3.90/month per extra location",
-          "dashboard": "Multi-location dashboard",
-          "team": "Unlimited users",
+          "dashboard": "Advanced multi-location dashboard",
+          "team": "Unlimited users & tone presets",
           "permissions": "Permission controls",
-          "sla": "SLA & advanced support"
+          "sla": "SLA & priority support",
+          "locations": "Unlimited locations",
+          "newReplies": "Unlimited AI replies",
+          "channels": "WhatsApp & TripAdvisor auto-replies"
+        }
+      },
+      "free": {
+        "name": "Free",
+        "description": "Connect Google and see the value — no card.",
+        "note": "AI replies require a paid plan.",
+        "features": {
+          "location": "1 Google location",
+          "dashboard": "All your reviews in one dashboard",
+          "sentiment": "Sentiment & theme analysis",
+          "summary": "Monthly AI executive summary",
+          "weeklyEmail": "Weekly performance email"
         }
       }
-    }
+    },
+    "banner": "Start free · No card needed"
   },
   "onboarding": {
     "pageTitle": "Welcome to HolaRevi",
@@ -1195,7 +1219,9 @@
       "blogs": "Blogs",
       "blogsDesc": "Create and manage blog posts for SEO",
       "qrReviews": "QR Reviews",
-      "qrReviewsDesc": "Create and track Google Reviews QR codes"
+      "qrReviewsDesc": "Create and track Google Reviews QR codes",
+      "settings": "Site Settings",
+      "settingsDesc": "Configure the landing page, showcase business, and other global options"
     },
     "goTo": "Go to {{section}}"
   },
@@ -1436,7 +1462,7 @@
   },
   "paywall": {
     "title": "Reactivate your account",
-    "subtitle": "Pick any plan — now 90% cheaper, forever — and keep automating your Google reviews with AI.",
+    "subtitle": "Pick a plan and keep automating your Google reviews with AI — unlimited replies.",
     "discountBadge": "90% off all plans",
     "subscribe": "Subscribe now",
     "manageBilling": "Manage billing settings",
@@ -1821,45 +1847,45 @@
   "plans": {
     "local": {
       "name": "Local",
-      "description": "Perfect for single-location restaurants.",
+      "description": "For a single-location restaurant.",
       "features": {
         "f1": "1 Google location",
-        "f2": "100 AI replies/month",
-        "f3": "Manual or auto-reply",
-        "f4": "Analytics & sentiment",
+        "f2": "Unlimited AI replies",
+        "f3": "Auto-post or review before publishing",
+        "f4": "Reply to old reviews",
         "f5": "1 user",
-        "f6": "1 tone preset",
-        "f7": "Weekly performance report",
-        "f8": "Negative review alerts"
+        "f6": "Brand tone & templates",
+        "f7": "Negative review alerts",
+        "f8": "AI executive summary + weekly email"
       }
     },
     "pro": {
       "name": "Pro",
-      "description": "For growing restaurant groups.",
+      "description": "For groups of up to 5 locations.",
       "features": {
         "f1": "Up to 5 locations",
-        "f2": "300 AI replies/month",
-        "f3": "Analytics & sentiment",
-        "f4": "Faster performance",
-        "f5": "Priority reply engine",
-        "f6": "3 users",
-        "f7": "5 tone presets",
-        "f8": "Priority email/WhatsApp support"
+        "f2": "Unlimited AI replies",
+        "f3": "Multi-location dashboard",
+        "f4": "Up to 5 users",
+        "f5": "5 tone presets",
+        "f6": "Per-location controls",
+        "f7": "Priority support",
+        "f8": "Everything in Local"
       }
     },
     "business": {
       "name": "Business",
-      "description": "For multi-location chains.",
+      "description": "For chains and multi-location operations.",
       "features": {
-        "f1": "5 locations included",
-        "f2": "+€3.90/month per extra location",
-        "f3": "1000 AI replies/month",
-        "f4": "Instagram comment & DM auto-replies",
-        "f5": "WhatsApp Business auto-replies",
-        "f6": "TripAdvisor auto-replies",
-        "f7": "Multi-location dashboard",
-        "f8": "Unlimited team members",
-        "f9": "Permission controls",
+        "f1": "Unlimited locations",
+        "f2": "Unlimited AI replies",
+        "f3": "Advanced multi-location dashboard",
+        "f4": "Unlimited users & tone presets",
+        "f5": "Roles & permission controls",
+        "f6": "WhatsApp & TripAdvisor auto-replies",
+        "f7": "SLA & priority support",
+        "f8": "Dedicated onboarding & success manager",
+        "f9": "Everything in Pro",
         "f10": "SLA & priority support",
         "f11": "GDPR & compliance tools",
         "f12": "Custom onboarding",
@@ -1878,6 +1904,18 @@
         "f6": "SLA",
         "f7": "Account manager",
         "f8": "Custom onboarding"
+      }
+    },
+    "free": {
+      "name": "Free",
+      "description": "Connect Google and see the value — no card.",
+      "features": {
+        "f1": "1 Google location",
+        "f2": "All your reviews in one dashboard",
+        "f3": "Sentiment & theme analysis",
+        "f4": "Monthly AI executive summary",
+        "f5": "Weekly performance email",
+        "f6": "AI replies on any paid plan"
       }
     }
   },
@@ -2108,12 +2146,30 @@
       "eyebrow": "Specifications",
       "title": "Technical details",
       "subtitle": "Premium quality in every component.",
-      "s1": { "label": "Front panel", "value": "12 × 14 cm" },
-      "s2": { "label": "Base", "value": "12 × 10 cm" },
-      "s3": { "label": "Shape", "value": "L (≈85°)" },
-      "s4": { "label": "Technology", "value": "NFC NTAG" },
-      "s5": { "label": "Compatibility", "value": "iOS & Android" },
-      "s6": { "label": "Material", "value": "Premium acrylic" }
+      "s1": {
+        "label": "Front panel",
+        "value": "12 × 14 cm"
+      },
+      "s2": {
+        "label": "Base",
+        "value": "12 × 10 cm"
+      },
+      "s3": {
+        "label": "Shape",
+        "value": "L (≈85°)"
+      },
+      "s4": {
+        "label": "Technology",
+        "value": "NFC NTAG"
+      },
+      "s5": {
+        "label": "Compatibility",
+        "value": "iOS & Android"
+      },
+      "s6": {
+        "label": "Material",
+        "value": "Premium acrylic"
+      }
     },
     "mockups": {
       "eyebrow": "In your business",

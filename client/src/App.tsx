@@ -47,6 +47,7 @@ import AdminReviews from "@/pages/admin-reviews";
 import AdminQRReviews from "@/pages/admin-qr-reviews";
 import AdminCRM from "@/pages/admin-crm";
 import AdminHome from "@/pages/admin-home";
+import AdminSettings from "@/pages/admin-settings";
 import Prelaunch from "@/pages/prelaunch";
 import OnboardingPage from "@/pages/onboarding";
 import SelectPlan from "@/pages/select-plan";
@@ -161,6 +162,7 @@ function Router() {
       <Route path="/:lang(en|es)/admin/reviews" component={AdminReviews} />
       <Route path="/:lang(en|es)/admin/qr-reviews" component={AdminQRReviews} />
       <Route path="/:lang(en|es)/admin/crm" component={AdminCRM} />
+      <Route path="/:lang(en|es)/admin/settings" component={AdminSettings} />
       
       <Route path="/:lang(en|es)/affiliate/login" component={AffiliateLogin} />
       <Route path="/:lang(en|es)/affiliate/dashboard" component={AffiliateDashboard} />

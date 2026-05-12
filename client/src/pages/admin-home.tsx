@@ -20,6 +20,7 @@ import {
   MessageSquare,
   QrCode,
   HandshakeIcon,
+  Settings,
 } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 
@@ -71,6 +72,12 @@ const adminSections = [
     descriptionKey: "admin.sections.qrReviewsDesc",
     url: "/admin/qr-reviews",
     icon: QrCode,
+  },
+  {
+    titleKey: "admin.sections.settings",
+    descriptionKey: "admin.sections.settingsDesc",
+    url: "/admin/settings",
+    icon: Settings,
   },
 ];
 

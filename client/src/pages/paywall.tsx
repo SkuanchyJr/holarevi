@@ -10,7 +10,6 @@ import {
   PLANS,
   formatPrice,
   getPlanMonthlyEquivalent,
-  getPlanPreviousMonthlyEquivalent,
   type PlanId,
   type BillingCycle,
 } from "@shared/plans";
@@ -61,8 +60,6 @@ export default function Paywall() {
 
   const getDisplayPrice = (planId: PlanId) =>
     formatPrice(getPlanMonthlyEquivalent(planId, getEffectiveBillingCycle(planId)), language);
-  const getOldDisplayPrice = (planId: PlanId) =>
-    formatPrice(getPlanPreviousMonthlyEquivalent(planId, getEffectiveBillingCycle(planId)), language);
 
   const getEffectiveBillingCycle = (planId: PlanId): BillingCycle => {
     const plan = PLANS[planId];
@@ -80,9 +77,6 @@ export default function Paywall() {
         <div className="text-center space-y-3">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-1">
             <Sparkles className="h-8 w-8 text-primary" />
-          </div>
-          <div>
-            <Badge variant="secondary" className="bg-primary/10 text-primary font-semibold">{t("paywall.discountBadge")}</Badge>
           </div>
           <h1 className="text-3xl font-bold" data-testid="text-paywall-title">{t("paywall.title")}</h1>
           <p className="text-muted-foreground max-w-md mx-auto">
@@ -104,14 +98,8 @@ export default function Paywall() {
                   <CardTitle className="mt-4">{t(`plans.${planId}.name`)}</CardTitle>
                   <CardDescription>{t(`plans.${planId}.description`)}</CardDescription>
                   <div className="mt-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm line-through text-muted-foreground" data-testid={`text-old-price-${planId}`}>€{getOldDisplayPrice(planId)}</span>
-                      <span className="inline-flex items-center rounded-full bg-primary/15 text-primary text-[10px] font-bold px-1.5 py-0.5 leading-none">{t("common.discountBadge")}</span>
-                    </div>
-                    <div className="mt-0.5">
-                      <span className="text-3xl font-bold" data-testid={`text-price-${planId}`}>€{getDisplayPrice(planId)}</span>
-                      <span className="text-muted-foreground">{t("paywall.perMonth")}</span>
-                    </div>
+                    <span className="text-3xl font-bold" data-testid={`text-price-${planId}`}>€{getDisplayPrice(planId)}</span>
+                    <span className="text-muted-foreground">{t("paywall.perMonth")}</span>
                   </div>
                 </CardHeader>
                 <CardContent>

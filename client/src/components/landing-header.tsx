@@ -7,7 +7,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 
 interface LandingHeaderProps {
   showLoginButton?: boolean;
-  /** Hide the slim -90% promo bar (e.g. on the pricing page itself). */
+  /** Hide the slim promo bar (e.g. on the pricing page itself). */
   hidePromoBar?: boolean;
 }
 
@@ -64,11 +64,8 @@ export function LandingHeader({ showLoginButton = true, hidePromoBar = false }: 
                 </span>
               </Link>
               <Link href={`/${language}/pricing`}>
-                <span className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer inline-flex items-center gap-1.5" data-testid="link-pricing">
+                <span className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer" data-testid="link-pricing">
                   {t("nav.pricing")}
-                  <span className="inline-flex items-center rounded-full bg-primary/15 text-primary text-[10px] font-bold px-1.5 py-0.5 leading-none">
-                    {t("common.discountBadge")}
-                  </span>
                 </span>
               </Link>
               <Link href={`/${language}/contact`}>
