@@ -18,6 +18,7 @@ import {
   Star,
   ChevronUp,
   GraduationCap,
+  ShoppingBag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Review } from "@shared/schema";
@@ -103,6 +104,11 @@ const managementItems: NavItem[] = [
     titleKey: "sidebar.nav.tonePresets",
     url: "/tone-presets",
     icon: Palette,
+  },
+  {
+    titleKey: "sidebar.nav.buyStand",
+    url: "/nfc",
+    icon: ShoppingBag,
   },
   {
     titleKey: "sidebar.nav.billing",

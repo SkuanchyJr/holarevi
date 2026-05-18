@@ -241,6 +241,9 @@ function LocalizedRouter({ currentPath }: { currentPath: string }) {
     <Switch>
       <Route path="/:lang/blog/:slug" component={BlogPostPage} />
       <Route path="/:lang/blog" component={BlogPage} />
+      <Route path="/:lang/nfc" component={NFCStand} />
+      <Route path="/:lang/nfc/checkout" component={NFCCheckout} />
+      <Route path="/:lang/nfc/order-success" component={NFCOrderSuccess} />
       <Route>
         <AuthenticatedLayout>
           <InvitationPopup />
