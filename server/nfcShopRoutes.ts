@@ -1,9 +1,10 @@
 import type { Express, Request, Response } from "express";
 import { db } from "./db";
 import { nfcOrders } from "@shared/schema";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { getUncachableStripeClient, getStripePublishableKey } from "./stripeClient";
 import { sendNfcOrderConfirmationEmail } from "./jobs/nfcOrderEmail";
+import { isAuthenticated } from "./auth";
 
 const NFC_PRICE_CENTS = 2500; // €25.00
 
@@ -161,6 +162,23 @@ export function registerNfcShopRoutes(app: Express): void {
     } catch (error: any) {
       console.error("[NFC Shop] confirm-payment error:", error?.message);
       return res.status(500).json({ success: false, message: "Failed to confirm payment" });
+    }
+  });
+
+  // List the authenticated user's NFC orders (matched by email)
+  app.get("/api/nfc-shop/my-orders", isAuthenticated, async (req: any, res: Response) => {
+    try {
+      const email: string | undefined = req.user?.claims?.email;
+      if (!email) return res.json({ success: true, orders: [] });
+      const orders = await db
+        .select()
+        .from(nfcOrders)
+        .where(eq(nfcOrders.email, email))
+        .orderBy(desc(nfcOrders.createdAt));
+      return res.json({ success: true, orders });
+    } catch (error: any) {
+      console.error("[NFC Shop] my-orders error:", error?.message);
+      return res.status(500).json({ success: false, message: "Failed to fetch orders" });
     }
   });
 

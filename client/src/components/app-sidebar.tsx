@@ -107,7 +107,7 @@ const managementItems: NavItem[] = [
   },
   {
     titleKey: "sidebar.nav.buyStand",
-    url: "/nfc",
+    url: "/nfc-panel",
     icon: ShoppingBag,
   },
   {

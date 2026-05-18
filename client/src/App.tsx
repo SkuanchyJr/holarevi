@@ -58,6 +58,7 @@ import Pricing from "@/pages/pricing";
 import NFCStand from "@/pages/nfc-stand";
 import NFCCheckout from "@/pages/nfc-checkout";
 import NFCOrderSuccess from "@/pages/nfc-order-success";
+import NFCPanel from "@/pages/nfc-panel";
 import NotFound from "@/pages/not-found";
 import { InvitationPopup } from "@/components/invitation-popup";
 import { TrialBanner } from "@/components/trial-banner";
@@ -259,6 +260,7 @@ function LocalizedRouter({ currentPath }: { currentPath: string }) {
             <Route path="/:lang/qr-reviews" component={QRReviews} />
             <Route path="/:lang/team" component={Team} />
             <Route path="/:lang/tone-presets" component={TonePresets} />
+            <Route path="/:lang/nfc-panel" component={NFCPanel} />
             <Route path="/:lang/billing" component={Billing} />
             <Route path="/:lang/settings" component={Settings} />
             <Route path="/:lang/contact" component={Contact} />

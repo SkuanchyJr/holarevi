@@ -2234,5 +2234,67 @@
       "feature3": "Support included",
       "feature4": "Secure payment"
     }
+  },
+  "nfcPanel": {
+    "title": "NFC Stand",
+    "subtitle": "Get more reviews with a tap. Buy your stand and learn how to measure the results.",
+    "myOrders": {
+      "title": "My orders",
+      "headerOrder": "Order",
+      "headerDate": "Date",
+      "headerQty": "Qty",
+      "headerTotal": "Total",
+      "headerStatus": "Status",
+      "status": {
+        "pending_payment": "Pending payment",
+        "paid": "Paid",
+        "processing": "Processing",
+        "shipped": "Shipped",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled",
+        "refunded": "Refunded"
+      }
+    },
+    "buy": {
+      "eyebrow": "Launch price",
+      "title": "HolaRevi NFC Stand",
+      "subtitle": "One tap. The customer lands on your Google review page. No app, no QR scan.",
+      "priceNew": "€25",
+      "priceCrossed": "€100",
+      "save": "Save 75%",
+      "unit": "per stand · VAT included",
+      "bullet1": "Universal NFC — works with iPhone and Android, no app needed",
+      "bullet2": "Pre-programmed for your business — plug and place",
+      "bullet3": "Premium aluminum stand for counters and tables",
+      "bullet4": "Free shipping in Spain · 30-day money-back guarantee",
+      "cta": "Reserve my stand",
+      "unitsLabel": "reserved",
+      "unitsLeft": "Only {count} left"
+    },
+    "measure": {
+      "eyebrow": "Setup & measurement",
+      "title": "Make every tap count",
+      "subtitle": "Connect your stand to your dashboard so every tap turns into trackable reviews.",
+      "step1": {
+        "title": "1. Create a QR Review",
+        "desc": "Generate a unique link for each location and pair it with your stand.",
+        "cta": "Open QR Reviews"
+      },
+      "step2": {
+        "title": "2. Track scans",
+        "desc": "See how many people tap the stand and from which device, in real time.",
+        "cta": "View scan analytics"
+      },
+      "step3": {
+        "title": "3. Read new reviews",
+        "desc": "Every new Google review appears in your inbox, ready for an AI-generated reply.",
+        "cta": "Go to reviews"
+      },
+      "step4": {
+        "title": "4. Weekly AI summary",
+        "desc": "Spot what guests love and what to fix — synthesized for you every week.",
+        "cta": "Read AI summary"
+      }
+    }
   }
 }

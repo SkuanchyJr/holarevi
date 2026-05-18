@@ -2234,5 +2234,67 @@
       "feature3": "Soporte incluido",
       "feature4": "Pago seguro"
     }
+  },
+  "nfcPanel": {
+    "title": "Stand NFC",
+    "subtitle": "Consigue más reseñas con un toque. Compra tu stand y aprende a medir resultados.",
+    "myOrders": {
+      "title": "Mis pedidos",
+      "headerOrder": "Pedido",
+      "headerDate": "Fecha",
+      "headerQty": "Cant.",
+      "headerTotal": "Total",
+      "headerStatus": "Estado",
+      "status": {
+        "pending_payment": "Pago pendiente",
+        "paid": "Pagado",
+        "processing": "Procesando",
+        "shipped": "Enviado",
+        "delivered": "Entregado",
+        "cancelled": "Cancelado",
+        "refunded": "Reembolsado"
+      }
+    },
+    "buy": {
+      "eyebrow": "Precio lanzamiento",
+      "title": "Stand NFC de HolaRevi",
+      "subtitle": "Un toque. El cliente aterriza en tu página de reseñas de Google. Sin app, sin escanear QR.",
+      "priceNew": "25€",
+      "priceCrossed": "100€",
+      "save": "Ahorra 75%",
+      "unit": "por stand · IVA incluido",
+      "bullet1": "NFC universal — iPhone y Android, sin app",
+      "bullet2": "Pre-programado para tu negocio — solo enchufar y listo",
+      "bullet3": "Stand premium de aluminio para barra y mesas",
+      "bullet4": "Envío gratis en España · Garantía 30 días",
+      "cta": "Reservar mi stand",
+      "unitsLabel": "reservados",
+      "unitsLeft": "Solo quedan {count}"
+    },
+    "measure": {
+      "eyebrow": "Configuración y medición",
+      "title": "Que cada toque cuente",
+      "subtitle": "Conecta tu stand al panel para convertir cada toque en reseñas medibles.",
+      "step1": {
+        "title": "1. Crea un QR Review",
+        "desc": "Genera un enlace único por local y vincúlalo a tu stand.",
+        "cta": "Abrir QR Reviews"
+      },
+      "step2": {
+        "title": "2. Mide los escaneos",
+        "desc": "Mira cuántas personas tocan el stand y desde qué dispositivo, en tiempo real.",
+        "cta": "Ver analítica de escaneos"
+      },
+      "step3": {
+        "title": "3. Lee las nuevas reseñas",
+        "desc": "Cada reseña nueva en Google aparece en tu bandeja, lista para responder con IA.",
+        "cta": "Ir a reseñas"
+      },
+      "step4": {
+        "title": "4. Resumen IA semanal",
+        "desc": "Descubre qué encanta y qué mejorar — sintetizado para ti cada semana.",
+        "cta": "Ver resumen IA"
+      }
+    }
   }
 }
