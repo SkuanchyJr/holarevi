@@ -1,0 +1,2358 @@
+{
+  "seo": {
+    "home": {
+      "title": "Responder reseñas de Google con IA de forma automática | HolaRevi",
+      "description": "Optimiza la reputación online de tu negocio. HolaRevi responde tus reseñas de Google automáticamente con inteligencia artificial, manteniendo tu tono de marca 24/7.",
+      "keywords": "responder reseñas Google IA, gestión reputación online SaaS, automatización reseñas Google, software para negocios locales, inteligencia artificial reseñas"
+    }
+  },
+  "nav": {
+    "features": "Funciones",
+    "pricing": "Precios",
+    "faq": "FAQ",
+    "blog": "Blog",
+    "contact": "Contacto",
+    "login": "Iniciar sesión",
+    "getStarted": "Empezar gratis",
+    "new": "Nuevo"
+  },
+  "promo": {
+    "bar": {
+      "text": "Empieza gratis · Configúralo en minutos · Cancela cuando quieras",
+      "cta": "Ver planes"
+    }
+  },
+  "pricing": {
+    "badge": "Empieza gratis · Sin tarjeta",
+    "title": "Tus reseñas en piloto automático",
+    "subtitle": "Empieza gratis y, cuando quieras responder en automático, elige el plan que necesites. Lo configuras en minutos y cancelas cuando quieras.",
+    "hero": {
+      "badge": "Empieza gratis — sin tarjeta",
+      "title": "Responde todas tus reseñas de Google, sin esfuerzo",
+      "subtitle": "Conecta Google gratis y descubre el valor. Cuando quieras publicar respuestas en automático, mejora a un plan de pago — desde 14€/mes."
+    },
+    "footer": {
+      "questions": "¿No sabes qué plan elegir? Te ayudamos a decidir en 1 minuto."
+    },
+    "testimonial": {
+      "text": "Antes tardábamos 3-4 días en responder reseñas. Con HolaRevi respondemos el 100% en menos de 10 minutos. Nuestra valoración en Google subió de 4.2 a 4.6 en dos meses.",
+      "author": "Lucía M.",
+      "role": "Responsable de operaciones · Cadena de restaurantes (5 locales)"
+    },
+    "outcomes": {
+      "free": "Conecta Google y ve el valor antes de comprometerte.",
+      "local": "Responde el 100% de tus reseñas sin tocar el ordenador.",
+      "pro": "Un panel para todos tus locales — tu equipo siempre al día.",
+      "business": "Sin límites: añade locales y usuarios según crezcas."
+    },
+    "savings": {
+      "badge": "Ahorras €{{amount}} al año"
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "q1": "¿Qué pasa si no cancelo antes de que termine la prueba?",
+      "a1": "Al finalizar los 14 días, se activa automáticamente el cobro del plan que elegiste. Te avisaremos por email antes. Puedes cancelar en cualquier momento desde tu panel, sin penalizaciones.",
+      "q2": "¿Puedo cambiar de plan después?",
+      "a2": "Sí. Puedes subir o bajar de plan en cualquier momento. Los cambios se aplican al instante y el precio se prorratea automáticamente.",
+      "q3": "¿Necesito tarjeta para el plan gratuito?",
+      "a3": "No. El plan Free no requiere tarjeta. Solo necesitas tarjeta para activar la prueba gratuita de 14 días de los planes Local o Pro.",
+      "q4": "¿Qué incluye el plan Free?",
+      "a4": "Puedes ver todas tus reseñas en un panel, análisis de sentimiento, resumen mensual con IA y email semanal de rendimiento. Las respuestas automáticas requieren un plan de pago."
+    },
+    "guidance": {
+      "local": "Ideal para 1 solo local",
+      "pro": "Ideal para 2–5 locales",
+      "business": "Ideal para cadenas y franquicias",
+      "free": "Para explorar sin compromiso"
+    },
+    "local": {
+      "name": "Local",
+      "description": "Para un restaurante con una ubicación.",
+      "cta": "Probar 14 días gratis",
+      "footnote": "14 días gratis. Si no cancelas antes, se cobra automáticamente 14€/mes.",
+      "f1": "1 ubicación de Google",
+      "f2": "Respuestas IA ilimitadas",
+      "f3": "Publica en automático o revisa antes",
+      "f4": "Responde reseñas antiguas",
+      "f5": "1 usuario",
+      "f6": "Plantillas y tono de marca",
+      "f7": "Resumen ejecutivo con IA + email semanal"
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "Para grupos de hasta 5 ubicaciones.",
+      "cta": "Probar 14 días gratis",
+      "f1": "Hasta 5 ubicaciones",
+      "f2": "Respuestas IA ilimitadas",
+      "f3": "Panel multi-ubicación",
+      "f4": "Hasta 5 usuarios",
+      "f5": "Control por ubicación",
+      "f6": "Soporte prioritario",
+      "f7": "Resumen ejecutivo con IA + email semanal"
+    },
+    "business": {
+      "name": "Business",
+      "description": "Para cadenas y operaciones multi-ubicación.",
+      "cta": "Suscribirme",
+      "footnote": "Locales y usuarios ilimitados.",
+      "f1": "Ubicaciones ilimitadas",
+      "f2": "Panel avanzado multi-ubicación",
+      "f3": "Usuarios y roles ilimitados",
+      "f4": "WhatsApp y TripAdvisor",
+      "f5": "SLA y soporte prioritario",
+      "f6": "Resumen ejecutivo con IA, emails, etc.",
+      "f7": "Respuestas IA ilimitadas",
+      "noTrialNote": "Sin prueba gratuita para este plan.",
+      "noTrialCta": "Hablar con el equipo"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "description": "Integraciones y escalabilidad a medida.",
+      "cta": "Hablar con ventas",
+      "f1": "API e integraciones",
+      "f2": "Conexión con CRM",
+      "f3": "Reporting avanzado",
+      "f4": "Account manager dedicado",
+      "f5": "Resumen ejecutivo con IA, emails, etc."
+    }
+  },
+  "contact": {
+    "title": "Contacta con nosotros",
+    "name": "Nombre completo",
+    "namePlaceholder": "Escribe tu nombre...",
+    "company": "Empresa",
+    "companyPlaceholder": "Nombre de tu negocio...",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "tu@email.com",
+    "phone": "Teléfono (opcional)",
+    "message": "Mensaje",
+    "messagePlaceholder": "¿Cómo podemos ayudarte?",
+    "submit": "Enviar mensaje",
+    "sending": "Enviando...",
+    "success": "¡Mensaje enviado correctamente! Te contactaremos pronto.",
+    "error": "Hubo un error al enviar el mensaje. Por favor, inténtalo de nuevo."
+  },
+  "hero": {
+    "badge": "Gestión de reseñas de Google con IA",
+    "titlePrefix": "Responde todas tus reseñas de Google",
+    "titleHighlight": "con IA, automáticamente",
+    "subtitle": "HolaRevi lee cada reseña de Google y publica una respuesta personalizada en tu tono de marca, sin que muevas un dedo. Más reputación, mejor SEO local y horas de trabajo que recuperas.",
+    "ctaPrimary": "Empieza gratis en 5 minutos",
+    "ctaSecondary": "Ver demo en vivo",
+    "footerText": "Sin tarjeta para el plan Free · 14 días de prueba gratis · Cancela cuando quieras"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "checkoutError": "No se pudo iniciar el pago",
+    "success": "Listo",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Añadir",
+    "create": "Crear",
+    "submit": "Enviar",
+    "sending": "Enviando...",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "settings": "Configuración",
+    "viewAll": "Ver todo",
+    "comingSoon": "Próximamente",
+    "update": "Actualizar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "all": "Todos",
+    "yes": "Sí",
+    "no": "No",
+    "or": "o",
+    "and": "y",
+    "contact": "Contacto",
+    "monthly": "Mensual",
+    "yearly": "Anual",
+    "save20": "2 meses gratis",
+    "perMonth": "/mes",
+    "billedAnnually": "facturado anualmente",
+    "startFreeTrial": "Empezar prueba gratuita",
+    "start3DayTrial": "Probar 3 días gratis",
+    "trialLimitedReplies": "Incluye respuestas IA limitadas durante el periodo de prueba.",
+    "contactSales": "Contactar con ventas",
+    "mostPopular": "Más popular",
+    "custom": "Personalizado",
+    "contactUsForPricing": "Contáctanos para precios",
+    "saveChanges": "Guardar cambios",
+    "subscribe": "Suscribirse",
+    "subscribeNow": "Suscribirme ahora",
+    "customer": "Cliente",
+    "discountBadge": "-90%",
+    "before": "Antes",
+    "now": "Ahora",
+    "forever": "para siempre",
+    "permanentOffer": "Este precio, para siempre",
+    "noCommitment": "Sin permanencia",
+    "cancelAnytime": "Cancela cuando quieras",
+    "securePayment": "Pago seguro con Stripe",
+    "humanSupport": "Soporte humano",
+    "instantSetup": "Listo en minutos",
+    "days": {
+      "dom": "Dom",
+      "lun": "Lun",
+      "mar": "Mar",
+      "mie": "Mié",
+      "jue": "Jue",
+      "vie": "Vie",
+      "sab": "Sáb"
+    },
+    "email": "Correo electrónico",
+    "startTrial": "Probar 14 días gratis",
+    "freePlanCta": "Empezar gratis",
+    "freePrice": "Gratis",
+    "trialNote14": "14 días gratis · Sin compromiso · Cancela cuando quieras",
+    "upgradeNow": "Mejorar plan"
+  },
+  "sidebar": {
+    "totalReviewsLabel": "Reseñas totales",
+    "tutorial": "Tutorial",
+    "navigation": "Navegación",
+    "management": "Gestión",
+    "nav": {
+      "dashboard": "Panel de control",
+      "reviews": "Reseñas",
+      "reviewSummary": "Resumen IA",
+      "restaurants": "Ubicaciones",
+      "locations": "Mapa de locales",
+      "analytics": "Analítica",
+      "qrReviews": "Generador QR",
+      "team": "Equipo",
+      "tonePresets": "Tonos de marca",
+      "buyStand": "Comprar stand NFC",
+      "billing": "Suscripción",
+      "settings": "Configuración"
+    }
+  },
+  "dashboard": {
+    "title": "Panel de control",
+    "subtitle": "Resumen de tu actividad de gestión de reseñas",
+    "anonymous": "Anónimo",
+    "noComment": "Sin comentario",
+    "stats": {
+      "totalReviews": "Total de reseñas",
+      "totalReviewsDesc": "Reseñas recibidas en total",
+      "pendingReplies": "Respuestas pendientes",
+      "pendingRepliesDesc": "Reseñas esperando respuesta",
+      "autoPosted": "Auto-publicadas",
+      "autoPostedDesc": "Respuestas publicadas automáticamente",
+      "responseRate": "Tasa de respuesta",
+      "responseRateDesc": "Reseñas con respuestas",
+      "fromLastMonth": "desde el mes pasado"
+    },
+    "sentiment": {
+      "positive": "positivo",
+      "negative": "negativo",
+      "neutral": "neutral"
+    },
+    "recentReviews": {
+      "title": "Reseñas recientes",
+      "subtitle": "Últimas reseñas de todas tus ubicaciones",
+      "viewAll": "Ver todas"
+    },
+    "noReviews": {
+      "title": "Aún no hay reseñas",
+      "subtitle": "Conecta una ubicación para empezar a recibir reseñas",
+      "action": "Conectar ubicación"
+    },
+    "quickActions": {
+      "title": "Acciones rápidas",
+      "subtitle": "Tareas comunes a tu alcance",
+      "reviewPending": "Revisar pendientes",
+      "addRestaurant": "Añadir ubicación",
+      "manageBilling": "Gestionar suscripción"
+    },
+    "alerts": {
+      "title": "Alertas",
+      "pending": "Tienes {count} reseñas pendientes esperando tu aprobación.",
+      "noAlerts": "Sin alertas en este momento. ¡Estás al día!"
+    },
+    "insight": {
+      "didYouKnow": "¿Sabías que?",
+      "trustMessage": "Los negocios que responden a las reseñas son percibidos como",
+      "trustMultiplier": "1.7× más fiables",
+      "trustSuffix": "en Google.",
+      "trustDescription": "Responder consistentemente mejora el posicionamiento, las conversiones y la confianza del cliente.",
+      "locationsConnected": "Ubicaciones conectadas",
+      "reviewsDetected": "Reseñas detectadas",
+      "autoReplies": "Auto-respuestas",
+      "active": "Activo",
+      "accountReady": "Tu cuenta está lista. HolaRevi detectará y responderá automáticamente a las nuevas reseñas.",
+      "manageLocations": "Gestionar ubicaciones"
+    }
+  },
+  "reviews": {
+    "title": "Reseñas",
+    "subtitle": "Gestiona y responde a tus reseñas de Google",
+    "allRestaurants": "Todas las ubicaciones",
+    "anonymous": "Anónimo",
+    "tabs": {
+      "all": "Todas",
+      "pending": "Pendientes",
+      "posted": "Publicadas",
+      "dismissed": "Descartadas"
+    },
+    "sort": {
+      "newest": "Más recientes",
+      "oldest": "Más antiguas"
+    },
+    "status": {
+      "pending": "pendiente",
+      "approved": "aprobada",
+      "posted": "publicada",
+      "dismissed": "descartada"
+    },
+    "sentiment": {
+      "positive": "positivo",
+      "negative": "negativo",
+      "neutral": "neutral"
+    },
+    "languages": {
+      "en": "Inglés",
+      "es": "Español",
+      "ca": "Catalán"
+    },
+    "noComment": "Sin comentario proporcionado",
+    "aiGeneratedReply": "Respuesta generada por IA",
+    "postedReply": "Respuesta publicada",
+    "actions": {
+      "approvePost": "Aprovar y publicar",
+      "editReply": "Editar respuesta",
+      "regenerate": "Regenerar",
+      "regenerating": "Regenerando...",
+      "dismiss": "Descartar"
+    },
+    "noReviewsFound": "No se han encontrado reseñas",
+    "syncReviews": "Sincronizar reseñas",
+    "syncing": "Sincronizando...",
+    "allResponded": "¡Buen trabajo! Todas las reseñas han sido respondidas.",
+    "noMatchFilters": "No hay reseñas que coincidan con tus filtros actuales.",
+    "editDialog": {
+      "title": "Editar respuesta",
+      "description": "Revisa y personaliza la respuesta generada por IA antes de publicar.",
+      "originalReview": "Reseña original",
+      "yourReply": "Tu respuesta",
+      "placeholder": "Escribe tu respuesta...",
+      "postReply": "Publicar respuesta"
+    },
+    "toasts": {
+      "replyPosted": "Respuesta publicada",
+      "replyPostedDesc": "Tu respuesta ha sido publicada en Google.",
+      "reviewDismissed": "Reseña descartada",
+      "reviewDismissedDesc": "Esta reseña ha sido marcada como descartada.",
+      "replyRegenerated": "Respuesta regenerada",
+      "replyRegeneratedDesc": "Se ha generado una nueva respuesta con IA.",
+      "generatingAll": "Generando respuestas...",
+      "allGenerated": "Respuestas generadas",
+      "allGeneratedDesc": "Se han generado {count} respuestas con IA.",
+      "allGeneratedPartial": "Se han generado {generated} respuestas. {skipped} omitidas (límite alcanzado).",
+      "error": "Error",
+      "errorPost": "No se pudo publicar la respuesta. Inténtalo de nuevo.",
+      "errorRegenerate": "Error al regenerar la respuesta. Inténtalo de nuevo.",
+      "errorGenerateAll": "Error al generar respuestas. Inténtalo de nuevo.",
+      "errorSync": "Error al sincronizar reseñas. Inténtalo de nuevo.",
+      "selectRestaurant": "Selecciona una ubicación",
+      "selectRestaurantDesc": "Por favor, selecciona una ubicación específica para sincronizar reseñas.",
+      "syncSuccess": "Reseñas sincronizadas",
+      "syncSuccessDesc": "Se han sincronizado {count} reseñas."
+    },
+    "generateAll": "Generar todas las respuestas",
+    "generateAllPending": "Generar respuestas ({count})"
+  },
+  "restaurants": {
+    "title": "Mis Ubicaciones",
+    "subtitle": "Gestiona y conecta tus negocios con Google Business",
+    "addRestaurant": "Añadir negocio",
+    "total": "Total",
+    "connected": "Conectadas",
+    "autoPost": "Auto-publicación",
+    "noRestaurants": "Aún no tienes ubicaciones",
+    "noRestaurantsDesc": "Añade tu primer negocio para empezar a gestionar reseñas.",
+    "card": {
+      "connected": "Conectado",
+      "pendingLocation": "Pendiente de local",
+      "notConnected": "Desconectado",
+      "connectToEnable": "Conecta con Google para activar la gestión automática.",
+      "connectGoogle": "Conectar Google",
+      "selectLocation": "Seleccionar local",
+      "configuration": "Configuración"
+    },
+    "addDialog": {
+      "title": "Añadir nuevo negocio",
+      "description": "Introduce los detalles de tu negocio para empezar.",
+      "name": "Nombre del negocio",
+      "namePlaceholder": "Ej: Pizzería Roma",
+      "address": "Dirección (opcional)",
+      "addressPlaceholder": "Ej: Calle Mayor, 12, Madrid",
+      "tone": "Tono de voz",
+      "tones": {
+        "friendly": "Amigable y cercano",
+        "formal": "Profesional y formal",
+        "casual": "Informal y divertido",
+        "mediterranean": "Mediterráneo y cálido"
+      },
+      "toneDescription": "Este tono se usará como base para generar las respuestas con IA."
+    },
+    "locationDialog": {
+      "title": "Seleccionar local de Google",
+      "description": "Elige el local específico de tu cuenta de Google Business Profile.",
+      "loadingAccounts": "Cargando cuentas de Google...",
+      "noAccounts": "No se han encontrado cuentas de Google vinculadas.",
+      "selectAccount": "Seleccionar cuenta",
+      "selectLocation": "Seleccionar ubicación",
+      "loadingLocations": "Cargando ubicaciones...",
+      "noLocations": "No se han encontrado ubicaciones en esta cuenta."
+    },
+    "toasts": {
+      "added": "Negocio añadido",
+      "addedDesc": "El negocio se ha creado correctamente.",
+      "updated": "Configuración guardada",
+      "updatedDesc": "Los cambios se han aplicado correctamente.",
+      "deleted": "Negocio eliminado",
+      "deletedDesc": "El negocio ha sido eliminado de tu cuenta.",
+      "error": "Error",
+      "errorAdd": "No se ha podido añadir el negocio.",
+      "errorSync": "Error al sincronizar reseñas.",
+      "synced": "Reseñas sincronizadas",
+      "syncedDesc": "Se han sincronizado {count} reseñas nuevas.",
+      "googleNotConfigured": "Google no configurado",
+      "locationConnected": "Local conectado",
+      "locationConnectedDesc": "Tu local de Google se ha vinculado correctamente."
+    }
+  },
+  "billing": {
+    "title": "Suscripción y Facturación",
+    "subtitle": "Gestiona tu plan y métodos de pago",
+    "status": {
+      "trial": "Prueba",
+      "trialing": "Prueba gratuita",
+      "active": "Activa",
+      "canceled": "Cancelada",
+      "canceling": "Cancelando",
+      "pastDue": "Vencida",
+      "noSubscription": "Sin suscripción"
+    },
+    "trialDaysLeft": "Te quedan {days} días de prueba gratuita.",
+    "trialWarning": "¡Atención! Tu prueba gratuita termina en {days} días.",
+    "trialBannerActive": "Estás en prueba gratuita: incluye hasta 10 respuestas a reseñas. Te quedan {days} días — al terminar, se activará automáticamente el cobro de tu plan.",
+    "trialBannerLastDay": "Último día de prueba gratuita (incluye hasta 10 respuestas). Mañana se activará automáticamente el cobro de tu plan.",
+    "trialBannerCta": "Ver mi plan",
+    "manageSubscription": "Gestionar suscripción",
+    "plan": "Plan actual",
+    "nextBilling": "Próxima facturación",
+    "upgradePlan": "Mejorar plan",
+    "cancelSubscription": "Cancelar suscripción",
+    "history": "Historial de facturas",
+    "sync": "Sincronizar",
+    "subscription": "Suscripción",
+    "month": "mes",
+    "yearly": "Anual",
+    "save20": "Ahorra 20%",
+    "noPlan": "Sin plan seleccionado",
+    "trialEnds": "La prueba termina el",
+    "accessUntil": "Acceso hasta",
+    "subscriptionEnding": "Suscripción finalizando",
+    "subscriptionEndingDesc": "Tu suscripción se cancelará el {date}. Puedes reactivarla antes de esa fecha.",
+    "cancelConfirmTitle": "¿Cancelar suscripción?",
+    "cancelConfirmDescription": "Tu suscripción permanecerá activa hasta el final del periodo de facturación actual. Después perderás acceso a las funciones premium.",
+    "cancelKeepButton": "Mantener suscripción",
+    "cancelConfirmButton": "Sí, cancelar",
+    "reactivateSubscription": "Reactivar suscripción",
+    "choosePlan": "Elegir un plan",
+    "chooseYourPlan": "Elige tu plan",
+    "chooseYourPlanDesc": "Selecciona el plan que mejor se adapte a tu negocio.",
+    "monthly": "Mensual",
+    "usageAndLimits": "Uso y Límites",
+    "usageDescription": "Uso actual de los recursos de tu plan",
+    "locations": "Ubicaciones",
+    "monthlyReplies": "Respuestas Mensuales",
+    "teamMembers": "Miembros del Equipo",
+    "tonePresets": "Presets de Tono",
+    "recentInvoices": "Facturas Recientes",
+    "recentInvoicesDesc": "Tus últimas transacciones de facturación",
+    "viewAllInvoices": "Ver todas",
+    "noInvoicesYet": "Sin facturas aún",
+    "noInvoicesDesc": "Las facturas aparecerán aquí cuando te suscribas.",
+    "cardEnding": "terminada en",
+    "toasts": {
+      "error": "Error",
+      "errorCheckout": "No se pudo iniciar el checkout. Inténtalo de nuevo.",
+      "errorPortal": "No se pudo abrir el portal de facturación. Inténtalo de nuevo.",
+      "errorExtraLocation": "No se pudo añadir la ubicación extra. Inténtalo de nuevo.",
+      "errorCancel": "No se pudo cancelar la suscripción. Inténtalo de nuevo.",
+      "errorResume": "No se pudo reactivar la suscripción. Inténtalo de nuevo.",
+      "cancelSuccess": "Suscripción cancelada",
+      "cancelSuccessDesc": "Tu suscripción ha sido cancelada. Conservarás el acceso hasta el final del periodo de facturación.",
+      "resumeSuccess": "Suscripción reactivada",
+      "resumeSuccessDesc": "Tu suscripción ha sido reactivada correctamente.",
+      "syncSuccess": "Sincronizado",
+      "syncSuccessDesc": "Tu información de facturación ha sido sincronizada.",
+      "errorSync": "No se pudo sincronizar la facturación. Inténtalo de nuevo.",
+      "planUpdated": "Plan actualizado",
+      "planUpdatedDesc": "Tu plan ha sido cambiado a {plan}.",
+      "alreadyOnPlan": "Ya estás en este plan.",
+      "planChangeError": "No se pudo cambiar el plan. Inténtalo de nuevo."
+    },
+    "currentPlan": "Plan Actual",
+    "processing": "Procesando...",
+    "selectPlan": "Seleccionar Plan",
+    "needCustom": "¿Necesitas una solución personalizada para tu empresa?",
+    "contactEnterprise": "Contactar Ventas Enterprise"
+  },
+  "analytics": {
+    "title": "Analítica",
+    "subtitle": "Métricas detalladas y rendimiento de tu reputación online.",
+    "upgradeMessage": "",
+    "upgradePlan": "Mejorar mi plan",
+    "stats": {
+      "totalReviews": "Total Reseñas",
+      "responses": "Respuestas",
+      "avgRating": "Rating Medio",
+      "responseTime": "Tiempo Respons.",
+      "unanswered": "Sin Contestar",
+      "sentiment": "Sentimiento"
+    },
+    "charts": {
+      "ratingEvolution": "Evolución del Rating",
+      "ratingEvolutionDesc": "Puntuación media mensual durante los últimos 12 meses",
+      "weeklyVolume": "Volumen Semanal",
+      "weeklyVolumeDesc": "Reseñas y respuestas por semana",
+      "sentimentAnalysis": "Análisis de Sentimiento",
+      "sentimentAnalysisDesc": "Distribución emocional de las reseñas",
+      "replyStatus": "Estado de Respuestas",
+      "replyStatusDesc": "Publicadas, aprobadas, pendientes y descartadas",
+      "starDistribution": "Distribución de Estrellas",
+      "starDistributionDesc": "Desglose por puntuación",
+      "dayOfWeek": "Reseñas por Día de la Semana",
+      "dayOfWeekDesc": "¿Cuándo dejan reseñas tus clientes?",
+      "languages": "Reseñas por Idioma",
+      "languagesDesc": "Idiomas en los que se escriben las reseñas",
+      "monthlyTrends": "Tendencias Mensuales",
+      "monthlyTrendsDesc": "Resumen mes a mes de los últimos 12 meses",
+      "locationPerformance": "Rendimiento por Ubicación",
+      "locationPerformanceDesc": "Comparativa de tus negocios",
+      "recentNegative": "Reseñas Negativas Recientes",
+      "recentNegativeDesc": "Reseñas de 1-2 estrellas que requieren tu atención",
+      "sentimentTrend": "Sentimiento a lo largo del tiempo",
+      "sentimentTrendDesc": "Desglose mensual de sentimiento positivo, neutro y negativo",
+      "monthlyChart": "Rendimiento mensual",
+      "monthlyChartDesc": "Reseñas y respuestas en los últimos 6 meses"
+    },
+    "health": {
+      "title": "Puntuación de Salud",
+      "excellent": "Excelente",
+      "good": "Bueno",
+      "needsWork": "Mejorable"
+    },
+    "ai": {
+      "title": "Insights de IA",
+      "noSummary": "Todavía no hay resumen de IA.",
+      "noSummaryAction": "Genéralo en Insights IA",
+      "generatedAt": "Generado el",
+      "keyThemes": "Temas clave",
+      "recommendations": "Recomendaciones"
+    },
+    "actions": {
+      "respond": "Responder ahora"
+    },
+    "comparison": {
+      "vs30d": "vs. 30d anteriores"
+    },
+    "data": {
+      "positive": "Positivas",
+      "neutral": "Neutras",
+      "negative": "Negativas",
+      "posted": "Publicadas",
+      "approved": "Aprobadas",
+      "pending": "Pendientes",
+      "dismissed": "Descartadas",
+      "noData": "Sin datos disponibles",
+      "responseRate": "{rate}% tasa de respuesta",
+      "avgTimeDesc": "Promedio desde la reseña",
+      "sentimentSummary": "{pos} pos · {neg} neg · {neu} neu",
+      "sentimentSummaryValue": "{pos} pos"
+    }
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Gestiona tu cuenta y preferencias de la aplicación",
+    "profile": {
+      "title": "Perfil de usuario",
+      "description": "Información personal y de contacto",
+      "firstName": "Nombre",
+      "lastName": "Apellidos",
+      "email": "Email",
+      "emailManagedByProvider": "El correo electrónico es gestionado por el proveedor de autenticación.",
+      "saved": "Perfil actualizado",
+      "savedDesc": "Tus cambios se han guardado correctamente.",
+      "saveError": "Error al guardar el perfil"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "description": "Configura cómo quieres recibir alertas de nuevas reseñas",
+      "email": "Notificaciones por email",
+      "emailDesc": "Recibe un aviso cuando recibas nuevas reseñas.",
+      "negativeAlerts": "Alertas de reseñas negativas",
+      "negativeAlertsDesc": "Aviso inmediato para reseñas de 1 o 2 estrellas.",
+      "weeklySummary": "Resumen semanal",
+      "weeklySummaryDesc": "Un informe de rendimiento todos los lunes en tu bandeja.",
+      "receiveEmails": "Recibes estos emails",
+      "receiveEmailsDesc": "El panel muestra lo que la app realmente envía hoy.",
+      "weeklySummaryActive": "Resumen semanal",
+      "weeklySummaryActiveDesc": "Se envía una vez por semana con métricas y rendimiento.",
+      "active": "Activo",
+      "replyNotification": "Notificación al responder",
+      "replyNotificationDesc": "Llega cuando se publica una respuesta a una reseña.",
+      "noControls": "No hay alertas inmediatas por reseñas negativas ni switches configurables en esta vista.",
+      "weekly": "Cada semana",
+      "weeklyDesc": "Sin controles manuales desde aquí.",
+      "repliesPosted": "Respuestas publicadas",
+      "repliesPostedDesc": "Aviso cuando se postea una respuesta."
+    },
+    "languageRegion": {
+      "title": "Idioma y Región",
+      "description": "Preferencias de visualización y zona horaria",
+      "timezone": "Zona horaria"
+    },
+    "security": {
+      "title": "Seguridad",
+      "description": "Gestiona la seguridad de tu acceso",
+      "twoFactor": "Autenticación de dos factores (2FA)",
+      "twoFactorDesc": "Añade una capa extra de seguridad a tu cuenta.",
+      "activeSessions": "Sesiones activas",
+      "activeSessionsDesc": "Dispositivos que tienen acceso a tu cuenta.",
+      "viewSessions": "Ver sesiones"
+    },
+    "dangerZone": {
+      "title": "Zona de peligro",
+      "description": "Acciones irreversibles sobre tu cuenta",
+      "signOut": "Cerrar sesión",
+      "signOutDesc": "Cierra tu sesión actual en este dispositivo.",
+      "deleteAccount": "Eliminar cuenta",
+      "deleteAccountDesc": "Borra permanentemente tu cuenta y todos tus datos asociados.",
+      "accountDeleted": "Cuenta eliminada",
+      "accountDeletedDesc": "Tu cuenta ha sido eliminada. Lamentamos verte partir.",
+      "deleteError": "No se ha podido eliminar la cuenta.",
+      "confirmDeleteTitle": "¿Estás completamente seguro?",
+      "confirmDeleteDesc": "Esta acción no se puede deshacer. Se borrarán todas tus ubicaciones, reseñas y configuraciones.",
+      "confirmDelete": "Sí, eliminar mi cuenta"
+    }
+  },
+  "landing": {
+    "hero": {
+      "browser_url": "holarevi.com · Panel de reseñas",
+      "live_badge": "En vivo",
+      "generating": "Generando...",
+      "review1_author": "María G.",
+      "review1_text": "Increíble experiencia. El personal fue muy amable y la comida estaba deliciosa. Volveremos sin duda.",
+      "review1_response": "¡Muchas gracias, María! Nos alegra mucho que hayas disfrutado la experiencia. Nuestro equipo trabaja cada día para que cada visita sea especial. ¡Te esperamos pronto!",
+      "review2_author": "Carlos M.",
+      "review2_text": "Muy buen servicio, aunque la espera fue un poco larga. En general una visita muy agradable.",
+      "review2_response": "Gracias, Carlos, por tu valoración y tus palabras. Tomamos nota sobre los tiempos de espera para seguir mejorando. ¡Esperamos verte pronto de nuevo!"
+    },
+    "liveTest": {
+      "eyebrow": "Prueba en vivo",
+      "title": "¡Pon HolaRevi a prueba!",
+      "subtitle": "Deja una reseña en nuestro perfil de Google y observa en tiempo real cómo nuestra Inteligencia Artificial responde automáticamente.",
+      "cta": "Dejar una reseña ahora"
+    },
+    "stats": {
+      "reviews": "Reseñas respondidas",
+      "responseTime": "Tiempo medio de respuesta",
+      "locations": "Ubicaciones gestionadas",
+      "trialDays": "prueba gratuita"
+    },
+    "logos": {
+      "title": "Negocios locales que ya automatizan sus reseñas con HolaRevi",
+      "restaurants": "Restaurantes",
+      "hotels": "Hoteles",
+      "clinics": "Clínicas",
+      "beauty": "Centros de estética",
+      "repairs": "Talleres",
+      "retail": "Retail"
+    },
+    "faq": {
+      "eyebrow": "Preguntas frecuentes",
+      "title": "Resolvemos tus dudas",
+      "subtitle": "Todo lo que necesitas saber sobre HolaRevi y la automatización de reseñas.",
+      "q1": "¿HolaRevi publica las respuestas automáticamente?",
+      "a1": "Sí. Puedes activar el modo automático y HolaRevi publica cada respuesta en cuanto llega la reseña. También puedes elegir el modo de revisión: la IA genera la respuesta y tú la apruebas antes de publicar.",
+      "q2": "¿Funciona con mi perfil de Google Business?",
+      "a2": "Sí. HolaRevi se conecta directamente con Google Business Profile para leer reseñas y publicar respuestas en tu nombre.",
+      "q3": "¿Puedo controlar el tono y el estilo de las respuestas?",
+      "a3": "Sí. Configuras el tono, las plantillas y las instrucciones de marca. Las respuestas siempre suenan a tu negocio, no a un bot.",
+      "q4": "¿Qué pasa con reseñas antiguas sin responder?",
+      "a4": "Puedes responder reseñas antiguas además de automatizar las nuevas. La idea es recuperar reputación sin un esfuerzo manual masivo.",
+      "q5": "¿Funciona para varias ubicaciones?",
+      "a5": "Sí. La plataforma está pensada para multi-ubicación: panel unificado, comparativas y control por local. El límite depende del plan.",
+      "q6": "¿Necesito una tarjeta para la prueba gratuita?",
+      "a6": "Depende de la configuración actual. Si se solicita, es para evitar interrupciones al finalizar la prueba. No se cobra durante el periodo gratuito."
+    },
+    "problem": {
+      "eyebrow": "El problema",
+      "title": "La mayoría de negocios ignoran sus reseñas",
+      "subtitle": "Y eso tiene un coste real: menos confianza, peor posicionamiento y clientes que se van a la competencia.",
+      "c1": {
+        "title": "Sin respuesta",
+        "desc": "De media, más de la mitad de las reseñas de Google quedan sin responder. Cada una es una oportunidad perdida."
+      },
+      "c2": {
+        "title": "Respuesta tardía",
+        "desc": "Cuando se responde, muchas veces es demasiado tarde. El cliente ya ha tomado otra decisión."
+      },
+      "c3": {
+        "title": "Respuestas inconsistentes",
+        "desc": "Cada empleado escribe diferente. El resultado es una imagen de marca fragmentada y poco profesional."
+      }
+    },
+    "industries": {
+      "restaurants": "Restaurantes",
+      "hotels": "Hoteles",
+      "clinics": "Clínicas",
+      "beauty": "Estética",
+      "repairs": "Talleres",
+      "retail": "Retail"
+    },
+    "solution": {
+      "eyebrow": "La solución",
+      "title": "Tus reseñas, respondidas automáticamente",
+      "subtitle": "HolaRevi usa IA para generar respuestas personalizadas a cada reseña de Google. Entiende el contexto de tu negocio, mantiene tu tono de marca y publica sin que tengas que hacer nada.",
+      "c1": {
+        "title": "Respuestas automáticas",
+        "desc": "La IA lee la reseña y genera una respuesta coherente al instante.",
+        "badge": "Core"
+      },
+      "c2": {
+        "title": "Tono de marca",
+        "desc": "Configuras el estilo una vez. Cada respuesta suena a tu negocio.",
+        "badge": "Config"
+      },
+      "c3": {
+        "title": "Analítica de reseñas",
+        "desc": "Tendencia, sentimiento y evolución de tu reputación en el tiempo.",
+        "badge": "Insights"
+      },
+      "c4": {
+        "title": "Multi-ubicación",
+        "desc": "Gestiona varios locales desde un panel unificado.",
+        "badge": "Pro+"
+      },
+      "points": {
+        "p1": "Respuestas generadas por IA, personalizadas para cada reseña",
+        "p2": "Publicación automática en Google Business Profile",
+        "p3": "Tono de marca y plantillas configurables por ti",
+        "p4": "Modo revisión: aprueba antes de publicar si lo prefieres",
+        "p5": "Funciona 24/7, incluso cuando tu equipo no está"
+      },
+      "ctaPrimary": "Empezar gratis",
+      "ctaSecondary": "Ver demo"
+    },
+    "how": {
+      "eyebrow": "Cómo funciona",
+      "title": "En marcha en menos de 10 minutos",
+      "subtitle": "Tres pasos simples. Sin técnicos. Sin configuraciones complejas.",
+      "cta": "Empezar ahora — gratis",
+      "step1": {
+        "title": "Conecta tu Google Business",
+        "desc": "Vincula tu perfil de Google Business Profile en un clic. HolaRevi empieza a leer tus reseñas al instante."
+      },
+      "step2": {
+        "title": "Configura tu tono de marca",
+        "desc": "Dinos cómo quieres sonar: formal, cercano, con humor… La IA aprende y mantiene ese tono en cada respuesta."
+      },
+      "step3": {
+        "title": "La IA responde por ti",
+        "desc": "Cada nueva reseña recibe una respuesta personalizada y publicada automáticamente. Tú lo ves todo en el panel."
+      }
+    },
+    "benefits": {
+      "eyebrow": "Beneficios",
+      "title": "El impacto en tu negocio es inmediato",
+      "subtitle": "Más reputación, más confianza, más ventas. Sin trabajo manual adicional.",
+      "b1": {
+        "title": "Mejor posicionamiento en Google",
+        "desc": "Google premia a los negocios que responden activamente a sus reseñas."
+      },
+      "b2": {
+        "title": "Más valoración media",
+        "desc": "Responder bien a reseñas negativas convierte la crítica en confianza."
+      },
+      "b3": {
+        "title": "Mayor engagement con clientes",
+        "desc": "Un cliente que recibe respuesta tiene más probabilidad de volver y recomendar."
+      },
+      "b4": {
+        "title": "Horas de trabajo ahorradas",
+        "desc": "Tu equipo deja de gestionar reseñas manualmente. La IA lo hace por vosotros."
+      }
+    },
+    "pricing": {
+      "title": "Precios simples y transparentes",
+      "subtitle": "Elige el plan que mejor se adapte al tamaño de tu negocio. Todos incluyen nuestra tecnología de IA líder.",
+      "local": {
+        "name": "Local",
+        "description": "Para un negocio con una ubicación.",
+        "cta": "Probar 14 días gratis",
+        "footnote": "Sin compromiso. Si no cancelas antes de 14 días, se cobra automáticamente 14€/mes.",
+        "f1": "1 ubicación",
+        "f2": "Respuestas automáticas ilimitadas",
+        "f3": "Responder reseñas antiguas",
+        "f4": "Modo automático o revisión",
+        "f5": "Analítica y sentimiento",
+        "f6": "1 usuario",
+        "f7": "Plantillas y tono de marca"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Para equipos y operaciones con varias ubicaciones.",
+        "cta": "Empezar ahora",
+        "f1": "Hasta 3 ubicaciones",
+        "f2": "Respuestas automáticas ilimitadas",
+        "f3": "Control por ubicación",
+        "f4": "Prioridad en nuevas funciones",
+        "f5": "Hasta 3 usuarios",
+        "f6": "Soporte prioritario"
+      },
+      "business": {
+        "name": "Business",
+        "description": "Para cadenas y operaciones multi-ubicación.",
+        "cta": "Probar gratis",
+        "footnote": "Añade ubicaciones extra según necesidad.",
+        "f1": "Ubicaciones ilimitadas (opcional)",
+        "f2": "Panel avanzado multi-ubicación",
+        "f3": "Equipo y colaboración",
+        "f4": "Roles y permisos",
+        "f5": "SLA y soporte avanzado"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "Integraciones y escalabilidad a medida.",
+        "cta": "Hablar con ventas",
+        "f1": "API e integraciones",
+        "f2": "Conexión con CRM",
+        "f3": "Reporting avanzado",
+        "f4": "Account manager dedicado"
+      }
+    },
+    "testimonials": {
+      "eyebrow": "Lo que dicen los clientes",
+      "title": "Resultados reales de negocios locales",
+      "subtitle": "De restaurantes a clínicas. El resultado es el mismo: más reputación, menos trabajo.",
+      "googleSubtitle": "Reseñas reales de Google Maps y las respuestas que se publicaron con HolaRevi.",
+      "googleReviewsLabel": "reseñas en Google",
+      "repliedWith": "Respondido con HolaRevi",
+      "anonymous": "Cliente de Google",
+      "t1": {
+        "text": "Antes tardábamos días en responder. Ahora cada reseña tiene respuesta en minutos, con el tono exacto que queremos. La valoración media ha subido medio punto en dos meses.",
+        "author": "Responsable de operaciones, cadena de restaurantes"
+      },
+      "t2": {
+        "text": "Tenemos 4 clínicas y gestionar las reseñas era imposible. HolaRevi lo hace solo. Solo revisamos las negativas antes de publicar.",
+        "author": "Directora, grupo de clínicas privadas"
+      },
+      "t3": {
+        "text": "El hotel siempre tuvo buenas reseñas pero pocas respuestas. Desde que usamos HolaRevi, respondemos el 100% y los clientes lo notan.",
+        "author": "Manager, hotel boutique"
+      }
+    },
+    "extraSolutions": {
+      "eyebrow": "Soluciones avanzadas",
+      "title": "¿Necesitas más que automatización de reseñas?",
+      "subtitle": "HolaRevi se centra en la automatización de reseñas. Para negocios con necesidades más complejas, ofrecemos soluciones personalizadas adicionales.",
+      "disclaimer": "Estas soluciones no forman parte del producto estándar y requieren contactar con el equipo.",
+      "s1": {
+        "title": "Webs de alta conversión automatizadas",
+        "desc": "Páginas web diseñadas para convertir visitantes en clientes. Optimizadas, rápidas y conectadas a tus reseñas de Google para generar confianza desde el primer segundo.",
+        "tag1": "Diseño",
+        "tag2": "Conversión",
+        "tag3": "Automatización"
+      },
+      "s2": {
+        "title": "Infraestructura avanzada de automatización",
+        "desc": "Para negocios con alto volumen de reseñas que necesitan flujos personalizados, integraciones con su CRM, auditoría avanzada y un sistema de atención completo.",
+        "tag1": "Alto volumen",
+        "tag2": "Integraciones",
+        "tag3": "A medida"
+      },
+      "cta": "Contactar para soluciones avanzadas"
+    },
+    "priceTeaser": {
+      "eyebrow": "Precios HolaRevi",
+      "title": "Empieza gratis. Crece cuando quieras.",
+      "subtitle": "Conecta Google y descubre el valor — gratis. Planes de pago desde 14€/mes.",
+      "perMonth": "/mes",
+      "cta": "Ver todos los planes",
+      "ctaSecondary": "Empezar gratis",
+      "note": "Plan Free permanente sin tarjeta · Sin permanencia · Cancela cuando quieras"
+    },
+    "finalCta": {
+      "eyebrow": "Empieza hoy",
+      "title": "Empieza a automatizar tus reseñas hoy",
+      "subtitle": "Conecta tu Google Business en minutos y deja que la IA responda por ti. Empieza gratis, sin tarjeta.",
+      "ctaPrimary": "Empezar gratis",
+      "ctaSecondary": "Ver precios",
+      "feature1": "Sin tarjeta para empezar",
+      "feature2": "Cancela cuando quieras"
+    },
+    "blogSection": {
+      "eyebrow": "Blog",
+      "title": "Ideas prácticas para tu reputación online",
+      "description": "Guías cortas para mejorar operación, respuesta y consistencia.",
+      "readMore": "Leer más",
+      "viewAll": "Ver todos los artículos"
+    },
+    "footer": {
+      "privacy": "Privacidad",
+      "terms": "Términos",
+      "googlePermissions": "Google Permissions",
+      "contact": "Contacto",
+      "secureData": "Datos seguros",
+      "officialApi": "Google Business API oficial",
+      "support": "Soporte en español",
+      "rights": "Todos los derechos reservados."
+    }
+  },
+  "generator": {
+    "badge": "Demostración en vivo",
+    "sectionTitle": "Mira cómo responde la IA",
+    "sectionDescription": "Selecciona un tipo de negocio y una reseña real para ver cómo HolaRevi genera una respuesta profesional en segundos.",
+    "cardTitle": "Generador de respuestas IA",
+    "businessTypeLabel": "Tipo de negocio",
+    "selectReviewLabel": "Selecciona una reseña para responder",
+    "typingText": "IA pensando...",
+    "generateButton": "Generar respuesta mágica",
+    "responseTitle": "Respuesta sugerida",
+    "approveButton": "Aprobar y publicar",
+    "timeSaved": "Has ahorrado",
+    "timeUnit": "minutos hoy",
+    "demoPopupTitle": "¡Respuesta publicada!",
+    "demoPopupDescription": "En la versión real, esta respuesta se publicaría directamente en Google Business Profile.",
+    "businessTypes": {
+      "restaurant": "Restaurante",
+      "hotel": "Hotel",
+      "nail_beauty": "Estética / Uñas",
+      "clinic": "Clínica médica",
+      "gym": "Gimnasio",
+      "car_repair": "Taller mecánico",
+      "retail": "Tienda / Retail",
+      "cafe": "Cafetería",
+      "vet": "Veterinaria",
+      "other": "Otro negocio local"
+    },
+    "reviews": {
+      "restaurant": [
+        "La comida estaba fría y tardaron mucho en atendernos. No vuelvo.",
+        "Increíble experiencia, el solomillo estaba espectacular. El camarero Juan nos trató de 10.",
+        "Sitio agradable pero ruidoso. La pizza es pasable."
+      ],
+      "hotel": [
+        "La habitación olía a tabaco y el aire acondicionado no funcionaba.",
+        "Vistas increíbles y desayuno muy completo. Repetiremos seguro.",
+        "Cerca del centro pero las camas son un poco duras."
+      ],
+      "gym": [
+        "Demasiada gente a las 6 de la tarde, no se puede entrenar.",
+        "Los monitores son muy profesionales y las máquinas son nuevas.",
+        "Buen ambiente, aunque faltan más clases de yoga."
+      ],
+      "clinic": [
+        "Me llamaron una hora tarde para mi cita sin pedir disculpas.",
+        "El Dr. García es una eminencia, me explicó todo con mucha paciencia.",
+        "Instalaciones limpias pero difícil aparcar por la zona."
+      ],
+      "nail_beauty": [
+        "Se me saltó el esmalte a los dos días. Muy decepcionada.",
+        "El mejor diseño de uñas que me han hecho nunca. Super cuidadosas.",
+        "Local bonito, pero un poco caro para lo que es."
+      ],
+      "car_repair": [
+        "Me dijeron un precio y luego me cobraron el doble por 'extras'.",
+        "Rápido y honesto. Me explicaron la avería con fotos.",
+        "Buen servicio, aunque tardaron un día más de lo previsto."
+      ],
+      "retail": [
+        "El dependiente fue muy borde cuando quise devolver una prenda.",
+        "Tienen una variedad increíble y me ayudaron a elegir el regalo perfecto.",
+        "Tienda bonita, aunque algo desordenada en rebajas."
+      ],
+      "cafe": [
+        "El café quemado y el bollo de ayer. No lo recomiendo.",
+        "Tienen la mejor tarta de queso de la ciudad. Sitio acogedor.",
+        "Buen sitio para trabajar, aunque el wifi falla a veces."
+      ],
+      "vet": [
+        "Trato frío y me pareció muy caro para una simple consulta.",
+        "Salvaron a mi perro, estaré eternamente agradecida al equipo.",
+        "Buenos profesionales, aunque suele haber mucha espera."
+      ],
+      "other": [
+        "No atendieron mi llamada en todo el día.",
+        "Servicio excepcional, resolvieron mi problema al momento.",
+        "Correcto, cumple con lo esperado."
+      ]
+    },
+    "replies": {
+      "restaurant": [
+        "Lamentamos profundamente que tu experiencia no fuera la esperada. Tomamos nota sobre la temperatura de la comida y el servicio para mejorar. Esperamos darnos otra oportunidad.",
+        "¡Qué alegría leer esto! Muchas gracias por tus palabras hacia Juan y nuestra cocina. Trabajamos con ilusión para momentos así. ¡Te esperamos pronto!",
+        "Gracias por tu visita. Nos alegra que disfrutaras las pizzas. Tomaremos medidas para intentar amortiguar el ruido en las horas punta. ¡Un saludo!"
+      ],
+      "hotel": [
+        "Te pedimos disculpas por el estado de la habitación y el fallo del aire. Hemos revisado nuestro protocolo de limpieza y mantenimento. Esperamos compensarte en el futuro.",
+        "¡Muchas gracias! Nos encanta saber que disfrutaste de las vistas y nuestro desayuno. Es un placer tener huéspedes como vosotros. Hasta la próxima.",
+        "Gracias por tu valoración. Nos alegra la ubicación fuera de tu agrado. Tomamos nota sobre la firmeza de los colchones para nuestras futuras renovaciones."
+      ],
+      "gym": [
+        "Hola. Somos conscientes de la afluencia en horas punta y estamos trabajando en optimizar el aforo para vuestra comodidad. ¡Gracias por el feedback!",
+        "¡Muchas gracias por valorar nuestras instalaciones y al equipo! Nos motiva mucho seguir ofreciendo lo mejor para vuestros entrenamientos.",
+        "¡Gracias! Nos alegra que te guste el ambiente. Estamos revisando el horario de actividades dirigidas para añadir más sesiones de yoga pronto."
+      ],
+      "clinic": [
+        "Sentimos mucho la espera. A veces las urgencias retrasan la agenda, pero deberíamos haberte avisado. Trabajaremos en mejorar nuestra comunicación.",
+        "Muchas gracias por confiar en el Dr. García y en nuestro equipo. Nos alegra saber que te sentiste bien atendido. Tu salud es nuestra prioridad.",
+        "Gracias por tu reseña. Nos alegra que las instalaciones sean de tu agrado. Lamentablemente el parking en la zona es limitado, recomendamos el parking público cercano."
+      ],
+      "nail_beauty": [
+        "Sentimos mucho lo ocurrido. Por favor, contáctanos para arreglarlo sin coste. Garantizamos la durabilidad de nuestro trabajo y queremos que estés satisfecha.",
+        "¡Muchísimas gracias! Nos encanta que te guste nuestro trabajo. Ponemos mucho detalle en cada diseño. ¡Nos vemos pronto!",
+        "Gracias por tu visita. Usamos productos premium de larga duración para asegurar el mejor resultado, de ahí nuestros precios. ¡Un saludo!"
+      ],
+      "car_repair": [
+        "Lamentamos la confusión con el presupuesto. Siempre intentamos informar de cualquier imprevisto. Revisaremos tu caso internamente.",
+        "¡Gracias por tu confianza! La transparencia es clave para nosotros. Nos alegra que el coche haya quedado perfecto. ¡Buen viaje!",
+        "Gracias por valorarnos. Siempre intentamos cumplir plazos, pero preferimos asegurar la calidad del arreglo. ¡Gracias por la paciencia!"
+      ],
+      "retail": [
+        "Lamentamos mucho el trato recibido, no es nuestro estándar de servicio. Hablaremos con el personal para que no se repita. ¡Disculpas!",
+        "¡Qué bien! Nos encanta ayudaros a encontrar el regalo ideal. Gracias por elegirnos y por tu amable reseña.",
+        "Gracias por avisarnos. Las rebajas son intensas, pero trabajaremos en mantener el orden para que vuestra compra sea más cómoda."
+      ],
+      "cafe": [
+        "Sentimos mucho tu mala experiencia. Revisaremos la calibración de la cafetera y la frescura de nuestra bollería inmediatamente. ¡Gracias!",
+        "¡Muchas gracias! Nuestra tarta de queso es la estrella de la casa. Nos alegra que te sintieras a gusto en nuestro rincón.",
+        "Gracias por el feedback. Estamos revisando el router para asegurar una conexión estable para quienes venís a trabajar con nosotros."
+      ],
+      "vet": [
+        "Lamentamos que te sintieras así. Nuestros precios reflejan la tecnología y profesionalidad dedicadas a cada mascota. No obstante, revisaremos tu caso.",
+        "Historias como la tuya son las que dan sentido a nuestro trabajo. Nos alegra mucho que tu perro esté bien. ¡Un abrazo fuerte!",
+        "Gracias por confiar en nosotros. Intentamos dedicar el tiempo necesario a cada paciente, lo que a veces causa esperas. ¡Gracias por la comprensión!"
+      ],
+      "other": [
+        "Disculpa las molestias. Hemos tenido un problema técnico con la línea, pero ya está solucionado. Si nos dejas un contacto, te llamamos nosotros.",
+        "¡Muchísimas gracias por tu valoración! Nos esforzamos por dar soluciones rápidas y eficaces. Un placer ayudarte.",
+        "Gracias por tu reseña. Nos alegra haber cumplido con tus expectativas. ¡Un cordial saludo!"
+      ]
+    }
+  },
+  "selectPlan": {
+    "title": "Elige tu plan",
+    "subtitle": "Empieza gratis o prueba un plan de pago 14 días sin compromiso. Cancela cuando quieras.",
+    "discountBanner": "Precio rebajado un 90% en todos los planes — para siempre",
+    "monthly": "Mensual",
+    "yearly": "Anual",
+    "save20": "2 meses gratis",
+    "mostPopular": "Más popular",
+    "perMonth": "/mes",
+    "tryFree": "Probar gratis",
+    "subscribe": "Suscribirse",
+    "trialNote": "Prueba de 3 días gratuita. No se te cobrará nada hasta que finalice la prueba.",
+    "plans": {
+      "local": {
+        "name": "Local",
+        "description": "Para un restaurante con una ubicación.",
+        "features": {
+          "location": "1 ubicación de Google",
+          "newReplies": "Respuestas IA ilimitadas",
+          "pastReplies": "Responde reseñas antiguas",
+          "mode": "Publica en automático o revisa antes",
+          "analytics": "Analítica y sentimiento",
+          "users": "1 usuario",
+          "alerts": "Alertas de reseña negativa"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Para grupos de hasta 5 ubicaciones.",
+        "features": {
+          "locations": "Hasta 5 ubicaciones",
+          "newReplies": "Respuestas IA ilimitadas",
+          "pastReplies": "Analítica y sentimiento",
+          "analytics": "Motor de respuesta prioritario",
+          "priority": "Soporte prioritario",
+          "users": "Hasta 5 usuarios",
+          "dashboard": "Panel multi-ubicación",
+          "controls": "Control por ubicación"
+        }
+      },
+      "business": {
+        "name": "Business",
+        "description": "Para cadenas y operaciones multi-ubicación.",
+        "features": {
+          "locationsIncluded": "5 ubicaciones incluidas",
+          "extraLocation": "+3,90€/mes por local extra",
+          "dashboard": "Panel avanzado multi-ubicación",
+          "team": "Usuarios y presets de tono ilimitados",
+          "permissions": "Control de permisos",
+          "sla": "SLA y soporte prioritario",
+          "locations": "Ubicaciones ilimitadas",
+          "newReplies": "Respuestas IA ilimitadas",
+          "channels": "WhatsApp y TripAdvisor en automático"
+        }
+      },
+      "free": {
+        "name": "Free",
+        "description": "Conecta Google y descubre el valor — sin tarjeta.",
+        "note": "Las respuestas con IA requieren un plan de pago.",
+        "features": {
+          "location": "1 ubicación de Google",
+          "dashboard": "Todas tus reseñas en un panel",
+          "sentiment": "Análisis de sentimiento y temas",
+          "summary": "Resumen ejecutivo con IA (mensual)",
+          "weeklyEmail": "Email semanal de rendimiento"
+        }
+      }
+    },
+    "banner": "Empieza gratis · Sin tarjeta"
+  },
+  "onboarding": {
+    "pageTitle": "Bienvenido a HolaRevi",
+    "pageSubtitle": "Vamos a configurar tu negocio para que empieces a gestionar tus reseñas.",
+    "progress": "{percent}% Completado",
+    "tip": "Consejo: Siempre puedes cambiar estos ajustes desde tu panel de control.",
+    "steps": {
+      "addLocation": "Añadir local",
+      "connectGoogle": "Conectar Google",
+      "selectLocation": "Seleccionar local",
+      "success": "¡Listo!"
+    },
+    "addLocation": {
+      "title": "Añade tu primer negocio",
+      "description": "Introduce el nombre de tu negocio y tus preferencias. Esta será la ubicación principal donde HolaRevi gestionará tus reseñas de Google.",
+      "nameLabel": "Nombre del negocio",
+      "namePlaceholder": "Ej: Pizzería Roma",
+      "addressLabel": "Dirección (opcional)",
+      "addressPlaceholder": "Ej: Calle Mayor 12, Madrid",
+      "toneLabel": "Tono de voz para las respuestas de IA",
+      "tones": {
+        "friendly": "Amigable y cercano",
+        "formal": "Profesional y formal",
+        "casual": "Informal y divertido",
+        "mediterranean": "Mediterráneo y cálido"
+      },
+      "toneHint": "Puedes personalizar esto más adelante con presets de tono avanzados.",
+      "submit": "Crear local y continuar",
+      "creating": "Creando...",
+      "errorRequired": "El nombre del negocio es obligatorio."
+    },
+    "connectGoogle": {
+      "title": "Conecta tu Google Business Profile",
+      "description": "Vincula tu cuenta de Google para que HolaRevi pueda leer tus reseñas y publicar respuestas generadas por IA. Siempre puedes conectar Google más tarde desde la página de Locales.",
+      "connectButton": "Conectar Google Business",
+      "connecting": "Conectando...",
+      "skipButton": "Omitir por ahora",
+      "skipHint": "Puedes conectar Google en cualquier momento desde tu página de Locales.",
+      "notConfigured": "La conexión con Google no está disponible en este entorno.",
+      "notConfiguredHint": "No te preocupes — puedes configurarlo desde la página de Locales más tarde.",
+      "waitingTitle": "Esperando a Google...",
+      "waitingDescription": "Completa la autorización en la ventana de Google que se acaba de abrir. Esta página se actualizará automáticamente.",
+      "connectedTitle": "¡Google conectado!",
+      "connectedDescription": "Tu Google Business Profile está vinculado. HolaRevi empezará a sincronizar tus reseñas.",
+      "continueButton": "Continuar"
+    },
+    "selectLocation": {
+      "title": "Selecciona tu local de Google",
+      "description": "Elige la ubicación de tu Google Business Profile que quieres vincular con HolaRevi.",
+      "loadingAccounts": "Cargando tus cuentas de Google...",
+      "loadingLocations": "Cargando tus locales...",
+      "saving": "Guardando local...",
+      "noLocations": "No se encontraron locales en tu cuenta de Google Business. Puedes configurarlo más tarde desde la página de Locales.",
+      "savedTitle": "¡Local seleccionado!",
+      "savedDescription": "Tu local ha sido vinculado correctamente.",
+      "errorAccounts": "Error al cargar las cuentas de Google. Inténtalo de nuevo.",
+      "errorLocations": "Error al cargar los locales. Inténtalo de nuevo.",
+      "errorSave": "Error al guardar el local. Inténtalo de nuevo."
+    },
+    "success": {
+      "title": "¡Todo listo!",
+      "description": "Tu negocio está configurado y listo. HolaRevi detectará y responderá automáticamente a tus reseñas de Google.",
+      "summary": {
+        "location": "Local creado",
+        "google": "Google conectado",
+        "googleSkipped": "Google no conectado aún",
+        "locationSelected": "Local de Google vinculado",
+        "locationSkipped": "Local de Google no seleccionado aún"
+      },
+      "goToDashboard": "Ir al Panel"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Introduce tu correo para iniciar sesión en tu cuenta"
+    },
+    "register": {
+      "title": "Crear una cuenta",
+      "subtitle": "Introduce tu información para crear una cuenta"
+    },
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Email",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarse",
+    "noAccount": "¿No tienes cuenta? ",
+    "hasAccount": "¿Ya tienes cuenta? ",
+    "error": {
+      "fillFields": "Por favor, completa todos los campos",
+      "passwordLength": "La contraseña debe tener al menos 8 caracteres",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "loginFailed": "Fallo al iniciar sesión",
+      "registerFailed": "Fallo al registrarse"
+    },
+    "verify": {
+      "sent": "Te hemos enviado un correo de verificación",
+      "sentDesc": "Revisa la bandeja de entrada de {email} y haz clic en el enlace para activar tu cuenta.",
+      "pendingTitle": "Confirma tu correo para continuar",
+      "pendingDesc": "Hemos enviado un enlace de verificación a {email}. Revisa también la carpeta de spam.",
+      "resendCta": "Reenviar correo de verificación",
+      "resent": "Correo reenviado",
+      "resentDesc": "Si la dirección está registrada y pendiente, recibirás un nuevo enlace en breve.",
+      "needEmail": "Introduce tu correo para reenviar el enlace.",
+      "required": "Verifica tu correo",
+      "requiredDesc": "Para iniciar sesión, primero confirma tu correo con el enlace que te enviamos.",
+      "successTitle": "¡Correo verificado!",
+      "successDesc": "Tu cuenta está activa. Ya puedes iniciar sesión.",
+      "alreadyTitle": "Tu correo ya estaba verificado",
+      "alreadyDesc": "Puedes iniciar sesión con normalidad.",
+      "expiredTitle": "Enlace caducado",
+      "expiredDesc": "El enlace ha expirado. Reenvía un nuevo correo de verificación.",
+      "invalidTitle": "Enlace no válido",
+      "invalidDesc": "El enlace no es válido o ya se utilizó. Solicita un nuevo enlace.",
+      "errorTitle": "No pudimos verificar tu correo",
+      "errorDesc": "Inténtalo de nuevo en unos minutos."
+    }
+  },
+  "notFound": {
+    "title": "404 Página no encontrada",
+    "description": "La página que buscas no existe o ha sido movida.",
+    "backHome": "Volver al inicio"
+  },
+  "admin": {
+    "login": {
+      "title": "Inicio de Sesión Admin",
+      "subtitle": "Introduce tus credenciales para acceder al panel de administración",
+      "username": "Usuario",
+      "password": "Contraseña",
+      "usernamePlaceholder": "Introduce el usuario",
+      "passwordPlaceholder": "Introduce la contraseña",
+      "button": "Iniciar sesión",
+      "loading": "Iniciando sesión...",
+      "error": "Credenciales inválidas",
+      "generalError": "Ocurrió un error. Por favor, inténtalo de nuevo."
+    },
+    "dashboard": {
+      "title": "Panel de Administración",
+      "subtitle": "Administración de HolaRevi",
+      "logout": "Cerrar sesión"
+    },
+    "sections": {
+      "crm": "CRM de Ventas",
+      "crmDesc": "Pipeline Kanban de leads comerciales",
+      "contacts": "Contactos",
+      "contactsDesc": "Ver y gestionar envíos de formularios de contacto",
+      "reviews": "Reseñas",
+      "reviewsDesc": "Ver todas las reseñas de la plataforma",
+      "analytics": "Analítica",
+      "analyticsDesc": "Tráfico, facturación, ubicaciones y estadísticas de uso",
+      "affiliates": "Afiliados",
+      "affiliatesDesc": "Gestionar socios afiliados y su rendimiento",
+      "promoCodes": "Códigos promocionales",
+      "promoCodesDesc": "Crear y gestionar códigos de descuento",
+      "blogs": "Blogs",
+      "blogsDesc": "Crear y gestionar artículos de blog para SEO",
+      "qrReviews": "Reseñas QR",
+      "qrReviewsDesc": "Crear y rastrear códigos QR de reseñas de Google",
+      "settings": "Ajustes del sitio",
+      "settingsDesc": "Configurar el landing, el negocio escaparate y otras opciones globales"
+    },
+    "goTo": "Ir a {{section}}"
+  },
+  "affiliate": {
+    "login": {
+      "title": "Inicio de Sesión Afiliado",
+      "subtitle": "Introduce tus credenciales para acceder a tu panel de afiliado",
+      "username": "Usuario",
+      "password": "Contraseña",
+      "usernamePlaceholder": "Introduce el usuario",
+      "passwordPlaceholder": "Introduce la contraseña",
+      "button": "Iniciar sesión",
+      "loading": "Iniciando sesión...",
+      "error": "Credenciales inválidas",
+      "generalError": "Ocurrió un error. Por favor, inténtalo de nuevo."
+    },
+    "dashboard": {
+      "title": "Panel de Afiliado",
+      "loginAs": "Sesión iniciada como {{username}}",
+      "zone": "Zona: {{zone}}",
+      "logout": "Cerrar sesión",
+      "stats": {
+        "assigned": "Leads asignados",
+        "assignedDesc": "Total de leads en tu lista",
+        "contacted": "Leads contactados",
+        "contactedDesc": "Cualquier estado distinto a Pendiente",
+        "sales": "Ventas cerradas",
+        "salesDesc": "Ventas enviadas",
+        "conversion": "Conversión",
+        "conversionDesc": "Ventas / Asignados"
+      },
+      "leads": {
+        "title": "Mis Leads",
+        "subtitle": "Actualiza el estado, añade notas e informa de ventas.",
+        "empty": "Aún no tienes leads asignados.",
+        "reviews": "reseñas",
+        "unanswered": "sin responder",
+        "perDay": "/día",
+        "replied": "respondidas",
+        "website": "Web",
+        "maps": "Mapps",
+        "notesLabel": "Notas:"
+      },
+      "status": {
+        "pending": "Pendiente",
+        "called": "Llamado",
+        "not_interested": "No interesado",
+        "call_later": "Llamar más tarde",
+        "sale_closed": "Venta cerrada"
+      },
+      "actions": {
+        "notes": "Notas",
+        "reportSale": "Informar venta",
+        "addLeads": "Añadir leads"
+      },
+      "dialogs": {
+        "notes": {
+          "title": "Notas del Lead",
+          "description": "Guarda notas privadas sobre tu llamada o seguimiento.",
+          "placeholder": "Hablé con el gerente, volver a llamar el jueves por la mañana...",
+          "save": "Guardar",
+          "saving": "Guardando...",
+          "cancel": "Cancelar",
+          "success": "Notas actualizadas."
+        },
+        "add": {
+          "title": "Añadir leads",
+          "description": "Pega tus leads en texto plano. Una línea por lead.",
+          "label": "Leads (un lead por línea)",
+          "help": "Formato: Nombre del negocio | Ciudad | Teléfono | Email | Notas. Solo el nombre es obligatorio. Separadores válidos: | tab ;",
+          "submit": "Añadir",
+          "cancel": "Cancelar",
+          "successDesc": "leads añadidos.",
+          "error": "No se pudieron añadir los leads"
+        },
+        "sale": {
+          "title": "Informar venta",
+          "description": "Envía una venta para validación del administrador.",
+          "email": "Email del negocio",
+          "emailPlaceholder": "propietario@negocio.com",
+          "plan": "Plan vendido (€)",
+          "comments": "Comentarios (opcional)",
+          "commentsPlaceholder": "Cualquier contexto extra para validación...",
+          "submit": "Enviar",
+          "submitting": "Enviando...",
+          "cancel": "Cancelar",
+          "successTitle": "Venta enviada",
+          "successDesc": "Tu venta ha sido enviada para validación del administrador."
+        }
+      },
+      "errors": {
+        "updateStatus": "No se pudo actualizar el estado",
+        "saveNotes": "No se pudieron guardar las notas",
+        "submitSale": "No se pudo enviar la venta"
+      }
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Ideas prácticas para mejorar tu reputación online y automatizar respuestas",
+    "noPosts": "Aún no hay artículos publicados",
+    "notFound": "Artículo no encontrado",
+    "notFoundDesc": "El artículo que buscas no existe o ha sido eliminado.",
+    "backToList": "Volver al blog"
+  },
+  "reviewSummary": {
+    "title": "Análisis IA",
+    "subtitle": "Resumen y análisis de tus reseñas con inteligencia artificial",
+    "generating": "Generando...",
+    "regenerate": "Regenerar",
+    "generate": "Generar Resumen",
+    "error": "No se pudo cargar el resumen. Inténtalo de nuevo.",
+    "allLocations": "Todos los locales",
+    "dateRange": {
+      "fromDate": "Desde",
+      "toDate": "Hasta",
+      "showingReviews": "Mostrando reseñas desde {startDate} hasta {endDate}"
+    },
+    "noSummary": {
+      "title": "Sin resumen aún",
+      "description": "Pulsa Generar para crear un análisis de tus reseñas con IA."
+    },
+    "executiveSummary": "Resumen Ejecutivo",
+    "basedOn": "Basado en",
+    "reviews": "reseñas",
+    "totalReviews": "Total de reseñas",
+    "overallSentiment": "Sentimiento General",
+    "sentimentDescription": "Puntuación agregada del sentimiento de las reseñas analizadas",
+    "sentiment": {
+      "positive": "Positivo",
+      "negative": "Negativo",
+      "neutral": "Neutral",
+      "mixed": "Mixto"
+    },
+    "trends": {
+      "title": "Tendencias",
+      "description": "Patrones emergentes en las reseñas recientes",
+      "improving": "Mejorando",
+      "declining": "Empeorando",
+      "consistent": "Consistente",
+      "noData": "No hay suficientes datos para identificar tendencias."
+    },
+    "recommendations": {
+      "title": "Recomendaciones",
+      "description": "Pasos accionables basados en tus reseñas",
+      "noData": "Aún no hay recomendaciones disponibles."
+    },
+    "keyThemes": {
+      "title": "Temas Clave",
+      "description": "Temas más mencionados en tus reseñas",
+      "mentionedIn": "Mencionado en"
+    },
+    "langSpanish": "Español",
+    "langCatalan": "Catalán",
+    "langEnglish": "Inglés",
+    "fetchError": "Error al obtener el resumen"
+  },
+  "tonePresets": {
+    "title": "Tonos de Marca",
+    "subtitle": "Crea y gestiona presets de tono personalizados para respuestas IA",
+    "createPreset": "Crear Preset",
+    "presetLimit": "Límite de Presets",
+    "unlimitedPresets": "Presets ilimitados",
+    "presetsUsed": "{current} / {limit} presets usados",
+    "upgradeToCreate": "Mejora tu plan para crear más presets.",
+    "noPresets": "Sin presets aún",
+    "noPresetsDesc": "Crea tu primer preset de tono para personalizar las respuestas IA.",
+    "default": "Por defecto",
+    "styles": {
+      "friendly": "Amigable",
+      "friendlyDesc": "Tono cálido y cercano",
+      "formal": "Formal",
+      "formalDesc": "Tono profesional y pulido",
+      "casual": "Casual",
+      "casualDesc": "Tono relajado e informal",
+      "professional": "Profesional",
+      "professionalDesc": "Tono enfocado en negocios y estructurado",
+      "warm": "Cálido",
+      "warmDesc": "Tono empático y atento",
+      "mediterranean": "Mediterráneo",
+      "mediterraneanDesc": "Tono cálido, expresivo y acogedor"
+    },
+    "dialog": {
+      "editTitle": "Editar Preset",
+      "createTitle": "Crear Preset",
+      "description": "Configura el tono y el comportamiento para las respuestas generadas por IA.",
+      "name": "Nombre",
+      "namePlaceholder": "ej. Restaurante Amigable",
+      "style": "Estilo",
+      "descriptionLabel": "Descripción",
+      "descriptionPlaceholder": "Breve descripción de este tono...",
+      "instructions": "Instrucciones personalizadas",
+      "instructionsPlaceholder": "ej. Siempre mencionar nuestra terraza y aparcamiento gratuito..."
+    },
+    "toasts": {
+      "created": "Preset creado",
+      "createdDesc": "Tu nuevo preset de tono está listo para usar.",
+      "updated": "Preset actualizado",
+      "updatedDesc": "El preset se ha actualizado correctamente.",
+      "deleted": "Preset eliminado",
+      "deletedDesc": "El preset ha sido eliminado.",
+      "error": "Error",
+      "errorCreate": "No se pudo crear el preset. Inténtalo de nuevo.",
+      "errorUpdate": "No se pudo actualizar el preset. Inténtalo de nuevo.",
+      "errorDelete": "No se pudo eliminar el preset. Inténtalo de nuevo."
+    }
+  },
+  "usage": {
+    "replies": {
+      "thisMonth": "Respuestas este mes",
+      "unlimited": "Ilimitadas",
+      "upgrade": "Mejorar",
+      "limitReached": "Límite alcanzado",
+      "remaining": "{count} restantes"
+    }
+  },
+  "invitations": {
+    "title": "Invitación de Equipo",
+    "description": "{name} te ha invitado a unirte a su equipo.",
+    "roleAssigned": "Rol asignado",
+    "accepted": "Invitación aceptada",
+    "acceptedDesc": "Te has unido al equipo correctamente.",
+    "declined": "Invitación rechazada",
+    "declinedDesc": "La invitación ha sido rechazada.",
+    "errorAccept": "No se pudo aceptar la invitación. Inténtalo de nuevo.",
+    "errorDecline": "No se pudo rechazar la invitación. Inténtalo de nuevo.",
+    "accept": "Aceptar",
+    "decline": "Rechazar"
+  },
+  "team": {
+    "title": "Equipo",
+    "subtitle": "Gestiona los miembros y roles de tu equipo",
+    "comingSoon": {
+      "title": "Gestión de equipo",
+      "badge": "Pronto",
+      "message": "Invita a miembros del equipo, asigna roles y colabora en las respuestas a reseñas juntos."
+    }
+  },
+  "paywall": {
+    "title": "Reactiva tu cuenta",
+    "subtitle": "Elige un plan y sigue automatizando tus reseñas de Google con IA — respuestas ilimitadas.",
+    "discountBadge": "-90% en todos los planes",
+    "subscribe": "Suscribirme ahora",
+    "manageBilling": "Gestionar ajustes de facturación",
+    "perMonth": "/mes"
+  },
+  "termsPage": {
+    "backToHome": "Volver al inicio",
+    "title": "Términos y Condiciones — HolaRevi",
+    "lastUpdated": "Última actualización: abril de 2026",
+    "intro1": "Bienvenido a HolaRevi. Estos Términos y Condiciones (los \"Términos\") regulan el acceso y uso de nuestro sitio web, panel de control, APIs, automatizaciones y cualquier otro servicio asociado (en conjunto, el \"Servicio\"). Al registrarte, acceder o utilizar el Servicio, aceptas íntegramente estos Términos y nuestra Política de Privacidad.",
+    "intro2": "Si no estás de acuerdo con alguna parte de estos Términos, debes abstenerte de usar el Servicio. El uso del Servicio implica una aceptación expresa y vinculante de estas condiciones.",
+    "s1Title": "1. Quiénes somos",
+    "s1p1": "HolaRevi es una plataforma de software como servicio (SaaS) que ofrece herramientas de asistencia, automatización y generación de contenido orientadas a la gestión de la reputación online de negocios locales, principalmente en relación con reseñas publicadas en plataformas de terceros como Google. HolaRevi pone a disposición funcionalidades técnicas; no presta servicios de asesoramiento legal, comercial, fiscal, reputacional ni profesional de ningún tipo.",
+    "s2Title": "2. Elegibilidad",
+    "s2p1": "Para usar HolaRevi, debes:",
+    "s2item1": "Tener al menos 18 años, o la mayoría de edad legal en tu jurisdicción, lo que sea mayor.",
+    "s2item2": "Tener capacidad legal y la autoridad necesaria para vincular contractualmente al negocio o entidad que conectes a la plataforma.",
+    "s2item3": "Aceptar estos Términos, nuestra Política de Privacidad y las políticas de los terceros con los que el Servicio interopera.",
+    "s3Title": "3. Descripción del Servicio",
+    "s3p1": "A través de HolaRevi, y según el plan contratado, puedes:",
+    "s3item1": "Conectar uno o varios Perfiles de Empresa de Google u otras cuentas que gestiones legítimamente.",
+    "s3item2": "Visualizar, organizar y filtrar reseñas y métricas asociadas dentro del panel de HolaRevi.",
+    "s3item3": "Generar borradores de respuesta mediante modelos de inteligencia artificial, configurables por tono e idioma.",
+    "s3item4": "Publicar respuestas de forma manual o, si lo activas expresamente, mediante reglas de publicación automática.",
+    "s3item5": "Acceder a analíticas, paneles de control, alertas y herramientas auxiliares de gestión de reputación.",
+    "s3p2": "El Servicio se ofrece \"tal cual\" y \"según disponibilidad\". HolaRevi puede añadir, modificar, limitar, suspender o retirar funcionalidades en cualquier momento por motivos técnicos, operativos, legales, de seguridad o comerciales, sin que ello genere derecho a indemnización para el Usuario.",
+    "s4Title": "4. Tu cuenta",
+    "s4p1": "Eres el único responsable de:",
+    "s4item1": "Mantener la confidencialidad de tus credenciales y de cualquier token de acceso asociado a tu cuenta.",
+    "s4item2": "Toda actividad realizada desde o a través de tu cuenta, incluso si la realiza un tercero con o sin tu autorización, salvo en la medida en que la ley exija lo contrario.",
+    "s4item3": "Asegurar que la información de tu cuenta y de tu negocio es veraz, exacta y se mantiene actualizada.",
+    "s4p2": "Debes notificarnos sin demora indebida cualquier acceso no autorizado, sospecha de incidente de seguridad o uso indebido de tu cuenta.",
+    "s5Title": "5. Tus responsabilidades como Usuario",
+    "s5p1": "Al usar HolaRevi, te comprometes a:",
+    "s5item1": "Conectar únicamente perfiles, cuentas o ubicaciones que estés legítimamente autorizado a gestionar.",
+    "s5item2": "Usar el Servicio cumpliendo en todo momento la legislación aplicable, incluidas las normas en materia de protección de datos, consumo, publicidad y competencia, así como las políticas de Google y de cualquier otra plataforma integrada.",
+    "s5item3": "No utilizar el Servicio para publicar, generar o difundir contenido ilegal, falso, engañoso, difamatorio, abusivo, discriminatorio, ofensivo o que vulnere derechos de terceros.",
+    "s5item4": "No realizar ingeniería inversa, scraping abusivo, ataques, intentos de evadir límites técnicos o cualquier otra interferencia con el Servicio o su infraestructura.",
+    "s5item5": "Revisar, validar y, en su caso, modificar cualquier contenido o respuesta sugerida por la IA antes de su publicación, especialmente cuando se trate de reseñas sensibles, negativas, con implicaciones legales, médicas, financieras o reputacionales.",
+    "s5note": "Eres el único y último responsable del contenido que se publique a través de tu cuenta, ya sea redactado por ti, por tu equipo o sugerido por los modelos de IA del Servicio. HolaRevi actúa exclusivamente como herramienta técnica de soporte; cualquier publicación se considera realizada bajo tu exclusiva responsabilidad.",
+    "s6Title": "6. Suscripción, facturación y pago",
+    "s6p1": "HolaRevi se ofrece principalmente bajo modalidad de suscripción de pago.",
+    "s6item1": "Los precios, planes y condiciones aplicables son los indicados en el momento de la contratación o en la página de precios vigente.",
+    "s6item2": "Los pagos se procesan a través de proveedores externos de pago (como Stripe), que aplican sus propios términos y políticas.",
+    "s6item3": "Al suscribirte, autorizas a HolaRevi y a su proveedor de pagos a cobrar de forma recurrente el método de pago elegido hasta que la suscripción sea cancelada conforme a estos Términos.",
+    "s6p2": "Salvo que la ley exija lo contrario o se indique expresamente, las cuotas de suscripción no son reembolsables, incluido en supuestos de uso parcial, falta de uso, incidencias técnicas puntuales o cancelación anticipada por parte del Usuario.",
+    "s6p3": "Puedes cancelar tu suscripción en cualquier momento desde el portal de facturación o por los canales habilitados. La cancelación tendrá efecto al final del período de facturación en curso, manteniéndose el acceso al Servicio hasta esa fecha.",
+    "s7Title": "7. Pruebas, ofertas y promociones",
+    "s7p1": "HolaRevi puede ofrecer pruebas gratuitas, ofertas piloto o promociones puntuales. Nos reservamos el derecho de:",
+    "s7item1": "Modificar, limitar, suspender o cancelar cualquier prueba o promoción en cualquier momento.",
+    "s7item2": "Determinar la elegibilidad y las condiciones aplicables a cada prueba o promoción.",
+    "s7p2": "Si no cancelas antes de que finalice una prueba, esta podrá convertirse automáticamente en una suscripción de pago bajo las condiciones comunicadas en el momento del alta.",
+    "s8Title": "8. Propiedad intelectual",
+    "s8p1": "HolaRevi y todos los elementos que lo componen — incluidos software, código fuente y objeto, diseños, interfaces, marcas, logotipos, documentación y contenidos creados por HolaRevi (excluyendo los datos del Usuario y los datos obtenidos de terceros) — son propiedad de HolaRevi o de sus licenciantes, y están protegidos por la legislación aplicable.",
+    "s8p2": "Te concedemos una licencia limitada, no exclusiva, intransferible, no sublicenciable y revocable para acceder y usar el Servicio exclusivamente con fines profesionales internos relacionados con tu negocio y conforme a estos Términos.",
+    "s8p3": "Queda expresamente prohibido:",
+    "s8item1": "Copiar, modificar, traducir, adaptar o crear obras derivadas del Servicio.",
+    "s8item2": "Distribuir, vender, alquilar, sublicenciar o revender, total o parcialmente, el Servicio o sus contenidos.",
+    "s8item3": "Eliminar, ocultar o alterar avisos de propiedad intelectual, marcas o cualquier otro signo distintivo de HolaRevi.",
+    "s9Title": "9. Servicios e integraciones de terceros",
+    "s9p1": "HolaRevi depende de y se integra con servicios prestados por terceros, entre los que pueden encontrarse:",
+    "s9item1": "Google (incluida la API del Perfil de Empresa de Google y servicios relacionados).",
+    "s9item2": "Proveedores de modelos de inteligencia artificial utilizados para generar borradores de respuesta y otros contenidos.",
+    "s9item3": "Procesadores de pago (como Stripe) y proveedores de facturación.",
+    "s9item4": "Proveedores de hosting, infraestructura, analítica, registro de eventos, monitorización y comunicaciones.",
+    "s9p2": "El uso que el Usuario haga de Google y de cualquier otro servicio de terceros está sujeto a sus propios términos y políticas de privacidad, cuyo cumplimiento es responsabilidad exclusiva del Usuario. HolaRevi no controla a estos terceros y no responde por sus decisiones, cambios, limitaciones, errores, latencias, suspensiones, interrupciones, eliminaciones de contenido, sanciones aplicadas a la cuenta del Usuario, fallos de sincronización ni por cualquier consecuencia derivada de su funcionamiento o de la imposibilidad de seguir integrando dichos servicios.",
+    "s10Title": "10. Ausencia de garantías y exención de resultados",
+    "s10p1": "Aunque trabajamos para que HolaRevi sea útil, fiable y esté disponible, en la máxima medida permitida por la ley el Servicio se proporciona sin garantías de ningún tipo, expresas o implícitas. En particular, HolaRevi no garantiza ni se compromete a:",
+    "s10item1": "Que el Servicio sea ininterrumpido, libre de errores, esté siempre disponible o sea totalmente seguro.",
+    "s10item2": "Que cualquier respuesta, sugerencia, traducción, análisis de sentimiento, resumen, clasificación, automatización u otro contenido generado por la IA sea correcto, completo, exacto, oportuno, apropiado, no ofensivo, válido legalmente o adecuado para un caso de uso concreto.",
+    "s10item3": "Que se obtengan mejoras concretas en visibilidad, posicionamiento, puntuaciones, número de reseñas, ingresos, conversiones, tráfico u otros resultados comerciales.",
+    "s10p2": "El Servicio se proporciona \"tal cual\" y \"según disponibilidad\". HolaRevi rechaza expresamente, en la medida permitida por la ley, cualquier garantía implícita de comerciabilidad, idoneidad para un fin determinado, no infracción, exactitud o continuidad del Servicio.",
+    "s11Title": "11. Contenido generado por IA y revisión por el Usuario",
+    "s11p1": "Las respuestas, textos, traducciones, resúmenes y demás contenidos producidos por las funcionalidades de IA de HolaRevi son generados por modelos automatizados a partir de la información disponible y de la configuración elegida por el Usuario. Este contenido puede ser inexacto, incompleto, desactualizado, sesgado, inapropiado o contradictorio respecto a la realidad del negocio.",
+    "s11item1": "Es el único responsable de revisar, aprobar, editar y, en su caso, descartar cualquier contenido generado antes de publicarlo o utilizarlo internamente.",
+    "s11item2": "El contenido generado no debe considerarse asesoramiento legal, médico, fiscal, financiero, comercial, reputacional ni profesional de ningún tipo.",
+    "s11p2": "El Usuario reconoce y acepta expresamente que:",
+    "s12Title": "12. Disponibilidad, mantenimiento e incidencias",
+    "s12p1": "HolaRevi puede aplicar interrupciones programadas o no programadas para tareas de mantenimiento, mejora, seguridad o cumplimiento normativo. También pueden producirse interrupciones, retrasos, errores o degradaciones por causas ajenas a HolaRevi, incluidas, sin limitación, fallos de proveedores de terceros, cambios en sus APIs, rate limits, suspensiones de cuenta, problemas de red, caídas de infraestructura, ciberataques o supuestos de fuerza mayor.",
+    "s12item1": "Tu uso del Servicio",
+    "s12item2": "Tu violación de estos Términos",
+    "s12item3": "Cualquier contenido o respuesta publicada a través de tu cuenta",
+    "s13Title": "13. Limitación de responsabilidad",
+    "s13p1": "En la máxima medida permitida por la ley aplicable, HolaRevi (incluidos sus administradores, empleados, colaboradores y proveedores) no será responsable, en ningún caso, de:",
+    "s13p2": "En cualquier caso, y sin perjuicio de lo anterior, la responsabilidad total acumulada de HolaRevi frente al Usuario por cualquier reclamación relacionada con el Servicio (contractual, extracontractual o de cualquier otra naturaleza) quedará limitada al importe efectivamente pagado por el Usuario a HolaRevi en los tres (3) meses inmediatamente anteriores al hecho que dé origen a la reclamación.",
+    "s13item1": "Daños indirectos, incidentales, especiales, consecuentes, punitivos o ejemplares de cualquier naturaleza.",
+    "s13item2": "Pérdida o lucro cesante, pérdida de ingresos, oportunidades de negocio, contratos, clientes, fondo de comercio, datos, reputación o ahorros previstos.",
+    "s13item3": "Daños derivados de respuestas u otros contenidos generados, publicados o no publicados, sean correctos o no, completos o no, dentro o fuera de plazo.",
+    "s13item4": "Daños derivados de la falta de respuesta a una reseña, del retraso en su tratamiento, de un error de clasificación o del comportamiento de los modelos de IA.",
+    "s13p3": "Determinadas jurisdicciones no permiten ciertas exclusiones o limitaciones de responsabilidad; en tal caso, dichas exclusiones o limitaciones se aplicarán únicamente en la medida máxima permitida por la ley.",
+    "s14Title": "14. Indemnización",
+    "s14p1": "El Usuario se compromete a mantener indemne a HolaRevi, sus administradores, empleados, colaboradores, proveedores y afiliados frente a cualquier reclamación, demanda, sanción administrativa, pérdida, daño, responsabilidad, coste o gasto (incluidos honorarios razonables de abogados y procuradores) que se deriven de o estén relacionados con:",
+    "s14p2": "Al continuar usando HolaRevi después de que los cambios entren en vigor, aceptas los Términos actualizados.",
+    "s15Title": "15. Suspensión y terminación",
+    "s15p1": "El Usuario puede dejar de usar HolaRevi y cancelar su suscripción en cualquier momento, conforme a la sección de facturación.",
+    "s15p2": "HolaRevi podrá suspender, restringir o finalizar el acceso al Servicio, total o parcialmente, sin que ello genere derecho a indemnización, cuando concurra alguna de las siguientes circunstancias:",
+    "s16Title": "16. Cambios en el Servicio o en estos Términos",
+    "s16p1": "HolaRevi puede modificar el Servicio o estos Términos en cualquier momento por motivos técnicos, legales, operativos, de seguridad o comerciales. Los cambios sustanciales en los Términos se comunicarán a través del Servicio, por correo electrónico o por otros medios razonables.",
+    "s16email": "Email:",
+    "footerPrivacy": "Política de Privacidad",
+    "footerTerms": "Términos y Condiciones",
+    "footerPermissions": "Permisos de Google",
+    "footerRights": "HolaRevi. Todos los derechos reservados.",
+    "s11item3": "La activación de funcionalidades de publicación automática es opcional, decisión exclusiva del Usuario, y se realiza bajo su entera responsabilidad y riesgo.",
+    "s11item4": "HolaRevi no garantiza que todas las reseñas u otros eventos sean detectados, clasificados, respondidos o gestionados, ni que ello ocurra dentro de un plazo concreto.",
+    "s11item5": "Las decisiones que el Usuario tome basándose en sugerencias, automatizaciones, métricas o contenido generado por la plataforma son adoptadas bajo su exclusiva responsabilidad.",
+    "s12p2": "HolaRevi no garantiza tiempos concretos de respuesta, publicación, sincronización o disponibilidad, salvo que se haya pactado expresamente por escrito en un acuerdo de nivel de servicio (SLA) específico. En ausencia de dicho acuerdo, no existe ningún compromiso vinculante de uptime, plazos de publicación de respuestas ni latencias máximas.",
+    "s13item5": "Daños derivados de errores, caídas, interrupciones, retrasos, fallos técnicos, incidentes de seguridad, pérdidas de datos, errores de sincronización o de traducción.",
+    "s13item6": "Daños derivados del uso, mal uso o imposibilidad de uso del Servicio, así como de decisiones tomadas por el Usuario basándose en el Servicio o en su contenido.",
+    "s13item7": "Daños derivados de integraciones con terceros, cambios en sus APIs o políticas, suspensiones, sanciones o cualquier acción que dichos terceros adopten contra el Usuario o su negocio.",
+    "s13item8": "Daños derivados de configuraciones incorrectas, errores del Usuario o de su personal, o de la activación de automatizaciones por parte del Usuario.",
+    "s13item9": "Daños derivados de cambios regulatorios, limitaciones jurisdiccionales o de obligaciones del Usuario frente a sus propios clientes finales, autoridades o terceros.",
+    "s14item1": "El uso que el Usuario hace del Servicio o el incumplimiento de estos Términos.",
+    "s14item2": "Cualquier contenido publicado, distribuido o tratado a través de la cuenta del Usuario, incluido el generado o sugerido por la IA.",
+    "s14item3": "La infracción por parte del Usuario de la normativa aplicable, las políticas de plataformas de terceros o derechos de terceros (incluidos derechos de propiedad intelectual, honor, imagen, intimidad o protección de datos).",
+    "s14item4": "Reclamaciones de los clientes finales del Usuario o de cualquier tercero relacionadas con la actividad del Usuario o con respuestas o contenidos publicados a través de su cuenta.",
+    "s15item1": "Incumplimiento, sospecha razonable de incumplimiento o uso indebido de estos Términos.",
+    "s15item2": "Impago, devolución o disputa injustificada de cuotas de suscripción.",
+    "s15item3": "Requerimiento de la ley, autoridad competente o de un proveedor de servicios de terceros.",
+    "s15item4": "Modificación, limitación o discontinuación del Servicio o de alguna de sus funcionalidades.",
+    "s15p3": "Tras la terminación, el acceso a la cuenta y a los datos asociados podrá ser desactivado, sujeto a las obligaciones legales aplicables y a las políticas de retención y eliminación de datos descritas en la Política de Privacidad.",
+    "s16p2": "El uso continuado del Servicio tras la entrada en vigor de los cambios implicará la aceptación de los Términos actualizados. Si el Usuario no está de acuerdo con los cambios, deberá dejar de usar el Servicio.",
+    "s17Title": "17. Ley aplicable y jurisdicción",
+    "s17p1": "Estos Términos se rigen por la legislación española, sin perjuicio de las normas imperativas de protección al consumidor que puedan resultar aplicables al Usuario.",
+    "s17p2": "Cualquier controversia derivada de los Términos o del uso del Servicio se someterá a la jurisdicción exclusiva de los Juzgados y Tribunales de Barcelona (España), salvo que la ley imperativa establezca un fuero distinto.",
+    "s18Title": "18. Disposiciones finales",
+    "s18p1": "Si alguna cláusula de estos Términos fuera declarada inválida, ilegal o inejecutable por una autoridad competente, el resto de cláusulas seguirá siendo plenamente válido y exigible. La cláusula afectada se interpretará en el sentido más cercano a su finalidad original que sea compatible con la ley.",
+    "s18p2": "El no ejercicio o el ejercicio tardío por parte de HolaRevi de cualquier derecho o facultad derivado de estos Términos no constituirá renuncia al mismo.",
+    "s18p3": "Estos Términos, junto con la Política de Privacidad y cualquier acuerdo específico firmado entre las partes, constituyen el acuerdo completo entre el Usuario y HolaRevi en relación con el Servicio, y prevalecen sobre cualquier acuerdo, propuesta o comunicación previa.",
+    "s19Title": "19. Contacto",
+    "s19p1": "Para cualquier cuestión relacionada con estos Términos, puedes contactarnos en:",
+    "s19email": "Email:",
+    "s20Title": "20. Aviso sobre revisión legal local",
+    "s20p1": "Estos Términos están redactados con un alcance general. El Usuario reconoce que determinadas obligaciones (en particular, las relacionadas con consumidores, sectores regulados, tratamiento de datos personales, publicidad, salud o servicios financieros) pueden requerir adaptaciones específicas según la jurisdicción. Se recomienda revisar estos Términos con un abogado local antes de su aplicación a un caso concreto."
+  },
+  "privacyPage": {
+    "backToHome": "Volver al inicio",
+    "title": "HOLAREVI — POLÍTICA DE PRIVACIDAD",
+    "lastUpdated": "Última actualización: abril de 2026",
+    "intro1": "Esta Política de Privacidad explica cómo HolaRevi (\"nosotros\", \"nuestro\") recopila, utiliza, almacena, comparte y protege los datos personales de los usuarios del Servicio (el \"Usuario\") y de las personas cuyos datos se traten a través de él. Incluye, entre otros, los datos obtenidos a través de las APIs de Google y de otros servicios integrados.",
+    "intro2": "Al usar HolaRevi, registrarte, conectar tu cuenta de Google u otros servicios, o aportar datos a la plataforma, aceptas el tratamiento descrito en esta Política. Esta Política debe leerse junto con los Términos y Condiciones del Servicio.",
+    "intro3": "Si tienes preguntas, puedes contactarnos en",
+    "s1Title": "1. Quiénes somos",
+    "s1p1": "HolaRevi es una plataforma SaaS centrada en la gestión de reseñas y reputación online de negocios locales, con sede en Barcelona, España.",
+    "s1p2": "Responsable del tratamiento:",
+    "s1address": "Carrer de Ramon Llull, 495, 08930 Sant Adrià de Besòs, Barcelona, España",
+    "s2Title": "2. Qué datos tratamos",
+    "s2_1Title": "2.1. Datos que el Usuario nos facilita",
+    "s2_1p1": "Recogemos, entre otros:",
+    "s2_1item1": "Datos identificativos y de contacto del Usuario: nombre, apellidos, correo electrónico, teléfono e idioma.",
+    "s2_1item2": "Datos del negocio o entidad gestionada: denominación, ubicación, sector, sedes, sitio web, identificadores comerciales.",
+    "s2_1item3": "Datos de suscripción y facturación, gestionados de forma segura por nuestros proveedores de pago (como Stripe).",
+    "s2_1item4": "Comunicaciones que el Usuario nos envía a través de email, chat, formularios de contacto o canales de soporte.",
+    "s2_2Title": "2.2. Datos obtenidos a través de las APIs de Google",
+    "s2_2p1": "Cuando el Usuario inicia sesión con Google y otorga los permisos correspondientes, HolaRevi puede acceder a los siguientes datos:",
+    "s2_2gaTitle": "Información de la cuenta de Google",
+    "s2_2ga1": "Nombre",
+    "s2_2ga2": "Dirección de email",
+    "s2_2ga3": "ID de perfil",
+    "s2_2gbpTitle": "Datos del Perfil de Empresa de Google",
+    "s2_2gbpIntro": "Por cada ubicación que el Usuario autorice:",
+    "s2_2gbp1": "Nombre del negocio, dirección, teléfono, categorías y atributos del perfil.",
+    "s2_2gbp2": "Reseñas (texto, puntuación, idioma, fecha y metadatos asociados).",
+    "s2_2gbp3": "Nombres de los reseñadores tal como Google los proporciona.",
+    "s2_2gbp4": "Respuestas existentes del Usuario como propietario.",
+    "s2_2gbp5": "IDs internos de ubicación.",
+    "s2_2gbp6": "Tokens OAuth necesarios para acceder, consultar y, en su caso, publicar respuestas en nombre del Usuario.",
+    "s2_2notTitle": "Datos a los que NO accedemos",
+    "s2_2notp1": "HolaRevi no accede a:",
+    "s2_2not1": "Gmail",
+    "s2_2not2": "Google Drive",
+    "s2_2not3": "Google Calendar",
+    "s2_2not4": "Contactos",
+    "s2_2not5": "Cualquier otro producto o dato de Google fuera de los alcances expresamente autorizados por el Usuario.",
+    "s3Title": "3. Cómo usamos los datos de Google",
+    "s3p1": "Los datos obtenidos de las APIs de Google se utilizan exclusivamente para prestar las funcionalidades principales de HolaRevi, en particular para:",
+    "s3item1": "Importar y mantener actualizadas las reseñas del Perfil de Empresa de Google del Usuario.",
+    "s3item2": "Analizar sentimiento, idioma, temas y patrones de reseñas con fines de gestión interna del Usuario.",
+    "s3item3": "Generar borradores de respuesta mediante IA y permitir su edición y revisión por el Usuario.",
+    "s3item4": "Publicar respuestas como propietario únicamente cuando el Usuario lo solicite manualmente o haya activado expresamente la publicación automática.",
+    "s3item5": "Proporcionar analíticas, paneles, alertas e informes en la cuenta del Usuario.",
+    "s3item6": "Atender solicitudes de soporte, diagnóstico y resolución de incidencias.",
+    "s3p2": "HolaRevi NO:",
+    "s3not1": "Utiliza datos obtenidos de las APIs de Google con fines publicitarios.",
+    "s3not2": "Vende ni cede datos de Google a terceros con fines comerciales propios.",
+    "s3not3": "Utiliza datos de Google para entrenar modelos generales de IA no relacionados con la prestación del Servicio al Usuario.",
+    "s3compliance": "El uso por parte de HolaRevi de la información recibida de las APIs de Google se ajusta a la",
+    "s3complianceLink": "Política de Datos de Usuario de los Servicios de API de Google",
+    "s3complianceEnd": ", incluidos los requisitos de Uso Limitado.",
+    "s4Title": "4. Cómo usamos otros datos personales",
+    "s4p1": "Tratamos los datos no procedentes de Google con las siguientes finalidades:",
+    "s4item1": "Crear, administrar y mantener la cuenta del Usuario y su entorno de trabajo.",
+    "s4item2": "Autenticar accesos, gestionar sesiones, prevenir fraudes y proteger la seguridad del Servicio.",
+    "s4item3": "Procesar pagos, suscripciones, facturas y obligaciones contables y fiscales.",
+    "s4item4": "Comunicar información del servicio, cambios técnicos, avisos legales, soporte y, cuando proceda, comunicaciones comerciales sobre productos similares.",
+    "s4item5": "Analizar el uso del Servicio para mantenerlo, mejorarlo, depurarlo y optimizar su rendimiento, seguridad y disponibilidad.",
+    "s4legal": "Bases legales (RGPD): ejecución del contrato suscrito con el Usuario; cumplimiento de obligaciones legales; intereses legítimos de HolaRevi en la operación, mejora y seguridad del Servicio; y consentimiento del Usuario cuando este sea necesario, especialmente para comunicaciones comerciales y determinadas cookies o tecnologías similares.",
+    "s5Title": "5. Cómo compartimos datos",
+    "s5p1": "Solo compartimos datos con proveedores de servicios estrictamente necesarios para operar HolaRevi, entre los que se incluyen:",
+    "s5item1": "Proveedores de hosting e infraestructura en la nube.",
+    "s5item2": "Proveedores de modelos de IA utilizados para generar borradores de respuesta y otros contenidos.",
+    "s5item3": "Procesadores de pago, como Stripe.",
+    "s5item4": "Proveedores de envío de email, mensajería transaccional y soporte.",
+    "s5item5": "Herramientas de analítica de uso, monitorización, registro de errores y observabilidad.",
+    "s5p2": "Estos proveedores actúan, en su caso, como encargados del tratamiento, conforme a contratos y compromisos de confidencialidad y seguridad alineados con la normativa aplicable. Cada proveedor puede aplicar sus propios términos y políticas de privacidad, ajenos al control de HolaRevi.",
+    "s5p3": "HolaRevi nunca:",
+    "s5never1": "Vende datos personales a terceros.",
+    "s5never2": "Comparte datos de Google con fines de marketing o publicidad.",
+    "s5never3": "Permite que terceros usen los datos del Usuario para entrenar modelos de IA no relacionados con la prestación del Servicio.",
+    "s6Title": "6. Almacenamiento y seguridad",
+    "s6p1": "HolaRevi aplica medidas técnicas y organizativas razonables para proteger los datos, entre otras:",
+    "s6item1": "Cifrado en tránsito (HTTPS/TLS).",
+    "s6item2": "Almacenamiento cifrado para datos sensibles, como tokens y credenciales.",
+    "s6item3": "Control de acceso basado en roles a sistemas de producción.",
+    "s6item4": "Infraestructura cloud con prácticas estándar de seguridad y resiliencia.",
+    "s6item5": "Monitorización de accesos y eventos de seguridad.",
+    "s6p2": "Ningún sistema es totalmente infalible. HolaRevi no puede garantizar una seguridad absoluta y no asumirá responsabilidad por incidentes de seguridad derivados de causas ajenas a su control razonable, sin perjuicio de las obligaciones legales que le sean directamente aplicables.",
+    "s7Title": "7. Conservación y eliminación de datos",
+    "s7_1Title": "7.1. Conservación",
+    "s7_1p1": "Conservamos los datos durante el tiempo necesario para las finalidades descritas:",
+    "s7_1item1": "Mientras la cuenta del Usuario esté activa y el contrato vigente.",
+    "s7_1item2": "Durante un período razonable tras la cancelación (típicamente 30-90 días) por motivos operativos, copias de seguridad y cumplimiento.",
+    "s7_2Title": "7.2. Eliminación",
+    "s7_2p1": "Puedes solicitar la eliminación de tus datos en cualquier momento escribiendo a",
+    "s7_2p2": "Tras una solicitud de eliminación o el cierre de la cuenta:",
+    "s7_2item1": "Revocaremos los tokens de la API de Google asociados a la cuenta.",
+    "s7_2item2": "Eliminaremos o anonimizaremos los datos de reseñas y respuestas almacenados, en la medida en que ello sea técnicamente posible y compatible con las obligaciones legales.",
+    "s7_2item3": "Eliminaremos la información personal de la cuenta, salvo aquella que debamos conservar por imperativo legal (por ejemplo, registros contables).",
+    "s8Title": "8. Tus derechos",
+    "s8p1": "Si te encuentras en la UE/EEE, podrás ejercer en cualquier momento los siguientes derechos sobre tus datos personales:",
+    "s8item1": "Acceso a los datos personales que tratamos sobre ti.",
+    "s8item2": "Rectificación de datos inexactos o incompletos.",
+    "s8item3": "Supresión (\"derecho al olvido\"), cuando proceda.",
+    "s8item4": "Limitación u oposición al tratamiento.",
+    "s8item5": "Portabilidad de los datos.",
+    "s8item6": "Retirada del consentimiento prestado, sin efectos retroactivos.",
+    "s8p2": "Para ejercer estos derechos, envía tu solicitud a",
+    "s8p3": "Por motivos de seguridad, podemos solicitar que acredites tu identidad. También tienes derecho a presentar una reclamación ante la autoridad de control competente (en España, la Agencia Española de Protección de Datos).",
+    "s9Title": "9. Transferencias internacionales de datos",
+    "s9p1": "Algunos de nuestros proveedores pueden tratar datos fuera del Espacio Económico Europeo (por ejemplo, en Estados Unidos).",
+    "s9p2": "En esos casos, aplicamos salvaguardas adecuadas conforme al RGPD, entre las que pueden incluirse:",
+    "s9item1": "Cláusulas Contractuales Tipo (CCT) aprobadas por la Comisión Europea.",
+    "s9item2": "Acuerdos de tratamiento de datos y medidas suplementarias cuando sean necesarias.",
+    "s10Title": "10. Privacidad de menores",
+    "s10p1": "HolaRevi está dirigido a profesionales y empresas, no a menores de 16 años, y no recopila datos de menores de forma consciente.",
+    "s10p2": "Si detectamos que se han recogido datos de un menor sin la base legal adecuada, los eliminaremos sin demora indebida.",
+    "s11Title": "11. Declaración de cumplimiento de la API de Google",
+    "s11p1": "El uso por parte de HolaRevi de la información recibida de las APIs de Google se ajusta a la",
+    "s11link": "Política de Datos de Usuario de los Servicios de API de Google",
+    "s11p2": ", incluidos los requisitos de Uso Limitado.",
+    "s11note": "Esta declaración se incluye conforme a las exigencias de Google para la verificación de OAuth.",
+    "s12Title": "12. Actualizaciones de esta Política de Privacidad",
+    "s12p1": "HolaRevi puede modificar esta Política de Privacidad en cualquier momento, especialmente para reflejar cambios legales, técnicos u operativos.",
+    "s12p2": "Los cambios sustanciales se comunicarán a través del Servicio, por correo electrónico o por otros medios razonables. La fecha de la última actualización se indica al inicio del documento.",
+    "s12p3": "La versión vigente estará siempre disponible en:",
+    "s13Title": "13. Contacto",
+    "s13p1": "Para cualquier cuestión relativa a privacidad o protección de datos, puedes contactarnos:",
+    "footerPrivacy": "Política de Privacidad",
+    "footerTerms": "Términos y Condiciones",
+    "footerPermissions": "Permisos de Google",
+    "footerRights": "HolaRevi. Todos los derechos reservados.",
+    "s4item6": "Cumplir obligaciones legales, atender requerimientos de autoridades competentes y ejercer o defender reclamaciones.",
+    "s7_1item3": "Durante los plazos legales aplicables (por ejemplo, conservación de facturas y documentación contable o fiscal)."
+  },
+  "googlePermissions": {
+    "backToHome": "Volver al inicio",
+    "title": "Cómo usa HolaRevi los datos de tu perfil de empresa de Google",
+    "lastUpdated": "Última actualización: diciembre de 2025",
+    "intro": "HolaRevi se conecta a tu Perfil de Empresa de Google para ayudarte a gestionar y responder tus reseñas de forma rápida y coherente con IA. Esta página explica a qué datos accedemos, cómo los usamos y cómo mantienes el control.",
+    "s1Title": "1. Qué permisos solicitamos",
+    "s1p1": "Cuando conectas tu cuenta de Google a HolaRevi, solicitamos permisos específicos relacionados con tu Perfil de Empresa de Google.",
+    "s1p2": "Podemos solicitar permiso para:",
+    "s1item1Title": "Ver la información de tu Perfil de Empresa de Google",
+    "s1item1a": "Nombre del negocio, categorías y detalles públicos",
+    "s1item1b": "Ubicaciones que gestionas",
+    "s1item2Title": "Ver tus reseñas de negocio y respuestas existentes",
+    "s1item2a": "Texto de la reseña",
+    "s1item2b": "Puntuación",
+    "s1item2c": "Fecha de la reseña",
+    "s1item2d": "Nombre del reseñador (proporcionado por Google)",
+    "s1item2e": "Tus respuestas anteriores como propietario",
+    "s1item3Title": "Crear y actualizar respuestas a reseñas en tu nombre",
+    "s1item3a": "Cuando apruebas una respuesta dentro de HolaRevi",
+    "s1item3b": "O cuando activas las respuestas automáticas (si decides hacerlo)",
+    "s1note": "No solicitamos acceso a Gmail, Google Drive, Google Calendar ni a ningún otro producto de Google no relacionado.",
+    "s2Title": "2. Cómo usamos tus datos de Google",
+    "s2p1": "HolaRevi usa los datos de tu Perfil de Empresa de Google para:",
+    "s2item1": "Mostrar todas tus reseñas en el panel de HolaRevi",
+    "s2item2": "Analizar el sentimiento y la puntuación de tus reseñas",
+    "s2item3": "Generar sugerencias de respuesta con IA en el tono e idioma que elijas",
+    "s2item4": "Publicar respuestas a reseñas cuando las apruebas o cuando las respuestas automáticas están activadas",
+    "s2item5": "Mostrar analíticas como:",
+    "s2item5a": "Volumen de reseñas a lo largo del tiempo",
+    "s2item5b": "Puntuación media",
+    "s2item5c": "Tasa y tiempo de respuesta",
+    "s2note": "Solo usamos tus datos de Google para ofrecer las funciones de gestión de reseñas que solicitas. No los usamos para fines no relacionados y no vendemos tus datos.",
+    "s3Title": "3. Cómo almacenamos y protegemos tus datos",
+    "s3p1": "Podemos almacenar:",
+    "s3store1": "Tus ubicaciones conectadas",
+    "s3store2": "Reseñas y respuestas necesarias para mostrar tu historial en el panel",
+    "s3store3": "Analíticas agregadas sobre reseñas y respuestas",
+    "s3p2": "Protegemos tus datos mediante:",
+    "s3protect1": "Conexiones seguras cifradas con HTTPS",
+    "s3protect2": "Acceso limitado a personal y sistemas autorizados",
+    "s3protect3": "Monitorización de accesos y mantenimiento de registros de seguridad",
+    "s3p3": "Conservamos tus datos solo el tiempo necesario para ofrecer el Servicio o según lo exija la ley. Para más detalles, consulta nuestra",
+    "s3privacyLink": "Política de Privacidad",
+    "s4Title": "4. Compartición de datos de Google",
+    "s4p1": "Podemos compartir algunos datos con proveedores de servicios que nos ayudan a operar HolaRevi, como:",
+    "s4item1": "Proveedores de hosting y bases de datos",
+    "s4item2": "Proveedores de IA para generar sugerencias de respuesta",
+    "s4item3": "Procesadores de pago",
+    "s4item4": "Herramientas de analítica y registro",
+    "s4note": "Estos proveedores solo pueden usar los datos para prestarnos sus servicios y deben protegerlos adecuadamente. No vendemos tus datos de Google ni los compartimos con anunciantes.",
+    "s5Title": "5. Tu control y cómo desconectar HolaRevi",
+    "s5p1": "Mantienes el control total de tu cuenta de Google y tus datos.",
+    "s5p2": "Puedes:",
+    "s5can1": "Desconectar HolaRevi de tu cuenta de Google en cualquier momento desde la configuración de tu cuenta de Google en \"Seguridad\" → \"Acceso de terceros\", o",
+    "s5can2": "Contactarnos en info@holarevi.com si necesitas ayuda para desconectar o eliminar datos almacenados",
+    "s5p3": "Después de revocar el acceso, HolaRevi ya no podrá:",
+    "s5revoke1": "Obtener nuevas reseñas",
+    "s5revoke2": "Publicar nuevas respuestas",
+    "s5revoke3": "Acceder a los datos de tu Perfil de Empresa de Google en adelante",
+    "s5p4": "También puedes solicitar la eliminación de tu cuenta y datos asociados de nuestros sistemas, sujeto a requisitos legales y de facturación.",
+    "s6Title": "6. Cumplimiento con las políticas de Google",
+    "s6p1": "HolaRevi usa tus datos de Google conforme a:",
+    "s6item1": "Política de datos de usuario de los servicios de API de Google",
+    "s6item2": "Políticas de la API de Perfil de Empresa de Google",
+    "s6item3": "Nuestra propia",
+    "s6p2": "Solo solicitamos los permisos mínimos necesarios para ofrecer nuestras funciones principales y gestionar tus reseñas.",
+    "s7Title": "7. Contacto",
+    "s7p1": "Si tienes alguna pregunta sobre cómo HolaRevi usa tus datos de Google o los permisos, contáctanos:",
+    "s7email": "Email:",
+    "footerPrivacy": "Política de Privacidad",
+    "footerTerms": "Términos del Servicio",
+    "footerPermissions": "Permisos de Google",
+    "footerRights": "HolaRevi. Todos los derechos reservados."
+  },
+  "locationConfig": {
+    "title": "Ajustes de ubicación",
+    "aiVoiceSettings": "Ajustes de Voz IA",
+    "toneOfVoice": "Tono de Voz",
+    "toneOfVoiceDesc": "El tono base para las respuestas generadas por IA",
+    "selectTone": "Seleccionar un tono",
+    "tonePreset": "Preset de Tono",
+    "tonePresetDesc": "Usar un preset personalizado con instrucciones específicas para esta ubicación",
+    "selectPreset": "Seleccionar un preset",
+    "noPreset": "Sin preset (usar solo el tono base)",
+    "noPresetsAvailable": "No hay presets disponibles. Crea uno en la página de Tonos de Marca.",
+    "automations": "Automatizaciones",
+    "autoSync": "Sincronización automática de reseñas",
+    "autoSyncDesc": "Sincronizar automáticamente nuevas reseñas desde Google",
+    "autoPublish": "Publicación automática de respuestas",
+    "autoPublishDesc": "Publicar automáticamente respuestas generadas por IA en Google",
+    "publishRules": "Reglas de publicación",
+    "reviewTypes": "Tipos de reseñas",
+    "withComments": "Reseñas con comentarios",
+    "withoutComments": "Reseñas sin comentarios",
+    "minStars": "Estrellas mínimas",
+    "minStarsDesc": "Solo publicar automáticamente respuestas para reseñas con esta puntuación o superior",
+    "stars": "estrellas",
+    "language": "Idioma de respuesta",
+    "languageDesc": "Idioma para las respuestas generadas automáticamente",
+    "languageAuto": "Detección automática",
+    "languageSpanish": "Español",
+    "languageEnglish": "Inglés",
+    "languageCatalan": "Catalán",
+    "dangerZone": "Zona de peligro",
+    "syncNow": "Sincronizar reseñas ahora",
+    "syncing": "Sincronizando...",
+    "deleteLocation": "Eliminar esta ubicación",
+    "deleteConfirmTitle": "¿Eliminar ubicación?",
+    "deleteConfirmDesc": "Esto eliminará permanentemente esta ubicación y todas sus reseñas y respuestas. Esta acción no se puede deshacer.",
+    "deleteConfirmButton": "Eliminar permanentemente",
+    "rulesWillPublish": "Publicará",
+    "rulesWithComments": "con comentarios",
+    "rulesWithoutComments": "sin comentarios",
+    "rulesMinStars": "{stars}+ estrellas",
+    "rulesAllLanguages": "todos los idiomas",
+    "rulesLanguage": "en {language}"
+  },
+  "plans": {
+    "local": {
+      "name": "Local",
+      "description": "Para un restaurante con una ubicación.",
+      "features": {
+        "f1": "1 ubicación de Google",
+        "f2": "Respuestas IA ilimitadas",
+        "f3": "Publica en automático o revisa antes",
+        "f4": "Responde reseñas antiguas",
+        "f5": "1 usuario",
+        "f6": "Plantillas y tono de marca",
+        "f7": "Alertas de reseña negativa",
+        "f8": "Resumen ejecutivo con IA + email semanal"
+      }
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "Para grupos de hasta 5 ubicaciones.",
+      "features": {
+        "f1": "Hasta 5 ubicaciones",
+        "f2": "Respuestas IA ilimitadas",
+        "f3": "Panel multi-ubicación",
+        "f4": "Hasta 5 usuarios",
+        "f5": "5 presets de tono",
+        "f6": "Control por ubicación",
+        "f7": "Soporte prioritario",
+        "f8": "Todo lo del plan Local"
+      }
+    },
+    "business": {
+      "name": "Business",
+      "description": "Para cadenas y operaciones multi-ubicación.",
+      "features": {
+        "f1": "Ubicaciones ilimitadas",
+        "f2": "Respuestas IA ilimitadas",
+        "f3": "Panel avanzado multi-ubicación",
+        "f4": "Usuarios y presets de tono ilimitados",
+        "f5": "Roles y permisos",
+        "f6": "WhatsApp y TripAdvisor en automático",
+        "f7": "SLA y soporte prioritario",
+        "f8": "Onboarding y success manager dedicados",
+        "f9": "Todo lo del plan Pro",
+        "f10": "SLA y soporte prioritario",
+        "f11": "Herramientas RGPD y cumplimiento",
+        "f12": "Onboarding personalizado",
+        "f13": "Gestor de éxito dedicado"
+      }
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "description": "Soluciones personalizadas para grandes organizaciones.",
+      "features": {
+        "f1": "Acceso a API",
+        "f2": "Integraciones CRM",
+        "f3": "Automatizaciones personalizadas",
+        "f4": "Registros de auditoría",
+        "f5": "Informes avanzados",
+        "f6": "SLA",
+        "f7": "Gestor de cuenta",
+        "f8": "Onboarding personalizado"
+      }
+    },
+    "free": {
+      "name": "Free",
+      "description": "Conecta Google y descubre el valor — sin tarjeta.",
+      "features": {
+        "f1": "1 ubicación de Google",
+        "f2": "Todas tus reseñas en un panel",
+        "f3": "Análisis de sentimiento y temas",
+        "f4": "Resumen ejecutivo con IA (mensual)",
+        "f5": "Email semanal de rendimiento",
+        "f6": "Respuestas con IA en cualquier plan de pago"
+      }
+    }
+  },
+  "testimonials": {
+    "eyebrow": "Lo que dicen los clientes",
+    "title": "Resultados reales de negocios locales",
+    "subtitle": "De restaurantes a clínicas. El resultado es el mismo: más reputación, menos trabajo.",
+    "t1": {
+      "text": "Antes tardábamos días en responder. Ahora cada reseña tiene respuesta en minutos, con el tono exacto que queremos. La valoración media ha subido medio punto en dos meses.",
+      "author": "Responsable de operaciones, cadena de restaurantes"
+    },
+    "t2": {
+      "text": "Antes perdíamos reseñas negativas en días muy movidos. Ahora respondemos a tiempo y con consistencia. Se ha convertido en parte de nuestro flujo diario.",
+      "author": "Líder de marketing, grupo hotelero"
+    }
+  },
+  "qrReviews": {
+    "title": "Códigos QR para reseñas",
+    "description": "Genera códigos QR para que tus clientes dejen una reseña en Google con un solo escaneo.",
+    "createQr": "Crear QR",
+    "createDescription": "Crea un nuevo código QR vinculado a una de tus ubicaciones.",
+    "selectLocation": "Ubicación",
+    "selectLocationPlaceholder": "Selecciona una ubicación",
+    "qrName": "Nombre del QR",
+    "qrNamePlaceholder": "Ej. Recepción, Mesa 5, Mostrador…",
+    "googleReviewUrl": "URL de reseña de Google",
+    "totalScans": "Escaneos totales",
+    "scansToday": "Escaneos hoy",
+    "scansLast7Days": "Escaneos (últimos 7 días)",
+    "scansLast30Days": "Escaneos (últimos 30 días)",
+    "noQrs": "Aún no tienes códigos QR",
+    "noQrsDescription": "Crea tu primer código QR para empezar a recibir más reseñas.",
+    "untitled": "QR sin nombre",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "scans": "escaneos",
+    "noScansYet": "Sin escaneos aún",
+    "last14Days": "Últimos 14 días",
+    "view": "Ver",
+    "copyLink": "Copiar enlace",
+    "deactivate": "Desactivar",
+    "activate": "Activar",
+    "downloadPng": "Descargar PNG",
+    "downloadSvg": "Descargar SVG",
+    "recentScans": "Escaneos recientes",
+    "created": "QR creado",
+    "createdDesc": "Tu código QR está listo para usar.",
+    "createError": "No se ha podido crear el código QR.",
+    "deleted": "QR eliminado",
+    "deletedDesc": "El código QR se ha eliminado.",
+    "deleteError": "No se ha podido eliminar el código QR.",
+    "copied": "Enlace copiado",
+    "copiedDesc": "El enlace del QR se ha copiado al portapapeles."
+  },
+  "demo": {
+    "launchButton": "Abrir demo del producto",
+    "launchError": "No se pudo iniciar la demo",
+    "bannerMessage": "Estás navegando una demo de HolaRevi. Las respuestas se generan con IA real, pero no se publican en Google.",
+    "exit": "Salir de la demo",
+    "reset": "Reiniciar demo",
+    "resetDone": "Demo reiniciada",
+    "resetDoneDesc": "Las reseñas se han restaurado a los valores iniciales.",
+    "resetError": "No se pudo reiniciar la demo",
+    "blockedAction": "Acción no disponible en modo demo",
+    "addReview": "Añadir reseña",
+    "addReviewTitle": "Añadir reseña personalizada",
+    "addReviewDesc": "Crea una reseña a medida para mostrar al cliente cómo responde la IA. La reseña se añadirá al restaurante de la demo.",
+    "addReviewDone": "Reseña añadida",
+    "addReviewDoneDesc": "Ya puedes ver cómo la IA la responde en la lista de reseñas.",
+    "addReviewError": "No se pudo añadir la reseña",
+    "reviewerName": "Nombre del cliente",
+    "reviewerNamePlaceholder": "Ej. Marta López",
+    "rating": "Puntuación",
+    "reviewLanguage": "Idioma",
+    "reviewText": "Texto de la reseña",
+    "reviewTextPlaceholder": "Escribe la reseña tal y como la dejaría un cliente real...",
+    "submitReview": "Añadir reseña",
+    "cancel": "Cancelar"
+  },
+  "nfc": {
+    "seo": {
+      "title": "Stand NFC para Reseñas de Google · Preorder Lanzamiento | HolaRevi",
+      "description": "El stand NFC que multiplica por 5 tus reseñas de Google. Sin apps, sin QR. Preorder lanzamiento -75% solo las primeras 100 unidades. Envío gratuito.",
+      "keywords": "stand NFC reseñas Google, preorder NFC, soporte NFC restaurante, dispositivo NFC reviews, stand reseñas corporativo, tap to review"
+    },
+    "promobar": {
+      "text": "Oferta Lanzamiento · Primeras 100 unidades con -75% · Envío gratis",
+      "cta": "Comprar ahora"
+    },
+    "hero": {
+      "badge": "Oferta Lanzamiento · Solo 100 unidades",
+      "rating": "+250 negocios interesados",
+      "title1": "Convierte cada cliente en una",
+      "titleHighlight": "reseña de Google",
+      "title2": "en segundos.",
+      "subtitle": "El stand NFC corporativo que multiplica por 5 tus reseñas. Sin apps, sin códigos QR, sin fricción. Tu cliente acerca el móvil y listo.",
+      "lightningText": "Configurado en menos de 5 minutos",
+      "priceCrossed": "99€",
+      "priceNew": "25€",
+      "saveText": "Ahorra 74€",
+      "saveBadge": "Oferta lanzamiento",
+      "cta": "Comprar mi NFC Stand — 25€",
+      "ctaSecondary": "Ver cómo funciona",
+      "trust1": "Envío gratuito",
+      "trust2": "Pago 100% seguro",
+      "trust3": "Garantía 30 días",
+      "trust4": "Compatible iOS + Android"
+    },
+    "urgency": {
+      "eyebrow": "Oferta limitada",
+      "title": "El precio lanzamiento termina pronto",
+      "subtitle": "Solo las primeras 100 unidades llevan -75%. Después subirá al precio retail.",
+      "days": "Días",
+      "hours": "Horas",
+      "minutes": "Min",
+      "seconds": "Seg",
+      "unitsLabel": "Unidades reservadas",
+      "unitsLeftPrefix": "Quedan",
+      "unitsLeftSuffix": "a precio lanzamiento"
+    },
+    "logos": {
+      "title": "Pensado para todo tipo de negocios locales",
+      "l1": "Restaurantes",
+      "l2": "Hoteles",
+      "l3": "Cafeterías",
+      "l4": "Clínicas",
+      "l5": "Tiendas",
+      "l6": "Salones"
+    },
+    "stats": {
+      "eyebrow": "Por qué funciona",
+      "s1Value": "30s",
+      "s1Label": "por reseña dejada",
+      "s2Value": "5×",
+      "s2Label": "más reseñas en 30 días",
+      "s3Value": "100%",
+      "s3Label": "iOS + Android",
+      "s4Value": "0",
+      "s4Label": "apps que descargar",
+      "s1": "Tiempo por reseña",
+      "s2": "Compatibilidad móvil",
+      "s3": "Más reseñas recibidas"
+    },
+    "how": {
+      "eyebrow": "Cómo funciona",
+      "title": "Más reseñas en 3 pasos",
+      "subtitle": "Tan simple que cualquier cliente puede hacerlo solo, sin instrucciones.",
+      "step1": {
+        "title": "Acerca el móvil",
+        "desc": "El cliente acerca su smartphone al stand NFC. Sin apps, sin escanear códigos."
+      },
+      "step2": {
+        "title": "Se abre Google",
+        "desc": "Se abre automáticamente la página de reseñas de tu Google Business."
+      },
+      "step3": {
+        "title": "Reseña publicada",
+        "desc": "Tu cliente deja la reseña en menos de 30 segundos. Tú recibes la notificación."
+      }
+    },
+    "benefits": {
+      "eyebrow": "Beneficios",
+      "title": "Lo que cambia en tu negocio",
+      "subtitle": "Multiplica tus reseñas, sube tu reputación y atrae más clientes sin esfuerzo extra.",
+      "b1": {
+        "title": "5× más reseñas",
+        "desc": "Los negocios que prueban el stand NFC reciben hasta 5 veces más reseñas en los primeros 30 días."
+      },
+      "b2": {
+        "title": "Mejor reputación",
+        "desc": "Más reseñas recientes y positivas suben tu puntuación media y tu ranking local en Google."
+      },
+      "b3": {
+        "title": "Más clientes nuevos",
+        "desc": "El 88% de los usuarios revisa las reseñas antes de elegir un negocio. Más reseñas = más clientes."
+      },
+      "b4": {
+        "title": "Imagen premium",
+        "desc": "Diseño corporativo elegante que mejora la percepción de tu marca en cada visita."
+      }
+    },
+    "comparison": {
+      "eyebrow": "Comparativa",
+      "title": "Pedir reseñas a mano vs. NFC Stand",
+      "subtitle": "Deja de perder reseñas que tus clientes nunca van a dejar.",
+      "manualHeader": "Método manual",
+      "nfcHeader": "HolaRevi NFC",
+      "row1": "Tiempo del cliente",
+      "row1Manual": "+3 minutos",
+      "row1NFC": "30 segundos",
+      "row2": "Conversión a reseña",
+      "row2Manual": "1 de cada 20 clientes",
+      "row2NFC": "1 de cada 4 clientes",
+      "row3": "Imagen de marca",
+      "row3Manual": "Improvisada",
+      "row3NFC": "Premium y profesional",
+      "row4": "Compatibilidad",
+      "row4Manual": "Solo papel o QR",
+      "row4NFC": "iOS + Android NFC",
+      "row5": "Esfuerzo del personal",
+      "row5Manual": "Pedirla a cada cliente",
+      "row5NFC": "Cero · trabaja sola",
+      "row6": "Reseñas en 30 días",
+      "row6Manual": "1× base",
+      "row6NFC": "Hasta 5× más"
+    },
+    "testimonials": {
+      "eyebrow": "Beta testers",
+      "title": "Negocios que ya lo están probando",
+      "subtitle": "Resultados reales de los primeros 50 negocios en piloto.",
+      "t1": {
+        "quote": "Pasamos de 2 reseñas al mes a 18 en solo 3 semanas. Los clientes lo prueban sin que les digamos nada.",
+        "author": "María R.",
+        "role": "Restaurante Costa Brava"
+      },
+      "t2": {
+        "quote": "Buscaba algo profesional para la recepción y este stand encaja perfecto. Es un detalle de marca que se nota.",
+        "author": "Javier S.",
+        "role": "Director, Hotel Atlántico"
+      },
+      "t3": {
+        "quote": "Antes pedíamos reseñas tras cada servicio y casi nadie las dejaba. Con el stand, llegan solas.",
+        "author": "Laura M.",
+        "role": "Salón de Estética"
+      }
+    },
+    "specs": {
+      "eyebrow": "Especificaciones",
+      "title": "Detalles técnicos",
+      "subtitle": "Calidad premium en cada componente.",
+      "s1": {
+        "label": "Panel frontal",
+        "value": "12 × 14 cm"
+      },
+      "s2": {
+        "label": "Base",
+        "value": "12 × 10 cm"
+      },
+      "s3": {
+        "label": "Forma",
+        "value": "L (≈85°)"
+      },
+      "s4": {
+        "label": "Tecnología",
+        "value": "NFC NTAG"
+      },
+      "s5": {
+        "label": "Compatibilidad",
+        "value": "iOS & Android"
+      },
+      "s6": {
+        "label": "Material",
+        "value": "Acrílico premium"
+      }
+    },
+    "mockups": {
+      "eyebrow": "En tu negocio",
+      "title": "Diseñado para cualquier mostrador",
+      "subtitle": "Diseño premium que se integra en cualquier ambiente, desde el más casual al más exclusivo.",
+      "restaurant": "Restaurantes",
+      "hotel": "Hoteles",
+      "shop": "Tiendas",
+      "clinic": "Clínicas",
+      "cafe": "Cafeterías",
+      "reception": "Recepciones"
+    },
+    "pricing": {
+      "eyebrow": "Preorder Lanzamiento",
+      "title": "Reserva el tuyo a precio lanzamiento",
+      "subtitle": "Las primeras 100 unidades con un 75% de descuento. Una vez agotadas, sube al precio retail.",
+      "tagPopular": "Más reservado",
+      "saveBadge": "Ahorra 74€",
+      "priceCrossed": "99€",
+      "priceNew": "25€",
+      "unit": "/ unidad",
+      "feature1": "Stand NFC personalizado con tu logo y marca",
+      "feature2": "Configuración guiada en 5 minutos",
+      "feature3": "Compatible con iOS y Android (NFC)",
+      "feature4": "Envío gratuito a península",
+      "feature5": "Garantía de devolución 30 días",
+      "feature6": "Soporte personalizado por email + videollamada",
+      "feature7": "Acceso prioritario a la plataforma HolaRevi",
+      "cta": "Comprar mi unidad — 25€",
+      "secureNote": "Pago 100% seguro con Stripe · SSL 256-bit",
+      "shipping": "Primeros envíos: Q1 2026"
+    },
+    "faq": {
+      "eyebrow": "Preguntas frecuentes",
+      "title": "Resolvemos tus dudas",
+      "subtitle": "Todo lo que necesitas saber antes de reservar tu unidad.",
+      "q1": "¿Funciona con todos los móviles?",
+      "a1": "Sí. Compatible con iPhone 7 o superior y prácticamente todos los Android con NFC (la gran mayoría desde 2018). El cliente solo acerca el móvil al stand y listo.",
+      "q2": "¿Necesito instalar una app?",
+      "a2": "No. Ni tú ni tus clientes necesitáis nada. El cliente solo acerca el móvil y se abre directamente la página de reseñas de tu Google Business.",
+      "q3": "¿Cómo se configura?",
+      "a3": "Te enviamos el stand ya configurado con el enlace a tu Google Business. Solo lo pones sobre el mostrador. Si necesitas ayuda, te acompañamos en una videollamada gratuita.",
+      "q4": "¿Cuándo recibiré mi pedido?",
+      "a4": "Los preorders empiezan a enviarse en Q1 2026. Te avisaremos por email con el número de seguimiento. Envío gratuito a península (5-7 días laborables).",
+      "q5": "¿Es reutilizable y duradero?",
+      "a5": "Sí. El stand está fabricado en acrílico premium y el chip NFC es duradero. Si cambias tu Google Business, lo reprogramamos a distancia sin coste.",
+      "q6": "¿Qué pasa si no me convence?",
+      "a6": "Tienes 30 días de garantía de devolución. Si no estás satisfecho, te devolvemos el dinero íntegro sin preguntas.",
+      "q7": "¿Puedo personalizarlo con mi logo?",
+      "a7": "Sí. Todos los stands se personalizan con el logo, colores y nombre de tu negocio. Subes tu logo en el formulario de preorder."
+    },
+    "finalCta": {
+      "eyebrow": "Última llamada",
+      "title": "Multiplica tus reseñas hoy.",
+      "titleHighlight": "Empieza ahora.",
+      "subtitle": "Reserva tu Stand NFC al precio lanzamiento. Solo quedan unas pocas unidades a este precio.",
+      "ctaPrimary": "Comprar mi NFC Stand — 25€",
+      "ctaSecondary": "Hablar con ventas",
+      "feature1": "Envío gratuito",
+      "feature2": "Garantía 30 días",
+      "feature3": "Soporte incluido",
+      "feature4": "Pago seguro"
+    }
+  },
+  "nfcPanel": {
+    "title": "Stand NFC",
+    "subtitle": "Consigue más reseñas con un toque. Compra tu stand y aprende a medir resultados.",
+    "myOrders": {
+      "title": "Mis pedidos",
+      "headerOrder": "Pedido",
+      "headerDate": "Fecha",
+      "headerQty": "Cant.",
+      "headerTotal": "Total",
+      "headerStatus": "Estado",
+      "status": {
+        "pending_payment": "Pago pendiente",
+        "paid": "Pagado",
+        "processing": "Procesando",
+        "shipped": "Enviado",
+        "delivered": "Entregado",
+        "cancelled": "Cancelado",
+        "refunded": "Reembolsado"
+      }
+    },
+    "buy": {
+      "eyebrow": "Precio lanzamiento",
+      "title": "Stand NFC de HolaRevi",
+      "subtitle": "Un toque. El cliente aterriza en tu página de reseñas de Google. Sin app, sin escanear QR.",
+      "priceNew": "25€",
+      "priceCrossed": "100€",
+      "save": "Ahorra 75%",
+      "unit": "por stand · IVA incluido",
+      "bullet1": "NFC universal — iPhone y Android, sin app",
+      "bullet2": "Pre-programado para tu negocio — solo enchufar y listo",
+      "bullet3": "Stand premium de aluminio para barra y mesas",
+      "bullet4": "Envío gratis en España · Garantía 30 días",
+      "cta": "Reservar mi stand",
+      "unitsLabel": "reservados",
+      "unitsLeft": "Solo quedan {count}"
+    },
+    "measure": {
+      "eyebrow": "Configuración y medición",
+      "title": "Que cada toque cuente",
+      "subtitle": "Conecta tu stand al panel para convertir cada toque en reseñas medibles.",
+      "step1": {
+        "title": "1. Crea un QR Review",
+        "desc": "Genera un enlace único por local y vincúlalo a tu stand.",
+        "cta": "Abrir QR Reviews"
+      },
+      "step2": {
+        "title": "2. Mide los escaneos",
+        "desc": "Mira cuántas personas tocan el stand y desde qué dispositivo, en tiempo real.",
+        "cta": "Ver analítica de escaneos"
+      },
+      "step3": {
+        "title": "3. Lee las nuevas reseñas",
+        "desc": "Cada reseña nueva en Google aparece en tu bandeja, lista para responder con IA.",
+        "cta": "Ir a reseñas"
+      },
+      "step4": {
+        "title": "4. Resumen IA semanal",
+        "desc": "Descubre qué encanta y qué mejorar — sintetizado para ti cada semana.",
+        "cta": "Ver resumen IA"
+      }
+    }
+  }
+}

@@ -1,0 +1,91 @@
+Acabo de reemplazar dos archivos del sistema de emails de HolaRevi:
+- jobs/emailGenerator.ts
+- jobs/replyNotificationEmail.ts
+
+Los archivos mantienen la misma interfaz pública (mismos exports y firmas), así que no 
+deberían romper nada. Tu tarea ahora es configurar el entorno y verificar que todo funciona.
+
+══════════════════════════════════════════════════════════
+1. VERIFICAR VARIABLES DE ENTORNO (Replit Secrets)
+══════════════════════════════════════════════════════════
+
+Revisa Secrets y confírmame cuáles existen y cuáles faltan:
+
+OBLIGATORIAS (el sistema falla sin ellas):
+  - OPENAI_API_KEY
+  - SMTP_HOST
+  - SMTP_PORT
+  - SMTP_USER
+  - SMTP_PASS
+
+OPCIONALES (tienen default, pero conviene fijarlas):
+  - OPENAI_MODEL      → si no existe, se usa "gpt-4o"
+  - APP_URL           → si no existe, se usa "https://holarevi.com"
+  - SMTP_FROM         → si no existe, se usa "HolaRevi <info@holarevi.com>"
+
+IMPORTANTE sobre APP_URL:
+Esta variable define a dónde apuntan TODOS los botones de los emails (dashboard, 
+reseñas, ajustes, soporte). Si el dominio real de producción no es exactamente 
+"https://holarevi.com", configúralo con el valor correcto. Pregúntame si no estás 
+seguro del valor que debe tener.
+
+Si ves que falta alguna OBLIGATORIA, para y avísame antes de seguir.
+
+══════════════════════════════════════════════════════════
+2. VERIFICAR QUE COMPILA
+══════════════════════════════════════════════════════════
+
+Ejecuta: npx tsc --noEmit
+
+Si sale algún error de tipos relacionado con jobs/emailGenerator.ts o 
+jobs/replyNotificationEmail.ts, muéstramelo. No toques nada, solo reporta.
+
+══════════════════════════════════════════════════════════
+3. GENERAR PREVIEWS DE PRUEBA (sin enviar emails reales)
+══════════════════════════════════════════════════════════
+
+Crea un script scripts/previewEmails.ts que:
+
+a) Importe generateFallbackEmail desde ../jobs/emailGenerator
+b) Lo ejecute con estos datos de prueba:
+   {
+     userName: "María",
+     userEmail: "test@ejemplo.com",
+     businessNames: ["Negocio de Prueba"],
+     planName: "Pro",
+     weekStart: "7 abril",
+     weekEnd: "13 abril",
+     weeksActive: 12,
+     reviewsReceived: 0,
+     autoResponded: 0,
+     avgResponseTime: "n/a",
+     currentRating: "4.6",
+     previousWeekRating: "4.6",
+     ratingChange: "sin cambios",
+     negativeHandled: 0,
+     totalManaged: 287,
+     bestReview: "",
+     requestsSent: null,
+     conversionRate: null,
+     hasActivity: false,
+   }
+c) Guarde el HTML resultante en /tmp/preview_weekly.html
+
+Ejecuta el script con: npx tsx scripts/previewEmails.ts
+(o ts-node si tsx no está disponible)
+
+Muéstrame:
+  - El subject que devolvió
+  - El tamaño en bytes del HTML
+  - Las primeras 20 líneas del HTML generado
+
+══════════════════════════════════════════════════════════
+4. CONFIRMAR AL FINAL
+══════════════════════════════════════════════════════════
+
+Resumen final que necesito de ti:
+  ✓ Variables de entorno: qué faltaba (si algo) y qué valor tiene APP_URL ahora
+  ✓ Resultado de `npx tsc --noEmit` (pasa / no pasa)
+  ✓ Preview del email semanal generado correctamente (subject + tamaño)
+
+NO despliegues. NO envíes emails reales. NO toques ningún otro archivo del proyecto.

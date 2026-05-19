@@ -1,0 +1,90 @@
+# Tarea: actualizar páginas legales (Términos y Política de Privacidad) de HolaRevi
+
+He subido dos archivos i18n actualizados:
+- `es.json`
+- `en.json`
+
+Estos archivos contienen versiones reforzadas de los nodos `termsPage` y `privacyPage`, con **nuevas claves añadidas** que aún no están renderizadas en la UI. El resto del JSON está intacto.
+
+## Lo que necesito que hagas
+
+### 1. Reemplazar los archivos i18n
+Sustituye los archivos i18n actuales del proyecto por los que acabo de subir. Localiza dónde viven los archivos de traducción (probablemente en `public/locales/`, `src/locales/`, `src/i18n/`, `messages/` o similar — búscalo) y reemplaza los `es.json` y `en.json` correspondientes.
+
+**No toques ninguna otra clave de los archivos.** Solo reemplazo total de los dos archivos.
+
+### 2. Identificar las claves nuevas
+Compara los archivos nuevos con los anteriores y detecta las claves que se han añadido en `termsPage` y `privacyPage`. Las claves nuevas previstas son:
+
+**En `termsPage` (31 claves nuevas):**
+`s11item3`, `s11item4`, `s11item5`, `s12p2`, `s13item5`, `s13item6`, `s13item7`, `s13item8`, `s13item9`, `s14item1`, `s14item2`, `s14item3`, `s14item4`, `s15item1`, `s15item2`, `s15item3`, `s15item4`, `s15p3`, `s16p2`, `s17Title`, `s17p1`, `s17p2`, `s18Title`, `s18p1`, `s18p2`, `s18p3`, `s19Title`, `s19p1`, `s19email`, `s20Title`, `s20p1`
+
+**En `privacyPage` (2 claves nuevas):**
+`s4item6`, `s7_1item3`
+
+### 3. Actualizar los componentes de página
+
+Localiza los componentes que renderizan la página de Términos y la Política de Privacidad (probablemente algo como `TermsPage.tsx`, `PrivacyPage.tsx`, `terms.tsx`, `privacy.tsx`, o dentro de rutas como `/app/terms`, `/pages/terms`, etc. — búscalo).
+
+Para cada clave nueva, **añade el JSX correspondiente en el lugar correcto del componente**, respetando:
+
+- **El orden numérico de las secciones.** Por ejemplo: `s17Title` va después de la sección 16 (Cambios en el Servicio) y antes de la sección 18 (Disposiciones finales). El componente original tenía hasta `s16` (Contacto); ahora debe llegar hasta `s20` (Aviso sobre revisión legal local).
+- **El estilo visual existente.** Usa exactamente los mismos componentes, clases CSS/Tailwind y estructura HTML que ya están aplicados a las secciones existentes (títulos `s1Title`...`s16Title`, párrafos `s1p1`...`s15p2`, items de lista `s5item1`...`s15item3`, etc.).
+- **El uso del hook de i18n** que ya esté en uso en el proyecto (`useTranslation`, `useT`, `next-intl`, `t('termsPage.s17Title')`, etc.).
+
+### 4. Reorganización en `termsPage`
+
+⚠️ **Importante**: en el JSON nuevo, las claves originales `s11`, `s12`, `s13`, `s14`, `s15` y `s16` han **cambiado de significado** (se han reordenado los temas). Por tanto, además de añadir las claves nuevas, debes verificar que el componente renderiza cada bloque con su nuevo título correcto:
+
+- `s11*` → ahora trata sobre **"Contenido generado por IA y revisión por el Usuario"** (antes era Limitación de responsabilidad).
+- `s12*` → ahora trata sobre **"Disponibilidad, mantenimiento e incidencias"** (antes era Indemnización).
+- `s13*` → ahora trata sobre **"Limitación de responsabilidad"** (antes era Terminación). Tiene 9 ítems (`s13item1` a `s13item9`).
+- `s14*` → ahora trata sobre **"Indemnización"** (antes era Cambios en Términos). Tiene 4 ítems.
+- `s15*` → ahora trata sobre **"Suspensión y terminación"** (antes era Ley aplicable). Tiene 4 ítems y 3 párrafos.
+- `s16*` → ahora trata sobre **"Cambios en el Servicio o en estos Términos"** (antes era Contacto). Tiene 2 párrafos.
+- `s17*` → **NUEVO**: "Ley aplicable y jurisdicción".
+- `s18*` → **NUEVO**: "Disposiciones finales".
+- `s19*` → **NUEVO**: "Contacto" (movido aquí desde `s16`).
+- `s20*` → **NUEVO**: "Aviso sobre revisión legal local".
+
+Si el componente original tenía estructura del tipo "renderiza s11Title como `<h2>` y luego s11p1 como `<p>` y s11item1..2 dentro de un `<ul>`", debes:
+1. Mantener esa misma estructura visual para las claves originales.
+2. Añadir los `s11item3`, `s11item4`, `s11item5` como nuevos `<li>` dentro del mismo `<ul>` de la sección 11.
+3. Hacer lo mismo con los nuevos items y párrafos de las secciones 12-20.
+
+### 5. Reorganización en `privacyPage`
+
+Mucho más simple, solo dos claves nuevas:
+- `s4item6` → añadir como nuevo `<li>` al final de la lista existente de la sección 4 ("Cómo usamos otros datos personales").
+- `s7_1item3` → añadir como nuevo `<li>` al final de la lista existente de la subsección 7.1 ("Conservación").
+
+### 6. Validaciones finales
+
+Antes de dar la tarea por terminada:
+
+1. **Verifica que el JSON parsea correctamente** en ambos idiomas (`JSON.parse` sin errores).
+2. **Verifica paridad de claves ES↔EN**: las claves de `termsPage` y `privacyPage` deben ser exactamente las mismas en `es.json` y `en.json`.
+3. **Compila el proyecto** y arregla cualquier error de TypeScript / linter introducido.
+4. **Renderiza la página de Términos en localhost** (en `/terms` o la ruta que corresponda) y comprueba que:
+   - Las secciones 1 a 10 se ven igual que antes (solo con texto reforzado).
+   - La sección 11 ahora habla de IA, no de limitación de responsabilidad.
+   - Las secciones 17, 18, 19 y 20 aparecen correctamente al final.
+   - No hay claves sin traducir mostradas en pantalla (tipo `termsPage.s17Title` en bruto).
+5. **Renderiza la página de Política de Privacidad** y comprueba que `s4item6` y `s7_1item3` aparecen en su sitio.
+6. **Cambia el idioma a inglés** y haz la misma comprobación visual rápida en ambas páginas.
+
+### 7. Restricciones
+
+- **No modifiques ninguna otra parte del código** (componentes, rutas, estilos globales, lógica de negocio).
+- **No añadas dependencias nuevas.**
+- **No reformatees** los archivos JSON ni los componentes más allá de lo estrictamente necesario.
+- **No traduzcas ni reescribas** ningún texto: usa el contenido tal cual viene en los `es.json` y `en.json` que he subido.
+- Si encuentras algo ambiguo (por ejemplo, dos archivos `es.json` candidatos, o un componente que parece tener su propio sistema de traducciones inline), **pregúntame antes de actuar**.
+
+## Entregable
+
+Cuando termines, dime:
+1. Qué archivos has reemplazado (rutas exactas).
+2. Qué componentes has modificado (rutas exactas).
+3. Cuántos `<h2>`, `<p>` y `<li>` nuevos has añadido en total en cada componente.
+4. Si la build pasa sin errores y si has comprobado visualmente las páginas.
